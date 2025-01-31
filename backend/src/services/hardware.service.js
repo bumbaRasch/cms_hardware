@@ -3,7 +3,7 @@
 import prisma from '../configs/database.js';
 
 export const hardwareService = {
-    getHardware: async ({ page = 1, limit = 10, sortBy = 'HA_NAME', sortOrder = 'asc', filter = {} }) => {
+    getHardware: async ({ page = 1, limit = 10, sortBy = 'HA_CREATED_AT', sortOrder = 'asc', filter = {}, search = '' }) => {
         const offset = (page - 1) * limit;
 
         const whereClauses = [];
@@ -11,6 +11,33 @@ export const hardwareService = {
             if (value) {
                 whereClauses.push(`${key} LIKE '%${value}%'`);
             }
+        }
+
+        if (search) {
+            const searchClause = `
+                (h.HA_NAME LIKE '%${search}%' OR
+                h.HA_MANUFACTURER LIKE '%${search}%' OR
+                h.HA_MODEL LIKE '%${search}%' OR
+                h.HA_SERIAL_NUMBER LIKE '%${search}%' OR
+                h.HA_PURCHASE_DATE LIKE '%${search}%' OR
+                h.HA_WARRANTY_EXPIRY_DATE LIKE '%${search}%' OR
+                h.HA_LAST_MAINTENANCE_DATE LIKE '%${search}%' OR
+                h.HA_NOTES LIKE '%${search}%' OR
+                h.HA_COST LIKE '%${search}%' OR
+                h.HA_CONDITION LIKE '%${search}%' OR
+                h.HA_DEPLOYMENT_DATE LIKE '%${search}%' OR
+                h.HA_RETIREMENT_DATE LIKE '%${search}%' OR
+                h.HA_IP_ADDRESS LIKE '%${search}%' OR
+                h.HA_MAC_ADDRESS LIKE '%${search}%' OR
+                ht.HT_NAME LIKE '%${search}%' OR
+                l.LOC_NAME LIKE '%${search}%' OR
+                s.ST_NAME LIKE '%${search}%' OR
+                u.USER_NAME LIKE '%${search}%' OR
+                sc.SIM_NUMBER LIKE '%${search}%' OR
+                st.STORE_NAME LIKE '%${search}%' OR
+                sp.SUPPLIER_NAME LIKE '%${search}%' OR
+                c.CURRENCY_CODE LIKE '%${search}%')`;
+            whereClauses.push(searchClause);
         }
 
         const whereClause = whereClauses.length > 0 ? `WHERE ${whereClauses.join(' AND ')}` : '';
@@ -39,7 +66,8 @@ export const hardwareService = {
                 h.HA_DEPLOYMENT_DATE,
                 h.HA_RETIREMENT_DATE,
                 h.HA_IP_ADDRESS,
-                h.HA_MAC_ADDRESS
+                h.HA_MAC_ADDRESS,
+                h.HA_CREATED_AT
             FROM 
                 tbl_hardware h
             LEFT JOIN 
@@ -105,9 +133,9 @@ export const hardwareService = {
                 HA_SUPPLIER: item.HA_SUPPLIER ? item.HA_SUPPLIER : null,
                 HA_CURRENCY: item.HA_CURRENCY ? item.HA_CURRENCY : null
             })),
-            total: total[0].total.toString(),
-            page,
-            limit
+            total: parseInt(total[0].total),
+            page: parseInt(page),
+            limit: parseInt(limit),
         };
     },
     createHardware: async () => {
