@@ -24,13 +24,14 @@ model tbl_hardware {
   HA_SIM_CARD              Int?
   HA_STORE                 Int?
   HA_SUPPLIER              Int?
-  HA_COST                  Decimal?           @db.Decimal(10, 2)
+  HA_COST                  Float?
   HA_CURRENCY              Int?
   HA_CONDITION             String?            @db.VarChar(50)
   HA_DEPLOYMENT_DATE       DateTime?          @db.Date
   HA_RETIREMENT_DATE       DateTime?          @db.Date
   HA_IP_ADDRESS            String?            @db.VarChar(15)
   HA_MAC_ADDRESS           String?            @db.VarChar(17)
+  HA_CREATED_AT            DateTime?          @default(now()) @db.Timestamp(0)
   tbl_hardware_types       tbl_hardware_types @relation(fields: [HA_TYPE], references: [HT_ID], onUpdate: Restrict, map: "tbl_hardware_ibfk_1")
   tbl_locations            tbl_locations      @relation(fields: [HA_LOCATION], references: [LOC_ID], onUpdate: Restrict, map: "tbl_hardware_ibfk_2")
   tbl_statuses             tbl_statuses       @relation(fields: [HA_STATUS], references: [ST_ID], onUpdate: Restrict, map: "tbl_hardware_ibfk_3")
