@@ -8,6 +8,14 @@ export const hardwareController = {
         return hardware;
     },
     createHardware: async (request, reply) => {
-        return { hello: 'world' };
+        const hardware = await hardwareService.createHardware(request.body);
+        return hardware;
+    },
+
+    deleteHardware: async (request, reply) => {
+        const hardware = await hardwareService.deleteHardware(request.params.id);
+        return hardware 
+            ? reply.code(204).send() 
+            : reply.code(404).send({ message: 'Hardware not found' });
     }
 };
