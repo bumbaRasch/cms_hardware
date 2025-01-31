@@ -1,1 +1,1 @@
-# cms_hardware
+CMS Hardware Description CMS Hardware is a hardware management system designed to simplify the tracking, management, and monitoring of various types of hardware devices within an organization. The program provides a user-friendly interface for handling data, including filtering, sorting, and grouping, as well as offering tools for easy navigation and customization.
