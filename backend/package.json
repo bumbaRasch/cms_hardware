@@ -1,0 +1,28 @@
+{
+  "name": "cms_hardware",
+  "version": "1.0.0",
+  "description": "CMS Hardware Description CMS Hardware is a hardware management system designed to simplify the tracking, management, and monitoring of various types of hardware devices within an organization. The program provides a user-friendly interface for handling data, including filtering, sorting, and grouping, as well as offering tools for easy navigation and customization.",
+  "main": "app.js",
+  "type": "module",
+  "scripts": {
+    "dev": "nodemon ./src/app.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/bumbaRasch/cms_hardware.git"
+  },
+  "author": "Dimitri Pisarev",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/bumbaRasch/cms_hardware/issues"
+  },
+  "homepage": "https://github.com/bumbaRasch/cms_hardware#readme",
+  "devDependencies": {
+    "nodemon": "^3.1.9",
+    "prisma": "^6.3.0"
+  },
+  "dependencies": {
+    "@prisma/client": "^6.3.0",
+    "fastify": "^5.2.1"
+  }
+}
