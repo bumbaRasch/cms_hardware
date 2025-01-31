@@ -1,0 +1,137 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model tbl_hardware {
+  HA_ID                    Int                @id @default(autoincrement())
+  HA_NAME                  String             @db.VarChar(255)
+  HA_TYPE                  Int
+  HA_MANUFACTURER          String?            @db.VarChar(255)
+  HA_MODEL                 String?            @db.VarChar(255)
+  HA_SERIAL_NUMBER         String?            @unique(map: "HA_SERIAL_NUMBER") @db.VarChar(255)
+  HA_PURCHASE_DATE         DateTime?          @db.Date
+  HA_WARRANTY_EXPIRY_DATE  DateTime?          @db.Date
+  HA_LOCATION              Int
+  HA_STATUS                Int
+  HA_ASSIGNED_TO           String?            @db.Char(36)
+  HA_LAST_MAINTENANCE_DATE DateTime?          @db.Date
+  HA_NOTES                 String?            @db.Text
+  HA_SIM_CARD              Int?
+  HA_STORE                 Int?
+  HA_SUPPLIER              Int?
+  HA_COST                  Decimal?           @db.Decimal(10, 2)
+  HA_CURRENCY              Int?
+  HA_CONDITION             String?            @db.VarChar(50)
+  HA_DEPLOYMENT_DATE       DateTime?          @db.Date
+  HA_RETIREMENT_DATE       DateTime?          @db.Date
+  HA_IP_ADDRESS            String?            @db.VarChar(15)
+  HA_MAC_ADDRESS           String?            @db.VarChar(17)
+  tbl_hardware_types       tbl_hardware_types @relation(fields: [HA_TYPE], references: [HT_ID], onUpdate: Restrict, map: "tbl_hardware_ibfk_1")
+  tbl_locations            tbl_locations      @relation(fields: [HA_LOCATION], references: [LOC_ID], onUpdate: Restrict, map: "tbl_hardware_ibfk_2")
+  tbl_statuses             tbl_statuses       @relation(fields: [HA_STATUS], references: [ST_ID], onUpdate: Restrict, map: "tbl_hardware_ibfk_3")
+  tbl_users                tbl_users?         @relation(fields: [HA_ASSIGNED_TO], references: [USER_ID], onDelete: Restrict, onUpdate: Restrict, map: "tbl_hardware_ibfk_4")
+  tbl_sim_cards            tbl_sim_cards?     @relation(fields: [HA_SIM_CARD], references: [SIM_ID], onDelete: Restrict, onUpdate: Restrict, map: "tbl_hardware_ibfk_5")
+  tbl_stores               tbl_stores?        @relation(fields: [HA_STORE], references: [STORE_ID], onDelete: Restrict, onUpdate: Restrict, map: "tbl_hardware_ibfk_6")
+  tbl_suppliers            tbl_suppliers?     @relation(fields: [HA_SUPPLIER], references: [SUPPLIER_ID], onDelete: Restrict, onUpdate: Restrict, map: "tbl_hardware_ibfk_7")
+  tbl_currencies           tbl_currencies?    @relation(fields: [HA_CURRENCY], references: [CURRENCY_ID], onDelete: Restrict, onUpdate: Restrict, map: "tbl_hardware_ibfk_8")
+
+  @@index([HA_LOCATION], map: "HA_LOCATION")
+  @@index([HA_STATUS], map: "HA_STATUS")
+  @@index([HA_TYPE], map: "HA_TYPE")
+  @@index([HA_ASSIGNED_TO], map: "HA_ASSIGNED_TO")
+  @@index([HA_CURRENCY], map: "HA_CURRENCY")
+  @@index([HA_SIM_CARD], map: "HA_SIM_CARD")
+  @@index([HA_STORE], map: "HA_STORE")
+  @@index([HA_SUPPLIER], map: "HA_SUPPLIER")
+}
+
+model tbl_hardware_types {
+  HT_ID        Int            @id @default(autoincrement())
+  HT_NAME      String         @db.VarChar(255)
+  tbl_hardware tbl_hardware[]
+}
+
+model tbl_locations {
+  LOC_ID       Int            @id @default(autoincrement())
+  LOC_NAME     String         @unique(map: "LOC_NAME") @db.VarChar(255)
+  tbl_hardware tbl_hardware[]
+}
+
+model tbl_statuses {
+  ST_ID        Int            @id @default(autoincrement())
+  ST_NAME      String         @unique(map: "ST_NAME") @db.VarChar(50)
+  tbl_hardware tbl_hardware[]
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model tbl_currencies {
+  CURRENCY_ID   Int            @id @default(autoincrement())
+  CURRENCY_CODE String         @unique(map: "CURRENCY_CODE") @db.VarChar(10)
+  CURRENCY_NAME String         @db.VarChar(50)
+  tbl_hardware  tbl_hardware[]
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model tbl_providers {
+  PROVIDER_ID   Int             @id @default(autoincrement())
+  PROVIDER_NAME String          @db.VarChar(255)
+  tbl_sim_cards tbl_sim_cards[]
+  tbl_tariffs   tbl_tariffs[]
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model tbl_sim_cards {
+  SIM_ID          Int            @id @default(autoincrement())
+  SIM_NUMBER      String         @unique(map: "SIM_NUMBER") @db.VarChar(20)
+  PROVIDER_ID     Int
+  TARIFF_ID       Int
+  PIN             String?        @db.VarChar(10)
+  PUK             String?        @db.VarChar(10)
+  ACTIVATION_DATE DateTime?      @db.Date
+  EXPIRATION_DATE DateTime?      @db.Date
+  tbl_hardware    tbl_hardware[]
+  tbl_providers   tbl_providers  @relation(fields: [PROVIDER_ID], references: [PROVIDER_ID], onUpdate: Restrict, map: "tbl_sim_cards_ibfk_1")
+  tbl_tariffs     tbl_tariffs    @relation(fields: [TARIFF_ID], references: [TARIFF_ID], onUpdate: Restrict, map: "tbl_sim_cards_ibfk_2")
+
+  @@index([PROVIDER_ID], map: "PROVIDER_ID")
+  @@index([TARIFF_ID], map: "TARIFF_ID")
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model tbl_stores {
+  STORE_ID       Int            @id @default(autoincrement())
+  STORE_NAME     String         @db.VarChar(255)
+  STORE_LOCATION String?        @db.VarChar(255)
+  tbl_hardware   tbl_hardware[]
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model tbl_suppliers {
+  SUPPLIER_ID      Int            @id @default(autoincrement())
+  SUPPLIER_NAME    String         @db.VarChar(255)
+  SUPPLIER_CONTACT String?        @db.VarChar(255)
+  tbl_hardware     tbl_hardware[]
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model tbl_tariffs {
+  TARIFF_ID     Int             @id @default(autoincrement())
+  TARIFF_NAME   String          @db.VarChar(255)
+  PROVIDER_ID   Int
+  tbl_sim_cards tbl_sim_cards[]
+  tbl_providers tbl_providers   @relation(fields: [PROVIDER_ID], references: [PROVIDER_ID], onUpdate: Restrict, map: "tbl_tariffs_ibfk_1")
+
+  @@index([PROVIDER_ID], map: "PROVIDER_ID")
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model tbl_users {
+  USER_ID      String         @id @db.Char(36)
+  USER_NAME    String         @unique(map: "USER_NAME") @db.VarChar(255)
+  tbl_hardware tbl_hardware[]
+}
