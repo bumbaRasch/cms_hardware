@@ -4,8 +4,6 @@ import prisma from '../configs/database.js';
 
 export const hardwareService = {
     getHardware: async ({ page = 1, limit = 10, sortBy = 'HA_CREATED_AT', sortOrder = 'asc', filter = {}, search = '' }) => {
-        const offset = (page - 1) * limit;
-
         const whereClauses = {};
         for (const [key, value] of Object.entries(filter)) {
             if (value) {
@@ -46,9 +44,7 @@ export const hardwareService = {
                 tbl_suppliers: { select: { SUPPLIER_NAME: true } },
                 tbl_currencies: { select: { CURRENCY_CODE: true } }
             },
-            orderBy: { [sortBy]: sortOrder },
-            skip: offset,
-            take: limit
+            orderBy: { [sortBy]: sortOrder }
         });
 
         const total = await prisma.tbl_hardware.count({
@@ -82,9 +78,9 @@ export const hardwareService = {
                 HA_MAC_ADDRESS: item.HA_MAC_ADDRESS,
                 HA_CREATED_AT: item.HA_CREATED_AT
             })),
-            total,
-            page,
-            limit
+            total: parseInt(total),
+            page: parseInt(page),
+            limit: parseInt(limit),
         };
     },
     createHardware: async (body) => {
