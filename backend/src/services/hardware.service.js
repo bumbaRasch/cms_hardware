@@ -6,136 +6,85 @@ export const hardwareService = {
     getHardware: async ({ page = 1, limit = 10, sortBy = 'HA_CREATED_AT', sortOrder = 'asc', filter = {}, search = '' }) => {
         const offset = (page - 1) * limit;
 
-        const whereClauses = [];
+        const whereClauses = {};
         for (const [key, value] of Object.entries(filter)) {
             if (value) {
-                whereClauses.push(`${key} LIKE '%${value}%'`);
+                whereClauses[key] = { contains: value };
             }
         }
 
         if (search) {
-            const searchClause = `
-                (h.HA_NAME LIKE '%${search}%' OR
-                h.HA_MANUFACTURER LIKE '%${search}%' OR
-                h.HA_MODEL LIKE '%${search}%' OR
-                h.HA_SERIAL_NUMBER LIKE '%${search}%' OR
-                h.HA_PURCHASE_DATE LIKE '%${search}%' OR
-                h.HA_WARRANTY_EXPIRY_DATE LIKE '%${search}%' OR
-                h.HA_LAST_MAINTENANCE_DATE LIKE '%${search}%' OR
-                h.HA_NOTES LIKE '%${search}%' OR
-                h.HA_COST LIKE '%${search}%' OR
-                h.HA_CONDITION LIKE '%${search}%' OR
-                h.HA_DEPLOYMENT_DATE LIKE '%${search}%' OR
-                h.HA_RETIREMENT_DATE LIKE '%${search}%' OR
-                h.HA_IP_ADDRESS LIKE '%${search}%' OR
-                h.HA_MAC_ADDRESS LIKE '%${search}%' OR
-                ht.HT_NAME LIKE '%${search}%' OR
-                l.LOC_NAME LIKE '%${search}%' OR
-                s.ST_NAME LIKE '%${search}%' OR
-                u.USER_NAME LIKE '%${search}%' OR
-                sc.SIM_NUMBER LIKE '%${search}%' OR
-                st.STORE_NAME LIKE '%${search}%' OR
-                sp.SUPPLIER_NAME LIKE '%${search}%' OR
-                c.CURRENCY_CODE LIKE '%${search}%')`;
-            whereClauses.push(searchClause);
+            whereClauses.OR = [
+                { HA_NAME: { contains: search } },
+                { HA_MANUFACTURER: { contains: search } },
+                { HA_MODEL: { contains: search } },
+                { HA_SERIAL_NUMBER: { contains: search } },
+                { HA_NOTES: { contains: search } },
+                { HA_CONDITION: { contains: search } },
+                { HA_IP_ADDRESS: { contains: search } },
+                { HA_MAC_ADDRESS: { contains: search } },
+                { tbl_hardware_types: { HT_NAME: { contains: search } } },
+                { tbl_locations: { LOC_NAME: { contains: search } } },
+                { tbl_statuses: { ST_NAME: { contains: search } } },
+                { tbl_users: { USER_NAME: { contains: search } } },
+                { tbl_sim_cards: { SIM_NUMBER: { contains: search } } },
+                { tbl_stores: { STORE_NAME: { contains: search } } },
+                { tbl_suppliers: { SUPPLIER_NAME: { contains: search } } },
+                { tbl_currencies: { CURRENCY_CODE: { contains: search } } }
+            ];
         }
 
-        const whereClause = whereClauses.length > 0 ? `WHERE ${whereClauses.join(' AND ')}` : '';
+        const hardware = await prisma.tbl_hardware.findMany({
+            where: whereClauses,
+            include: {
+                tbl_hardware_types: { select: { HT_NAME: true } },
+                tbl_locations: { select: { LOC_NAME: true } },
+                tbl_statuses: { select: { ST_NAME: true } },
+                tbl_users: { select: { USER_NAME: true } },
+                tbl_sim_cards: { select: { SIM_NUMBER: true } },
+                tbl_stores: { select: { STORE_NAME: true } },
+                tbl_suppliers: { select: { SUPPLIER_NAME: true } },
+                tbl_currencies: { select: { CURRENCY_CODE: true } }
+            },
+            orderBy: { [sortBy]: sortOrder },
+            skip: offset,
+            take: limit
+        });
 
-        const hardware = await prisma.$queryRawUnsafe(`
-            SELECT
-                h.HA_ID,
-                h.HA_NAME,
-                ht.HT_NAME AS HA_TYPE,
-                h.HA_MANUFACTURER,
-                h.HA_MODEL,
-                h.HA_SERIAL_NUMBER,
-                h.HA_PURCHASE_DATE,
-                h.HA_WARRANTY_EXPIRY_DATE,
-                l.LOC_NAME AS HA_LOCATION,
-                s.ST_NAME AS HA_STATUS,
-                u.USER_NAME AS HA_ASSIGNED_TO,
-                h.HA_LAST_MAINTENANCE_DATE,
-                h.HA_NOTES,
-                sc.SIM_NUMBER AS HA_SIM_CARD,
-                st.STORE_NAME AS HA_STORE,
-                sp.SUPPLIER_NAME AS HA_SUPPLIER,
-                h.HA_COST,
-                c.CURRENCY_CODE AS HA_CURRENCY,
-                h.HA_CONDITION,
-                h.HA_DEPLOYMENT_DATE,
-                h.HA_RETIREMENT_DATE,
-                h.HA_IP_ADDRESS,
-                h.HA_MAC_ADDRESS,
-                h.HA_CREATED_AT
-            FROM 
-                tbl_hardware h
-            LEFT JOIN 
-                tbl_hardware_types ht ON h.HA_TYPE = ht.HT_ID
-            LEFT JOIN 
-                tbl_locations l ON h.HA_LOCATION = l.LOC_ID
-            LEFT JOIN 
-                tbl_statuses s ON h.HA_STATUS = s.ST_ID
-            LEFT JOIN 
-                tbl_users u ON h.HA_ASSIGNED_TO = u.USER_ID
-            LEFT JOIN 
-                tbl_sim_cards sc ON h.HA_SIM_CARD = sc.SIM_ID
-            LEFT JOIN 
-                tbl_stores st ON h.HA_STORE = st.STORE_ID
-            LEFT JOIN 
-                tbl_suppliers sp ON h.HA_SUPPLIER = sp.SUPPLIER_ID
-            LEFT JOIN 
-                tbl_currencies c ON h.HA_CURRENCY = c.CURRENCY_ID
-            ${whereClause}
-            ORDER BY 
-                ${sortBy} ${sortOrder}
-            LIMIT 
-                ${limit} 
-            OFFSET 
-                ${offset}
-        `);
-
-        const total = await prisma.$queryRawUnsafe(`
-            SELECT 
-                COUNT(*) AS total
-            FROM 
-                tbl_hardware h
-            LEFT JOIN 
-                tbl_hardware_types ht ON h.HA_TYPE = ht.HT_ID
-            LEFT JOIN 
-                tbl_locations l ON h.HA_LOCATION = l.LOC_ID
-            LEFT JOIN 
-                tbl_statuses s ON h.HA_STATUS = s.ST_ID
-            LEFT JOIN 
-                tbl_users u ON h.HA_ASSIGNED_TO = u.USER_ID
-            LEFT JOIN 
-                tbl_sim_cards sc ON h.HA_SIM_CARD = sc.SIM_ID
-            LEFT JOIN 
-                tbl_stores st ON h.HA_STORE = st.STORE_ID
-            LEFT JOIN 
-                tbl_suppliers sp ON h.HA_SUPPLIER = sp.SUPPLIER_ID
-            LEFT JOIN 
-                tbl_currencies c ON h.HA_CURRENCY = c.CURRENCY_ID
-            ${whereClause}
-        `);
+        const total = await prisma.tbl_hardware.count({
+            where: whereClauses
+        });
 
         return {
             data: hardware.map(item => ({
-                ...item,
-                HA_COST: item.HA_COST ? item.HA_COST : null,
                 HA_ID: item.HA_ID,
-                HA_TYPE: item.HA_TYPE,
-                HA_LOCATION: item.HA_LOCATION,
-                HA_STATUS: item.HA_STATUS,
-                HA_ASSIGNED_TO: item.HA_ASSIGNED_TO ? item.HA_ASSIGNED_TO : null,
-                HA_SIM_CARD: item.HA_SIM_CARD ? item.HA_SIM_CARD : null,
-                HA_STORE: item.HA_STORE ? item.HA_STORE : null,
-                HA_SUPPLIER: item.HA_SUPPLIER ? item.HA_SUPPLIER : null,
-                HA_CURRENCY: item.HA_CURRENCY ? item.HA_CURRENCY : null
+                HA_NAME: item.HA_NAME,
+                HA_TYPE: item.tbl_hardware_types.HT_NAME,
+                HA_MANUFACTURER: item.HA_MANUFACTURER,
+                HA_MODEL: item.HA_MODEL,
+                HA_SERIAL_NUMBER: item.HA_SERIAL_NUMBER,
+                HA_PURCHASE_DATE: item.HA_PURCHASE_DATE,
+                HA_WARRANTY_EXPIRY_DATE: item.HA_WARRANTY_EXPIRY_DATE,
+                HA_LOCATION: item.tbl_locations.LOC_NAME,
+                HA_STATUS: item.tbl_statuses.ST_NAME,
+                HA_ASSIGNED_TO: item.tbl_users ? item.tbl_users.USER_NAME : null,
+                HA_LAST_MAINTENANCE_DATE: item.HA_LAST_MAINTENANCE_DATE,
+                HA_NOTES: item.HA_NOTES,
+                HA_SIM_CARD: item.tbl_sim_cards ? item.tbl_sim_cards.SIM_NUMBER : null,
+                HA_STORE: item.tbl_stores ? item.tbl_stores.STORE_NAME : null,
+                HA_SUPPLIER: item.tbl_suppliers ? item.tbl_suppliers.SUPPLIER_NAME : null,
+                HA_COST: item.HA_COST,
+                HA_CURRENCY: item.tbl_currencies ? item.tbl_currencies.CURRENCY_CODE : null,
+                HA_CONDITION: item.HA_CONDITION,
+                HA_DEPLOYMENT_DATE: item.HA_DEPLOYMENT_DATE,
+                HA_RETIREMENT_DATE: item.HA_RETIREMENT_DATE,
+                HA_IP_ADDRESS: item.HA_IP_ADDRESS,
+                HA_MAC_ADDRESS: item.HA_MAC_ADDRESS,
+                HA_CREATED_AT: item.HA_CREATED_AT
             })),
-            total: parseInt(total[0].total),
-            page: parseInt(page),
-            limit: parseInt(limit),
+            total,
+            page,
+            limit
         };
     },
     createHardware: async (body) => {
