@@ -34,6 +34,9 @@ export const hardwareService = {
 
         const hardware = await prisma.tbl_hardware.findMany({
             where: whereClauses,
+            orderBy: { 
+                [sortBy]: sortOrder 
+            },
             include: {
                 tbl_hardware_types: { select: { HT_NAME: true } },
                 tbl_locations: { select: { LOC_NAME: true } },
@@ -44,7 +47,6 @@ export const hardwareService = {
                 tbl_suppliers: { select: { SUPPLIER_NAME: true } },
                 tbl_currencies: { select: { CURRENCY_CODE: true } }
             },
-            orderBy: { [sortBy]: sortOrder }
         });
 
         const total = await prisma.tbl_hardware.count({
