@@ -5,6 +5,7 @@ import fastifyView from '@fastify/view';
 import ejs from 'ejs';
 import routes from './routes/index.js';
 import fastifyCors from '@fastify/cors';
+import fastifyStatic from '@fastify/static';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -24,6 +25,11 @@ fastify.register(fastifyView, {
 fastify.register(fastifyCors, {
   origin: '*',
   methods: ['GET', 'POST', 'PUT', 'DELETE'],
+});
+
+fastify.register(fastifyStatic, {
+  root: path.join(__dirname, '../public'),
+  prefix: '/public/',
 });
 
 fastify.register(routes);
