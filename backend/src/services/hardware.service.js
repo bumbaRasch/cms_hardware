@@ -1,6 +1,5 @@
-// backend/src/services/hardware.service.js
-
 import prisma from '../configs/database.js';
+import { formatDate } from '../utils/date.js';
 
 export const hardwareService = {
     getHardware: async ({ page = 1, limit = 10, sortBy = 'HA_CREATED_AT', sortOrder = 'asc', filter = {}, search = '' }) => {
@@ -61,12 +60,12 @@ export const hardwareService = {
                 HA_MANUFACTURER: item.HA_MANUFACTURER,
                 HA_MODEL: item.HA_MODEL,
                 HA_SERIAL_NUMBER: item.HA_SERIAL_NUMBER,
-                HA_PURCHASE_DATE: item.HA_PURCHASE_DATE,
-                HA_WARRANTY_EXPIRY_DATE: item.HA_WARRANTY_EXPIRY_DATE,
+                HA_PURCHASE_DATE: formatDate(item.HA_PURCHASE_DATE),
+                HA_WARRANTY_EXPIRY_DATE: formatDate(item.HA_WARRANTY_EXPIRY_DATE),
                 HA_LOCATION: item.tbl_locations.LOC_NAME,
                 HA_STATUS: item.tbl_statuses.ST_NAME,
                 HA_ASSIGNED_TO: item.tbl_users ? item.tbl_users.USER_NAME : null,
-                HA_LAST_MAINTENANCE_DATE: item.HA_LAST_MAINTENANCE_DATE,
+                HA_LAST_MAINTENANCE_DATE: formatDate(item.HA_LAST_MAINTENANCE_DATE),
                 HA_NOTES: item.HA_NOTES,
                 HA_SIM_CARD: item.tbl_sim_cards ? item.tbl_sim_cards.SIM_NUMBER : null,
                 HA_STORE: item.tbl_stores ? item.tbl_stores.STORE_NAME : null,
@@ -74,11 +73,11 @@ export const hardwareService = {
                 HA_COST: item.HA_COST,
                 HA_CURRENCY: item.tbl_currencies ? item.tbl_currencies.CURRENCY_CODE : null,
                 HA_CONDITION: item.HA_CONDITION,
-                HA_DEPLOYMENT_DATE: item.HA_DEPLOYMENT_DATE,
-                HA_RETIREMENT_DATE: item.HA_RETIREMENT_DATE,
+                HA_DEPLOYMENT_DATE: formatDate(item.HA_DEPLOYMENT_DATE),
+                HA_RETIREMENT_DATE: formatDate(item.HA_RETIREMENT_DATE),
                 HA_IP_ADDRESS: item.HA_IP_ADDRESS,
                 HA_MAC_ADDRESS: item.HA_MAC_ADDRESS,
-                HA_CREATED_AT: item.HA_CREATED_AT
+                HA_CREATED_AT: formatDate(item.HA_CREATED_AT)
             })),
             total: parseInt(total),
             page: parseInt(page),
@@ -130,12 +129,12 @@ export const hardwareService = {
             HA_MANUFACTURER: hardware.HA_MANUFACTURER,
             HA_MODEL: hardware.HA_MODEL,
             HA_SERIAL_NUMBER: hardware.HA_SERIAL_NUMBER,
-            HA_PURCHASE_DATE: hardware.HA_PURCHASE_DATE,
-            HA_WARRANTY_EXPIRY_DATE: hardware.HA_WARRANTY_EXPIRY_DATE,
+            HA_PURCHASE_DATE: formatDate(hardware.HA_PURCHASE_DATE),
+            HA_WARRANTY_EXPIRY_DATE: formatDate(hardware.HA_WARRANTY_EXPIRY_DATE),
             HA_LOCATION: hardware.tbl_locations.LOC_NAME,
             HA_STATUS: hardware.tbl_statuses.ST_NAME,
             HA_ASSIGNED_TO: hardware.tbl_users.USER_NAME,
-            HA_LAST_MAINTENANCE_DATE: hardware.HA_LAST_MAINTENANCE_DATE,
+            HA_LAST_MAINTENANCE_DATE: formatDate(hardware.HA_LAST_MAINTENANCE_DATE),
             HA_NOTES: hardware.HA_NOTES,
             HA_SIM_CARD: hardware.tbl_sim_cards.SIM_NUMBER,
             HA_STORE: hardware.tbl_stores.STORE_NAME,
@@ -143,11 +142,11 @@ export const hardwareService = {
             HA_COST: hardware.HA_COST,
             HA_CURRENCY: hardware.tbl_currencies.CURRENCY_CODE,
             HA_CONDITION: hardware.HA_CONDITION,
-            HA_DEPLOYMENT_DATE: hardware.HA_DEPLOYMENT_DATE,
-            HA_RETIREMENT_DATE: hardware.HA_RETIREMENT_DATE,
+            HA_DEPLOYMENT_DATE: formatDate(hardware.HA_DEPLOYMENT_DATE),
+            HA_RETIREMENT_DATE: formatDate(hardware.HA_RETIREMENT_DATE),
             HA_IP_ADDRESS: hardware.HA_IP_ADDRESS,
             HA_MAC_ADDRESS: hardware.HA_MAC_ADDRESS,
-            HA_CREATED_AT: hardware.HA_CREATED_AT
+            HA_CREATED_AT: formatDate(hardware.HA_CREATED_AT)
         };
     },
 
