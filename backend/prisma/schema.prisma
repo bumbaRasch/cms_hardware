@@ -32,6 +32,8 @@ model tbl_hardware {
   HA_IP_ADDRESS            String?            @db.VarChar(15)
   HA_MAC_ADDRESS           String?            @db.VarChar(17)
   HA_CREATED_AT            DateTime?          @default(now()) @db.Timestamp(0)
+  HA_UPDATED_AT            DateTime?          @default(now()) @db.Timestamp(0)
+  HA_DELETED_AT            DateTime?          @db.Timestamp(0)
   tbl_hardware_types       tbl_hardware_types @relation(fields: [HA_TYPE], references: [HT_ID], onUpdate: Restrict, map: "tbl_hardware_ibfk_1")
   tbl_locations            tbl_locations      @relation(fields: [HA_LOCATION], references: [LOC_ID], onUpdate: Restrict, map: "tbl_hardware_ibfk_2")
   tbl_statuses             tbl_statuses       @relation(fields: [HA_STATUS], references: [ST_ID], onUpdate: Restrict, map: "tbl_hardware_ibfk_3")
@@ -58,15 +60,17 @@ model tbl_hardware_types {
 }
 
 model tbl_locations {
-  LOC_ID       Int            @id @default(autoincrement())
-  LOC_NAME     String         @unique(map: "LOC_NAME") @db.VarChar(255)
-  tbl_hardware tbl_hardware[]
+  LOC_ID        Int             @id @default(autoincrement())
+  LOC_NAME      String          @unique(map: "LOC_NAME") @db.VarChar(255)
+  tbl_hardware  tbl_hardware[]
+  tbl_sim_cards tbl_sim_cards[]
 }
 
 model tbl_statuses {
-  ST_ID        Int            @id @default(autoincrement())
-  ST_NAME      String         @unique(map: "ST_NAME") @db.VarChar(50)
-  tbl_hardware tbl_hardware[]
+  ST_ID         Int             @id @default(autoincrement())
+  ST_NAME       String          @unique(map: "ST_NAME") @db.VarChar(50)
+  tbl_hardware  tbl_hardware[]
+  tbl_sim_cards tbl_sim_cards[]
 }
 
 /// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
@@ -91,16 +95,28 @@ model tbl_sim_cards {
   SIM_NUMBER      String         @unique(map: "SIM_NUMBER") @db.VarChar(20)
   PROVIDER_ID     Int
   TARIFF_ID       Int
-  PIN             String?        @db.VarChar(10)
-  PUK             String?        @db.VarChar(10)
+  LOC_ID          Int
+  STATUS_ID       Int
+  PIN1            String?        @db.VarChar(10)
+  PUK1            String?        @db.VarChar(10)
+  PIN2            String?        @db.VarChar(10)
+  PUK2            String?        @db.VarChar(10)
   ACTIVATION_DATE DateTime?      @db.Date
   EXPIRATION_DATE DateTime?      @db.Date
+  COMMENTS        String?        @db.Text
+  SIM_CREATED_AT  DateTime?      @default(now()) @db.Timestamp(0)
+  SIM_UPDATED_AT  DateTime?      @default(now()) @db.Timestamp(0)
+  SIM_DELETED_AT  DateTime?      @db.Timestamp(0)
   tbl_hardware    tbl_hardware[]
   tbl_providers   tbl_providers  @relation(fields: [PROVIDER_ID], references: [PROVIDER_ID], onUpdate: Restrict, map: "tbl_sim_cards_ibfk_1")
   tbl_tariffs     tbl_tariffs    @relation(fields: [TARIFF_ID], references: [TARIFF_ID], onUpdate: Restrict, map: "tbl_sim_cards_ibfk_2")
+  tbl_locations   tbl_locations  @relation(fields: [LOC_ID], references: [LOC_ID], onUpdate: Restrict, map: "tbl_sim_cards_ibfk_3")
+  tbl_statuses    tbl_statuses   @relation(fields: [STATUS_ID], references: [ST_ID], onUpdate: Restrict, map: "tbl_sim_cards_ibfk_4")
 
   @@index([PROVIDER_ID], map: "PROVIDER_ID")
   @@index([TARIFF_ID], map: "TARIFF_ID")
+  @@index([LOC_ID], map: "LOC_ID")
+  @@index([STATUS_ID], map: "STATUS_ID")
 }
 
 /// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
