@@ -76,6 +76,7 @@ CREATE TABLE tbl_tariffs (
     TARIFF_ID INT AUTO_INCREMENT PRIMARY KEY,
     TARIFF_NAME VARCHAR(255) NOT NULL COMMENT 'Name of the tariff',
     PROVIDER_ID INT NOT NULL COMMENT 'Provider ID, references tbl_providers',
+    PRICE DOUBLE COMMENT 'Price of the tariff',
     FOREIGN KEY (PROVIDER_ID) REFERENCES tbl_providers(PROVIDER_ID)
 ) COMMENT 'Table for storing tariffs';
 
@@ -92,31 +93,33 @@ CREATE TABLE tbl_sim_cards (
     SIM_NUMBER VARCHAR(20) NOT NULL UNIQUE COMMENT 'SIM card number',
     PROVIDER_ID INT NOT NULL COMMENT 'Provider ID, references tbl_providers',
     TARIFF_ID INT NOT NULL COMMENT 'Tariff ID, references tbl_tariffs',
-    PIN VARCHAR(10) COMMENT 'PIN code for the SIM card',
-    PUK VARCHAR(10) COMMENT 'PUK code for the SIM card',
+    LOC_ID INT NOT NULL COMMENT 'Location ID, references tbl_locations',
+    STATUS_ID INT NOT NULL COMMENT 'Status ID, references tbl_statuses',
+    PIN1 VARCHAR(10) COMMENT 'PIN1 code for the SIM card',
+    PUK1 VARCHAR(10) COMMENT 'PUK1 code for the SIM card',
+    PIN2 VARCHAR(10) COMMENT 'PIN2 code for the SIM card',
+    PUK2 VARCHAR(10) COMMENT 'PUK2 code for the SIM card',
     ACTIVATION_DATE DATE COMMENT 'Activation date of the SIM card',
     EXPIRATION_DATE DATE COMMENT 'Expiration date of the SIM card',
+    COMMENTS TEXT COMMENT 'Additional comments about the SIM card',
     FOREIGN KEY (PROVIDER_ID) REFERENCES tbl_providers(PROVIDER_ID),
-    FOREIGN KEY (TARIFF_ID) REFERENCES tbl_tariffs(TARIFF_ID)
+    FOREIGN KEY (TARIFF_ID) REFERENCES tbl_tariffs(TARIFF_ID),
+    FOREIGN KEY (LOC_ID) REFERENCES tbl_locations(LOC_ID),
+    FOREIGN KEY (STATUS_ID) REFERENCES tbl_statuses(ST_ID)
 ) COMMENT 'Table for storing SIM cards';
 
-INSERT INTO tbl_sim_cards (SIM_NUMBER, PROVIDER_ID, TARIFF_ID, PIN, PUK, ACTIVATION_DATE, EXPIRATION_DATE) VALUES
-('1234567890', 1, 1, '1234', '5678', '2022-01-01', '2023-01-01'),
-('0987654321', 2, 2, '4321', '1341', '2022-02-01', '2023-02-01'),
-('8381726362', 1, 1, '1421', '6474', '2022-01-01', '2023-01-01'),
-('0192837261', 2, 2, '6798', '8642', '2022-02-01', '2023-02-01'),
-('3847261928', 3, 3, '9071', '5678', '2022-03-01', '2023-03-01'),
-('9182736453', 1, 1, '4321', '4315', '2022-01-01', '2023-01-01'),
-('2736458192', 2, 2, '1421', '6471', '2022-02-01', '2023-02-01'),
-('6458192736', 3, 3, '6798', '8642', '2022-03-01', '2023-03-01'),
-('8192736458', 1, 1, '1234', '5678', '2022-01-01', '2023-01-01'),
-('1928374658', 2, 2, '4321', '4315', '2022-02-01', '2023-02-01'),
-('3746581928', 3, 3, '1421', '6472', '2022-03-01', '2023-03-01'),
-('5468192736', 1, 1, '6798', '8642', '2022-01-01', '2023-01-01'),
-('8192736428', 2, 2, '1643', '5678', '2022-02-01', '2023-02-01'),
-('2736457592', 3, 3, '4321', '4315', '2022-03-01', '2023-03-01'),
-('6458192126', 1, 1, '1421', '6473', '2022-01-01', '2023-01-01'),
-('8192737658', 2, 2, '6798', '8642', '2022-02-01', '2023-02-01');
+INSERT INTO tbl_sim_cards (SIM_NUMBER, PROVIDER_ID, TARIFF_ID, LOC_ID, STATUS_ID, PIN1, PUK1, PIN2, PUK2, ACTIVATION_DATE, EXPIRATION_DATE, COMMENTS) VALUES
+('1234567890', 1, 1, 1, 1, '1234', '5678', '4321', '8765', '2022-01-01', '2023-01-01', 'First SIM card'),
+('0987654321', 2, 2, 2, 2, '4321', '1341', '1234', '4315', '2022-02-01', '2023-02-01', 'Second SIM card'),
+('8381726362', 1, 1, 3, 3, '1421', '6474', '6798', '8642', '2022-01-01', '2023-01-01', 'Third SIM card'),
+('0192837261', 2, 2, 1, 4, '6798', '8642', '1421', '6471', '2022-02-01', '2023-02-01', 'Fourth SIM card'),
+('3847261928', 3, 3, 2, 5, '9071', '5678', '6798', '8642', '2022-03-01', '2023-03-01', 'Fifth SIM card'),
+('9182736453', 1, 1, 3, 6, '4321', '4315', '1234', '5678', '2022-01-01', '2023-01-01', 'Sixth SIM card'),
+('2736458192', 2, 2, 1, 7, '1421', '6471', '4321', '4315', '2022-02-01', '2023-02-01', 'Seventh SIM card'),
+('6458192736', 3, 3, 2, 8, '6798', '8642', '1421', '6472', '2022-03-01', '2023-03-01', 'Eighth SIM card'),
+('8192736458', 1, 1, 3, 9, '1234', '5678', '4321', '4315', '2022-01-01', '2023-01-01', 'Ninth SIM card'),
+('1928374658', 2, 2, 1, 1, '4321', '4315', '1421', '6472', '2022-02-01', '2023-02-01', 'Tenth SIM card'),
+('3746581928', 3, 3, 2, 2, '1421', '6472', '6798', '8642', '2022-03-01', '2023-03-01', 'Eleventh SIM card');
 
 CREATE TABLE tbl_stores (
     STORE_ID INT AUTO_INCREMENT PRIMARY KEY,
