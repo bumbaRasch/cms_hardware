@@ -36,6 +36,8 @@ export const hardwareService = {
             orderBy: { 
                 [sortBy]: sortOrder 
             },
+            skip: (parseInt(page) - 1) * parseInt(limit),
+            take: parseInt(limit),
             include: {
                 tbl_hardware_types: { select: { HT_NAME: true } },
                 tbl_locations: { select: { LOC_NAME: true } },

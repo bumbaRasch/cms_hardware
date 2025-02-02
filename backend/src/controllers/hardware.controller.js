@@ -3,14 +3,12 @@ import { hardwareService } from "../services/hardware.service.js";
 
 export const hardwareController = {
     getHardware: async (request, reply) => {
-        const { page, limit, sortBy, sortOrder, search, ...filter } = request.query;
-        const hardware = await hardwareService.getHardware({ page, limit, sortBy, sortOrder, filter, search });
-        return reply.view('hardware', { 
-            data: hardware.data,
+        const { offset, limit, sortBy, sortOrder, search, ...filter } = request.query;
+        const hardware = await hardwareService.getHardware({ offset, limit, sortBy, sortOrder, filter, search });
+        return reply.send({
             total: hardware.total,
-            page: hardware.page,
-            limit: hardware.limit,
-            currentPath: '/hardware'
+            totalNotFiltered: hardware.total,
+            rows: hardware.data
         });
     },
     createHardware: async (request, reply) => {

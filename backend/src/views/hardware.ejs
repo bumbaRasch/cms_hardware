@@ -23,6 +23,7 @@
             data-toolbar="#toolbar"
             data-search="true"
             data-show-toggle="true"
+            data-auto-refresh="true"
             data-show-fullscreen="true"
             data-show-columns="true"
             data-show-columns-toggle-all="true"
@@ -30,80 +31,43 @@
             data-show-pagination-switch="true"
             data-page-list="[10, 25, 50, all]"
             data-sortable="true"
-            data-show-columns="true"
-            data-show-columns-toggle-all="true"
             data-id-field="HA_ID"
             data-locale="en-US"
+            data-url="/api/hardware"
+            data-side-pagination="server"
             class="table table-bordered table-hover">
-        <thead class="table-primary">
-            <tr>
-                <th data-field="HA_ID" data-sortable="true">ID</th>
-                <th data-field="HA_NAME" data-sortable="true">Name</th>
-                <th data-field="HA_TYPE" data-sortable="true">Type</th>
-                <th data-field="HA_MANUFACTURER" data-sortable="true">Manufacturer</th>
-                <th data-field="HA_MODEL" data-sortable="true">Model</th>
-                <th data-field="HA_SERIAL_NUMBER" data-sortable="true">Serial Number</th>
-                <th data-field="HA_PURCHASE_DATE" data-sortable="true">Purchase Date</th>
-                <th data-field="HA_WARRANTY_EXPIRY_DATE" data-sortable="true">Warranty Expiry Date</th>
-                <th data-field="HA_LOCATION" data-sortable="true">Location</th>
-                <th data-field="HA_STATUS" data-sortable="true">Status</th>
-                <th data-field="HA_ASSIGNED_TO" data-sortable="true">Assigned To</th>
-                <th data-field="HA_LAST_MAINTENANCE_DATE" data-sortable="true">Last Maintenance Date</th>
-                <th data-field="HA_NOTES" data-sortable="true">Notes</th>
-                <th data-field="HA_SIM_CARD" data-sortable="true">SIM Card</th>
-                <th data-field="HA_STORE" data-sortable="true">Store</th>
-                <th data-field="HA_SUPPLIER" data-sortable="true">Supplier</th>
-                <th data-field="HA_COST" data-sortable="true">Cost</th>
-                <th data-field="HA_CURRENCY" data-sortable="true">Currency</th>
-                <th data-field="HA_CONDITION" data-sortable="true">Condition</th>
-                <th data-field="HA_DEPLOYMENT_DATE" data-sortable="true">Deployment Date</th>
-                <th data-field="HA_RETIREMENT_DATE" data-sortable="true">Retirement Date</th>
-                <th data-field="HA_IP_ADDRESS" data-sortable="true">IP Address</th>
-                <th data-field="HA_MAC_ADDRESS" data-sortable="true">MAC Address</th>
-                <th data-field="HA_CREATED_AT" data-sortable="true">Created At</th>
-                <th data-field="HA_ACTION" data-sortable="false">Action</th>
-            </tr>
-        </thead>
-        <tbody>
-            <% data.forEach(item => { %>
-            <tr>
-                <td><%= item.HA_ID %></td>
-                <td><%= item.HA_NAME %></td>
-                <td><%= item.HA_TYPE %></td>
-                <td><%= item.HA_MANUFACTURER %></td>
-                <td><%= item.HA_MODEL %></td>
-                <td><%= item.HA_SERIAL_NUMBER %></td>
-                <td><%= item.HA_PURCHASE_DATE %></td>
-                <td><%= item.HA_WARRANTY_EXPIRY_DATE %></td>
-                <td><%= item.HA_LOCATION %></td>
-                <td><%= item.HA_STATUS %></td>
-                <td><%= item.HA_ASSIGNED_TO %></td>
-                <td><%= item.HA_LAST_MAINTENANCE_DATE %></td>
-                <td><%= item.HA_NOTES %></td>
-                <td><%= item.HA_SIM_CARD %></td>
-                <td><%= item.HA_STORE %></td>
-                <td><%= item.HA_SUPPLIER %></td>
-                <td><%= item.HA_COST %></td>
-                <td><%= item.HA_CURRENCY %></td>
-                <td><%= item.HA_CONDITION %></td>
-                <td><%= item.HA_DEPLOYMENT_DATE %></td>
-                <td><%= item.HA_RETIREMENT_DATE %></td>
-                <td><%= item.HA_IP_ADDRESS %></td>
-                <td><%= item.HA_MAC_ADDRESS %></td>
-                <td><%= item.HA_CREATED_AT %></td>
-                <td>
-                    <a class="remove" data-id="<%= item.HA_ID %>" title="Remove">
-                        <i class="bi bi-trash"></i>
-                    </a>
-                </td>
-            </tr>
-            <% }) %>
-        </tbody>
+            <thead>
+                <tr>
+                    <th data-field="HA_ID" data-sortable="true">ID</th>
+                    <th data-field="HA_NAME" data-sortable="true">Item Name</th>
+                    <th data-field="HA_COST" data-sortable="true">Item Price</th>
+                    <th data-field="HA_MANUFACTURER" data-sortable="true">Manufacturer</th>
+                    <th data-field="HA_MODEL" data-sortable="true">Model</th>
+                    <th data-field="HA_SERIAL_NUMBER" data-sortable="true">Serial Number</th>
+                    <th data-field="HA_PURCHASE_DATE" data-sortable="true">Purchase Date</th>
+                    <th data-field="HA_WARRANTY_EXPIRY_DATE" data-sortable="true">Warranty Expiry Date</th>
+                    <th data-field="HA_LOCATION" data-sortable="true">Location</th>
+                    <th data-field="HA_STATUS" data-sortable="true">Status</th>
+                    <th data-field="HA_ASSIGNED_TO" data-sortable="true">Assigned To</th>
+                    <th data-field="HA_LAST_MAINTENANCE_DATE" data-sortable="true">Last Maintenance Date</th>
+                    <th data-field="HA_NOTES" data-sortable="true">Notes</th>
+                    <th data-field="HA_SIM_CARD" data-sortable="true">SIM Card</th>
+                    <th data-field="HA_STORE" data-sortable="true">Store</th>
+                    <th data-field="HA_SUPPLIER" data-sortable="true">Supplier</th>
+                    <th data-field="HA_CURRENCY" data-sortable="true">Currency</th>
+                    <th data-field="HA_CONDITION" data-sortable="true">Condition</th>
+                    <th data-field="HA_DEPLOYMENT_DATE" data-sortable="true">Deployment Date</th>
+                    <th data-field="HA_RETIREMENT_DATE" data-sortable="true">Retirement Date</th>
+                    <th data-field="HA_IP_ADDRESS" data-sortable="true">IP Address</th>
+                    <th data-field="HA_MAC_ADDRESS" data-sortable="true">MAC Address</th>
+                    <th data-field="HA_CREATED_AT" data-sortable="true">Created At</th>
+                </tr>
+            </thead>
         </table>
-    </div>
+        </div>
 
     <!-- Modal -->
-    <%- include('partials/modal') %>>
+    <%- include('partials/modal') %>
 
     
     <script src="https://cdn.jsdelivr.net/npm/jquery/dist/jquery.min.js"></script>
@@ -112,6 +76,7 @@
     <script src="https://cdn.jsdelivr.net/npm/tableexport.jquery.plugin@1.29.0/tableExport.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap-table@1.24.0/dist/bootstrap-table-locale-all.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap-table@1.24.0/dist/extensions/export/bootstrap-table-export.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap-table@1.24.0/dist/extensions/auto-refresh/bootstrap-table-auto-refresh.min.js"></script>
     <script src="/public/js/index.js" defer></script>
 </body>
 </html>
