@@ -3,4 +3,5 @@ import {simController} from '../controllers/sim.controller.js'
 
 export const simRouter = async (fastify, options) => {
     fastify.get('/sim-cards', simController.getSim);
+    fastify.delete('/sim-cards/:id', simController.deleteSim);
 }

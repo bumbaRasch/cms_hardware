@@ -70,6 +70,16 @@ export const simService = {
         return await prisma.tbl_sim_cards.create({ data });
     },
     deleteSim: async (id) => {
-        return await prisma.tbl_sim_cards.delete({ where: { SIM_ID: id } });
+        try {
+            const simcards = await prisma.tbl_sim_cards.delete({ 
+                where: { SIM_ID: parseInt(id) } 
+            });
+            return simcards;
+        }
+
+        catch (error) {
+            console.error(error);
+            return null;
+        }
     }
 };
