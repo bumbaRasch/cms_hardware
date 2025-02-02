@@ -32,6 +32,8 @@
             data-sortable="true"
             data-id-field="SIM_ID"
             data-locale="en-US"
+            data-url="/api/sim-cards"
+            data-side-pagination="server"
             class="table table-bordered table-hover">
         <thead class="table-primary">
             <tr>
@@ -54,33 +56,6 @@
                 <th data-field="ACTION" data-sortable="false">Action</th>
             </tr>
         </thead>
-        <tbody>
-            <% data.forEach(item => { %>
-            <tr>
-                <td><%= item.SIM_ID %></td>
-                <td><%= item.SIM_NUMBER %></td>
-                <td><%= item.PROVIDER_NAME %></td>
-                <td><%= item.TARIFF_NAME %></td>
-                <td><%= item.LOC_NAME %></td>
-                <td><%= item.ST_NAME %></td>
-                <td><%= item.PIN1 %></td>
-                <td><%= item.PUK1 %></td>
-                <td><%= item.PIN2 %></td>
-                <td><%= item.PUK2 %></td>
-                <td><%= item.ACTIVATION_DATE %></td>
-                <td><%= item.EXPIRATION_DATE %></td>
-                <td><%= item.COMMENTS %></td>
-                <td><%= item.SIM_CREATED_AT %></td>
-                <td><%= item.SIM_UPDATED_AT %></td>
-                <td><%= item.SIM_DELETED_AT %></td>
-                <td>
-                    <a class="remove" data-id="<%= item.SIM_ID %>" title="Remove">
-                        <i class="bi bi-trash"></i>
-                    </a>
-                </td>
-            </tr>
-            <% }) %>
-        </tbody>
         </table>
     </div>
 

@@ -26,7 +26,17 @@ export const simService = {
             orderBy: { 
                 [sortBy]: sortOrder 
             },
+            skip: (parseInt(page) - 1) * parseInt(limit),
+            take: parseInt(limit),
+            include: {
+                tbl_locations: { select: { LOC_NAME: true } },
+                tbl_statuses: { select: { ST_NAME: true } },
+                tbl_tariffs: { select: { TARIFF_NAME: true } },
+                tbl_providers: { select: { PROVIDER_NAME: true } }
+            },
         });
+
+        console.log(sims);
 
         const total = await prisma.tbl_sim_cards.count({
             where: whereClauses
@@ -36,10 +46,10 @@ export const simService = {
             data: sims.map(item => ({
                 SIM_ID: item.SIM_ID,
                 SIM_NUMBER: item.SIM_NUMBER,
-                PROVIDER_NAME: item.PROVIDER_NAME,
-                TARIFF_NAME: item.TARIFF_NAME,
-                LOC_NAME: item.LOC_NAME,
-                ST_NAME: item.ST_NAME,
+                PROVIDER_NAME: item.tbl_providers.PROVIDER_NAME,
+                TARIFF_NAME: item.tbl_tariffs.TARIFF_NAME,
+                LOC_NAME: item.tbl_locations.LOC_NAME,
+                ST_NAME: item.tbl_statuses.ST_NAME,
                 PIN1: item.PIN1,
                 PUK1: item.PUK1,
                 PIN2: item.PIN2,

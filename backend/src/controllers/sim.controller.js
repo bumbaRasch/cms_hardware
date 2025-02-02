@@ -2,15 +2,14 @@
 import { simService } from "../services/sim.service.js";
 
 export const simController = {
-    getSim: async (request, reply) => {
-        const { page, limit, sortBy, sortOrder, search, ...filter } = request.query;
-        const sim = await simService.getSims({ page, limit, sortBy, sortOrder, filter, search });
-        return reply.view('sim', { 
-            data: sim.data,
+    getSims: async (request, reply) => {
+        const { offset, limit, sortBy, sortOrder, search, ...filter } = request.query;
+        const sim = await simService.getSims({ offset, limit, sortBy, sortOrder, filter, search });
+        return reply.send({ 
             total: sim.total,
-            page: sim.page,
-            limit: sim.limit,
-            currentPath: '/sim-cards' });
+            totalNotFiltered: sim.total,
+            rows: sim.data,    
+        });
     },
     createSim: async (request, reply) => {
         const sim = await simService.createSim(request.body);
