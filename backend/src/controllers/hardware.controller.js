@@ -5,11 +5,12 @@ export const hardwareController = {
     getHardware: async (request, reply) => {
         const { page, limit, sortBy, sortOrder, search, ...filter } = request.query;
         const hardware = await hardwareService.getHardware({ page, limit, sortBy, sortOrder, filter, search });
-        return reply.view('hardware.ejs', { 
+        return reply.view('hardware', { 
             data: hardware.data,
             total: hardware.total,
             page: hardware.page,
             limit: hardware.limit,
+            currentPath: '/hardware'
         });
     },
     createHardware: async (request, reply) => {

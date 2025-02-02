@@ -6,15 +6,15 @@
                 <span class="nav_logo-name">CMS</span>
             </a>
             <div class="nav_list">
-                <a href="/" class="nav_link active">
+                <a href="/" class="nav_link <%= currentPath === '/' ? 'active' : '' %>">
                     <i class='bx bx-grid-alt nav_icon'></i>
                     <span class="nav_name">Dashboard</span>
                 </a>
-                <a href="/hardware" class="nav_link">
+                <a href="/hardware" class="nav_link <%= currentPath === '/hardware' ? 'active' : '' %>">
                     <i class='bx bi-motherboard-fill nav_icon'></i>
                     <span class="nav_name">Hardware</span>
                 </a>
-                <a href="#" class="nav_link">
+                <a href="/sim" class="nav_link <%= currentPath === '/sim' ? 'active' : '' %>">
                     <i class='bx bi-sim-fill nav_icon'></i>
                     <span class="nav_name">Sims</span>
                 </a>

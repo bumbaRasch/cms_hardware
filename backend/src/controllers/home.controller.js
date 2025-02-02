@@ -2,6 +2,6 @@
 
 export const homeController = {
     getHome: async (request, reply) => {
-        return reply.view('index.ejs');
+        return reply.view('index', { currentPath: '/' });
     }
 };

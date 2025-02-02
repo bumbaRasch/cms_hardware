@@ -5,7 +5,7 @@ export const simController = {
     getSim: async (request, reply) => {
         const { page, limit, sortBy, sortOrder, search, ...filter } = request.query;
         //const sim = await simService.getSim({ page, limit, sortBy, sortOrder, filter, search });
-        return reply.view('sim.ejs');
+        return reply.view('sim', { currentPath: '/sim' });
     },
     createSim: async (request, reply) => {
         const sim = await simService.createSim(request.body);
