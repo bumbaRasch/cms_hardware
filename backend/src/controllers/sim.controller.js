@@ -4,7 +4,7 @@ import { simService } from "../services/sim.service.js";
 export const simController = {
     getSim: async (request, reply) => {
         const { page, limit, sortBy, sortOrder, search, ...filter } = request.query;
-        const sim = await simService.getSim({ page, limit, sortBy, sortOrder, filter, search });
+        const sim = await simService.getSims({ page, limit, sortBy, sortOrder, filter, search });
         return reply.view('sim', { 
             data: sim.data,
             total: sim.total,
