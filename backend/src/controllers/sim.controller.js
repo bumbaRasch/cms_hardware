@@ -1,11 +1,16 @@
 // backend/src/controllers/sim.controller.js
-//import { simService } from "../services/sim.service.js";
+import { simService } from "../services/sim.service.js";
 
 export const simController = {
     getSim: async (request, reply) => {
         const { page, limit, sortBy, sortOrder, search, ...filter } = request.query;
-        //const sim = await simService.getSim({ page, limit, sortBy, sortOrder, filter, search });
-        return reply.view('sim', { currentPath: '/sim' });
+        const sim = await simService.getSim({ page, limit, sortBy, sortOrder, filter, search });
+        return reply.view('sim', { 
+            data: sim.data,
+            total: sim.total,
+            page: sim.page,
+            limit: sim.limit,
+            currentPath: '/sim' });
     },
     createSim: async (request, reply) => {
         const sim = await simService.createSim(request.body);
