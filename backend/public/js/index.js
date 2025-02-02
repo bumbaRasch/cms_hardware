@@ -33,6 +33,8 @@ window.onload = function() {
     let deleteEndpoint = null;
     const deleteModalElement = document.getElementById('deleteModal');
     const deleteModal = new bootstrap.Modal(deleteModalElement);
+    const deleteModalTitle = document.getElementById('deleteModalLabel');
+    const deleteModalBody = document.getElementById('deleteModalBody');
 
     document.getElementById('table').addEventListener('click', function(event) {
         if (event.target.closest('.remove')) {
@@ -41,6 +43,23 @@ window.onload = function() {
             const pathname = window.location.pathname.split('/')[1];
             deleteEndpoint = `${window.location.origin}/${pathname}/${deleteId}`;
             
+            let itemName = '';
+            if (pathname === 'sim-cards') {
+                const simNumber = element.closest('tr').querySelector('td:nth-child(2)').textContent;
+                itemName = `SIM card with number <b>${simNumber}</b>`;
+                deleteModalTitle.innerHTML = 'Delete SIM Card';
+            } else if (pathname === 'hardware') {
+                const hardwareName = element.closest('tr').querySelector('td:nth-child(2)').textContent;
+                const serialNumber = element.closest('tr').querySelector('td:nth-child(6)').textContent;
+                itemName = `<b>${hardwareName}</b> with serial number <b>${serialNumber}</b>`;
+                deleteModalTitle.innerHTML = 'Delete Hardware';
+            } else if (pathname === 'users') {
+                const username = element.closest('tr').querySelector('td:nth-child(2)').textContent;
+                itemName = `user <b>${username}</b>`;
+                deleteModalTitle.innerHTML = 'Delete User';
+            }
+            deleteModalBody.innerHTML = `Are you sure you want to delete the ${itemName}?`;
+
             deleteModal.show();
         }
     });
