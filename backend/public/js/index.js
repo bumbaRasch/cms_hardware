@@ -46,6 +46,7 @@ window.onload = function() {
         alertContainer.appendChild(alert);
         setTimeout(() => {
             alert.remove();
+            window.location.reload();
         }, 5000);
     };
 
@@ -86,8 +87,6 @@ window.onload = function() {
                     const row = document.querySelector(`.remove[data-id="${deleteId}"]`).closest('tr');
                     if (row) {
                         row.remove();
-                        const $table = $('#table');
-                        $table.bootstrapTable('load', $table.bootstrapTable('getData'));
                     }
                     showAlert(`${itemName} was successfully deleted!`, 'success');
                 } else {
