@@ -10,7 +10,7 @@ export const simController = {
             total: sim.total,
             page: sim.page,
             limit: sim.limit,
-            currentPath: '/sim' });
+            currentPath: '/sim-cards' });
     },
     createSim: async (request, reply) => {
         const sim = await simService.createSim(request.body);
