@@ -1,33 +1,32 @@
-<div class="sidebar" id="sidebar">
-    <div>
-        <div class="sidebar-header">
-            <img src="logo.jpg" alt="Logo">
-            <h2>CMS</h2>
+<div class="l-navbar" id="nav-bar">
+    <nav class="nav">
+        <div>
+            <a href="#" class="nav_logo">
+                <i class='bx bx-layer nav_logo-icon'></i>
+                <span class="nav_logo-name">CMS</span>
+            </a>
+            <div class="nav_list">
+                <a href="/" class="nav_link active">
+                    <i class='bx bx-grid-alt nav_icon'></i>
+                    <span class="nav_name">Dashboard</span>
+                </a>
+                <a href="/hardware" class="nav_link">
+                    <i class='bx bi-motherboard-fill nav_icon'></i>
+                    <span class="nav_name">Hardware</span>
+                </a>
+                <a href="#" class="nav_link">
+                    <i class='bx bi-sim-fill nav_icon'></i>
+                    <span class="nav_name">Sims</span>
+                </a>
+                <a href="#" class="nav_link">
+                    <i class='bx bx-user nav_icon'></i>
+                    <span class="nav_name">Users</span>
+                </a>
+            </div>
         </div>
-        <ul class="nav flex-column">
-            <li class="nav-item">
-                <a class="nav-link active" href="/"><i class="bi bi-house-door-fill"></i> <span>Home</span></a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="/hardware"><i class="bi bi-motherboard-fill"></i> <span>Hardware</span></a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="#"><i class="bi bi-sim-fill"></i> <span>Sims</span></a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="#"><i class="bi bi-people-fill"></i> <span>Users</span></a>
-            </li>
-        </ul>
-    </div>
-    <div class="profile dropup">
-        <a class="nav-link dropdown-toggle" href="#" id="profileDropdown" data-bs-toggle="dropdown" aria-expanded="false">
-            <img src="profile.jpg" alt="Profile Picture">
+        <a href="#" class="nav_link">
+            <i class='bx bx-log-out nav_icon'></i>
+            <span class="nav_name">SignOut</span>
         </a>
-        <ul class="dropdown-menu" aria-labelledby="profileDropdown">
-            <li><a class="dropdown-item" href="#">Profile</a></li>
-            <li><a class="dropdown-item" href="#">Settings</a></li>
-            <li><hr class="dropdown-divider"></li>
-            <li><a class="dropdown-item" href="#"><i class="bi bi-box-arrow-left"></i> Sign out</a></li>
-        </ul>
-    </div>
+    </nav>
 </div>
