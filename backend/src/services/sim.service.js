@@ -96,6 +96,15 @@ export const simService = {
 
     deleteSim: async (id) => {
         try {
+            await prisma.tbl_hardware.updateMany({
+                where: {
+                    HA_SIM_CARD: parseInt(id)
+                },
+                data: {
+                    HA_SIM_CARD: null
+                }
+            });
+
             const sim = await prisma.tbl_sim_cards.delete({
                 where: {
                     SIM_ID: parseInt(id)
