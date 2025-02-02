@@ -90,7 +90,7 @@ a {
 .nav_icon {
     font-size: 1.25rem;
 }
-.show {
+.show-sidebar {
     left: 0;
 }
 .body-pd {
@@ -130,10 +130,15 @@ a {
         left: 0;
         padding: 1rem 1rem 0 0;
     }
-    .show {
+    .show-sidebar {
         width: calc(var(--nav-width) + 156px);
     }
     .body-pd {
         padding-left: calc(var(--nav-width) + 188px);
     }
+}
+
+.modal-header{
+    display: flex;
+    justify-content: space-between;
 }
