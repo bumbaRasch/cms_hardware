@@ -31,10 +31,23 @@ document.addEventListener("DOMContentLoaded", function(event) {
 window.onload = function() {
     let deleteId = null;
     let deleteEndpoint = null;
+    let itemName = '';
     const deleteModalElement = document.getElementById('deleteModal');
     const deleteModal = new bootstrap.Modal(deleteModalElement);
     const deleteModalTitle = document.getElementById('deleteModalLabel');
     const deleteModalBody = document.getElementById('deleteModalBody');
+    const alertContainer = document.getElementById('alert-container');
+
+    const showAlert = (message, type) => {
+        const alert = document.createElement('div');
+        alert.className = `alert alert-${type}`;
+        alert.role = 'alert';
+        alert.innerHTML = message;
+        alertContainer.appendChild(alert);
+        setTimeout(() => {
+            alert.remove();
+        }, 5000);
+    };
 
     document.getElementById('table').addEventListener('click', function(event) {
         if (event.target.closest('.remove')) {
@@ -43,7 +56,6 @@ window.onload = function() {
             const pathname = window.location.pathname.split('/')[1];
             deleteEndpoint = `${window.location.origin}/${pathname}/${deleteId}`;
             
-            let itemName = '';
             if (pathname === 'sim-cards') {
                 const simNumber = element.closest('tr').querySelector('td:nth-child(2)').textContent;
                 itemName = `SIM card with number <b>${simNumber}</b>`;
@@ -77,14 +89,14 @@ window.onload = function() {
                         const $table = $('#table');
                         $table.bootstrapTable('load', $table.bootstrapTable('getData'));
                     }
-                    window.location.reload();
+                    showAlert(`${itemName} was successfully deleted!`, 'success');
                 } else {
-                    alert('Failed to delete the record.');
+                    showAlert(`Failed to delete the ${itemName}.`, 'danger');
                 }
             })
             .catch(error => {
                 console.error('Error:', error);
-                alert('An error occurred while deleting the record.');
+                showAlert(`An error occurred while deleting the ${itemName}.`, 'danger');
             });
         }
         deleteModal.hide();
