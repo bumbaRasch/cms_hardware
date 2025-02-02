@@ -4,14 +4,18 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <title>Hardware List</title>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-table@1.24.0/dist/bootstrap-table.min.css">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/boxicons@2.1.1/css/boxicons.min.css">
+    <link rel="stylesheet" href="/public/css/styles.css">
 </head>
 <body>
-    <div class="container">
-        <h1>Hardware List</h1>
+    <body id="body-pd">
+        <%- include('header') %>
+        <%- include('sidebar', { currentPath: currentPath }) %>
+        <div class="container">
+        <h4>Hardware List</h4>
         <table 
             data-show-export="true"
             id="table"
@@ -104,42 +108,11 @@
 
     
     <script src="https://cdn.jsdelivr.net/npm/jquery/dist/jquery.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap-table@1.24.0/dist/bootstrap-table.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/tableexport.jquery.plugin@1.29.0/tableExport.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap-table@1.24.0/dist/bootstrap-table-locale-all.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap-table@1.24.0/dist/extensions/export/bootstrap-table-export.min.js"></script>
-    <script>
-        window.onload = function() {
-            document.getElementById('table').addEventListener('click', function(event) {
-                if (event.target.closest('.remove')) {
-                    const element = event.target.closest('.remove');
-                    const id = element.getAttribute('data-id');
-                    if (confirm('Are you sure to remove this record?')) {
-                        fetch(`${window.location.origin}/hardware/${id}`, {
-                            method: 'DELETE'
-                        })
-                        .then(res => {
-                            if (res.ok) {
-                                const row = element.closest('tr');
-                                if (row) {
-                                    row.remove();
-                                    var $table = $('#table');
-                                    $table.bootstrapTable('load', $table.bootstrapTable('getData'))
-                                }
-                                window.location.reload();
-                            } else {
-                                alert('Failed to delete the record.');
-                            }
-                        })
-                        .catch(error => {
-                            console.error('Error:', error);
-                            alert('An error occurred while deleting the record.');
-                        });
-                    }
-                }
-            });
-        };
-    </script>
+    <script src="/public/js/index.js" defer></script>
 </body>
 </html>
