@@ -50,6 +50,20 @@ export const userService = {
             limit: parseInt(limit),
         };
     },
+
+    updateUser: async (id, data) => {
+        return await prisma.tbl_users.update({
+            where: { USER_ID: id },
+            data: {
+                FIRST_NAME: data.FIRST_NAME,
+                LAST_NAME: data.LAST_NAME,
+                USERNAME: data.USERNAME,
+                EMAIL: data.EMAIL,
+                PASSWORD: data.PASSWORD
+            }
+        });
+    },
+    
     deleteUser: async (id) => {
         return await prisma.tbl_users.delete({
             where: { USER_ID: id }

@@ -6,5 +6,6 @@ export const userRouter = async (fastify, options) => {
         return reply.view('users', { currentPath: '/users' });
     });
     fastify.get('/api/users', userController.getUsers);
+    fastify.put('/api/users/:id', userController.updateUser);
     fastify.delete('/api/users/:id', userController.deleteUser);
 }
