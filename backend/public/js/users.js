@@ -1,7 +1,56 @@
 window.operateEvents = window.operateEvents || {};
 
 window.operateEvents['click .edit'] = function (e, value, row, index) {
-    //edit
+    showModal({
+        title: 'Edit User',
+        body: generateEditForm(row),
+        actionText: 'Save',
+        actionClass: 'btn-primary',
+        onConfirm: async () => {
+            const formData = new FormData(document.getElementById('editForm'));
+            const updatedData = Object.fromEntries(formData.entries());
+
+            try {
+                const response = await fetch(`/api/users/${row.USER_ID}`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(updatedData)
+                });
+
+                if (response.ok) {
+                    $('#table').bootstrapTable('updateByUniqueId', {
+                        id: row.USER_ID,
+                        row: updatedData
+                    });
+                    $('#table').bootstrapTable('refresh');
+                    showAlert(`User <b>${row.USERNAME}</b> was successfully updated!`, 'success');
+                } else {
+                    showAlert(`Failed to update user ${row.USERNAME}`, 'danger');
+                }
+            } catch (error) {
+                console.error('Error updating user:', error);
+                showAlert('An error occurred while updating the user.', 'danger');
+            }
+        }
+    });
+};
+
+const generateEditForm = (row) => {
+    let formHtml = '<form id="editForm">';
+    for (const key in row) {
+        if (key !== 'USER_ID') {
+            formHtml += `
+                <div class="mb-3">
+                    <label for="${key}" class="form-label">${key.replace('_', ' ')}</label>
+                    <input type="text" class="form-control" id="${key}" name="${key}" value="${row[key]}">
+                </div>
+            `;
+        }
+    }
+    formHtml += '</form>';
+    return formHtml;
 };
 
 const showModal = ({ title, body, actionText, actionClass, onConfirm }) => {
