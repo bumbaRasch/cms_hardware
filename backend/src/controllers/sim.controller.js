@@ -3,8 +3,8 @@ import { simService } from "../services/sim.service.js";
 
 export const simController = {
     getSims: async (request, reply) => {
-        const { offset, limit, sortBy, sortOrder, search, ...filter } = request.query;
-        const sim = await simService.getSims({ offset, limit, sortBy, sortOrder, filter, search });
+        const { offset, limit, sort, order, search, ...filter } = request.query;
+        const sim = await simService.getSims({ offset, limit, sort, order, filter, search });
         return reply.send({ 
             total: sim.total,
             totalNotFiltered: sim.total,

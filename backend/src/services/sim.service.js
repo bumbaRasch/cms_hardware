@@ -2,7 +2,7 @@ import prisma from '../configs/database.js';
 import { formatDate } from '../utils/date.js';
 
 export const simService = {
-    getSims: async ({ page = 1, limit = 10, sortBy = 'SIM_CREATED_AT', sortOrder = 'asc', filter = {}, search = '' }) => {
+    getSims: async ({ page = 1, limit = 10, sort = 'SIM_CREATED_AT', order = 'desc', filter = {}, search = '' }) => {
         const whereClauses = {};
         for (const [key, value] of Object.entries(filter)) {
             if (value) {
@@ -24,7 +24,7 @@ export const simService = {
         const sims = await prisma.tbl_sim_cards.findMany({
             where: whereClauses,
             orderBy: { 
-                [sortBy]: sortOrder 
+                [sort]: order 
             },
             skip: (parseInt(page) - 1) * parseInt(limit),
             take: parseInt(limit),
