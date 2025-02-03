@@ -23,7 +23,6 @@ export const hardwareService = {
                 { tbl_hardware_types: { HT_NAME: { contains: search } } },
                 { tbl_locations: { LOC_NAME: { contains: search } } },
                 { tbl_statuses: { ST_NAME: { contains: search } } },
-                { tbl_users: { USER_NAME: { contains: search } } },
                 { tbl_sim_cards: { SIM_NUMBER: { contains: search } } },
                 { tbl_stores: { STORE_NAME: { contains: search } } },
                 { tbl_suppliers: { SUPPLIER_NAME: { contains: search } } },
@@ -40,9 +39,6 @@ export const hardwareService = {
         } 
         else if (sort === 'ST_NAME') {
             orderBy.push({ tbl_statuses: { ST_NAME: order } });
-        } 
-        else if (sort === 'USER_NAME') {
-            orderBy.push({ tbl_users: { USER_NAME: order } });
         } 
         else if (sort === 'SIM_NUMBER') {
             orderBy.push({ tbl_sim_cards: { SIM_NUMBER: order } });
@@ -69,7 +65,6 @@ export const hardwareService = {
                 tbl_hardware_types: { select: { HT_NAME: true } },
                 tbl_locations: { select: { LOC_NAME: true } },
                 tbl_statuses: { select: { ST_NAME: true } },
-                tbl_users: { select: { USER_NAME: true } },
                 tbl_sim_cards: { select: { SIM_NUMBER: true } },
                 tbl_stores: { select: { STORE_NAME: true } },
                 tbl_suppliers: { select: { SUPPLIER_NAME: true } },
@@ -93,7 +88,6 @@ export const hardwareService = {
                 HA_WARRANTY_EXPIRY_DATE: formatDate(item.HA_WARRANTY_EXPIRY_DATE),
                 HA_LOCATION: item.tbl_locations.LOC_NAME,
                 HA_STATUS: item.tbl_statuses.ST_NAME,
-                HA_ASSIGNED_TO: item.tbl_users ? item.tbl_users.USER_NAME : null,
                 HA_LAST_MAINTENANCE_DATE: formatDate(item.HA_LAST_MAINTENANCE_DATE),
                 HA_NOTES: item.HA_NOTES,
                 HA_SIM_CARD: item.tbl_sim_cards ? item.tbl_sim_cards.SIM_NUMBER : null,
