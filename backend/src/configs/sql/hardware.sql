@@ -1,4 +1,8 @@
-CREATE TABLE tbl_hardware_types (
+CREATE DATABASE IF NOT EXISTS cms_hardware;
+
+USE cms_hardware;
+
+CREATE TABLE IF NOT EXISTS tbl_hardware_types (
     HT_ID INT AUTO_INCREMENT PRIMARY KEY,
     HT_NAME VARCHAR(255) NOT NULL COMMENT 'Name of the hardware type'
 ) COMMENT 'Table for storing hardware types';
@@ -15,7 +19,7 @@ INSERT INTO tbl_hardware_types (HT_NAME) VALUES
 ('Peripheral Device'),
 ('Other');
 
-CREATE TABLE tbl_locations (
+CREATE TABLE IF NOT EXISTS tbl_locations (
     LOC_ID INT AUTO_INCREMENT PRIMARY KEY,
     LOC_NAME VARCHAR(255) NOT NULL UNIQUE COMMENT 'Name of the location'
 ) COMMENT 'Table for storing locations';
@@ -30,7 +34,7 @@ INSERT INTO tbl_locations (LOC_NAME) VALUES
 ('Remote Site C'),
 ('Remote Site D');
 
-CREATE TABLE tbl_statuses (
+CREATE TABLE IF NOT EXISTS tbl_statuses (
     ST_ID INT AUTO_INCREMENT PRIMARY KEY,
     ST_NAME VARCHAR(50) NOT NULL UNIQUE COMMENT 'Name of the status'
 ) COMMENT 'Table for storing statuses';
@@ -46,7 +50,7 @@ INSERT INTO tbl_statuses (ST_NAME) VALUES
 ('Damaged'),
 ('Other');
 
-CREATE TABLE tbl_users (
+CREATE TABLE IF NOT EXISTS tbl_users (
     USER_ID CHAR(36) PRIMARY KEY,
     FIRST_NAME VARCHAR(255) COMMENT 'First name of the user',
     LAST_NAME VARCHAR(255) COMMENT 'Last name of the user',
@@ -58,7 +62,7 @@ CREATE TABLE tbl_users (
     DELETED_AT TIMESTAMP COMMENT 'Timestamp when the user was deleted'
 ) COMMENT 'Table for storing users or departments';
 
-INSERT INTO tbl_users (USER_ID, USER_NAME) VALUES
+INSERT INTO tbl_users (USER_ID, FIRST_NAME, LAST_NAME, USERNAME, EMAIL, PASSWORD) VALUES
 (UUID(), 'John', 'Doe', 'john.doe', 'john@gmail.com', 'password'),
 (UUID(), 'Jane', 'Smith', 'jane.smith', 'jane@gmail.com','test123'),
 (UUID(), 'IT Department', '', 'it.department', 'te@gmail.com', 'password'),
@@ -67,7 +71,7 @@ INSERT INTO tbl_users (USER_ID, USER_NAME) VALUES
 (UUID(), 'Sales Department', '', 'sales.department', 'sales@gmail.com', 'password'),
 (UUID(), 'Marketing Department', '', 'marketing.department', 'marketing@gmail.com', 'password');
 
-CREATE TABLE tbl_roles (
+CREATE TABLE IF NOT EXISTS tbl_roles (
     ROLE_ID INT AUTO_INCREMENT PRIMARY KEY,
     ROLE_NAME VARCHAR(255) NOT NULL UNIQUE COMMENT 'Name of the role',
     CREATED_AT TIMESTAMP DEFAULT CURRENT_TIMESTAMP COMMENT 'Timestamp when the role was created',
@@ -86,7 +90,7 @@ INSERT INTO tbl_roles (ROLE_NAME) VALUES
 ('Developer'),
 ('Designer');
 
-CREATE TABLE tbl_user_roles (
+CREATE TABLE IF NOT EXISTS tbl_user_roles (
     USER_ID CHAR(36),
     ROLE_ID INT,
     PRIMARY KEY (USER_ID, ROLE_ID),
@@ -94,7 +98,7 @@ CREATE TABLE tbl_user_roles (
     FOREIGN KEY (ROLE_ID) REFERENCES tbl_roles(ROLE_ID)
 ) COMMENT 'Table for storing user-role relationships';
 
-CREATE TABLE tbl_companies (
+CREATE TABLE IF NOT EXISTS tbl_companies (
     COMPANY_ID CHAR(36) PRIMARY KEY,
     COMPANY_NAME VARCHAR(255) NOT NULL UNIQUE COMMENT 'Name of the company',
     COMPANY_EMAIL VARCHAR(255) NOT NULL UNIQUE COMMENT 'Email of the company',
@@ -116,8 +120,7 @@ INSERT INTO tbl_companies (COMPANY_ID, COMPANY_NAME, COMPANY_EMAIL, COMPANY_PHON
 (UUID(), 'Epsilon Tech', 'info@epsilontech.com', '901-234-5678', 'www.epsilontech.com'),
 (UUID(), 'Zeta Systems', 'contact@zetasystems.com', '012-345-6789', 'www.zetasystems.com');
 
-
-CREATE TABLE tbl_user_companies (
+CREATE TABLE IF NOT EXISTS tbl_user_companies (
     USER_ID CHAR(36),
     COMPANY_ID CHAR(36),
     PRIMARY KEY (USER_ID, COMPANY_ID),
@@ -125,7 +128,7 @@ CREATE TABLE tbl_user_companies (
     FOREIGN KEY (COMPANY_ID) REFERENCES tbl_companies(COMPANY_ID)
 ) COMMENT 'Table for storing user-company relationships';
 
-CREATE TABLE tbl_providers (
+CREATE TABLE IF NOT EXISTS tbl_providers (
     PROVIDER_ID INT AUTO_INCREMENT PRIMARY KEY,
     PROVIDER_NAME VARCHAR(255) NOT NULL COMMENT 'Name of the provider'
 ) COMMENT 'Table for storing providers';
@@ -137,7 +140,7 @@ INSERT INTO tbl_providers (PROVIDER_NAME) VALUES
 ('Provider D'),
 ('Provider E');
 
-CREATE TABLE tbl_tariffs (
+CREATE TABLE IF NOT EXISTS tbl_tariffs (
     TARIFF_ID INT AUTO_INCREMENT PRIMARY KEY,
     TARIFF_NAME VARCHAR(255) NOT NULL COMMENT 'Name of the tariff',
     PROVIDER_ID INT NOT NULL COMMENT 'Provider ID, references tbl_providers',
@@ -153,7 +156,7 @@ INSERT INTO tbl_tariffs (TARIFF_NAME, PROVIDER_ID) VALUES
 ('Tariff 5', 2),
 ('Tariff 6', 3);
 
-CREATE TABLE tbl_sim_cards (
+CREATE TABLE IF NOT EXISTS tbl_sim_cards (
     SIM_ID INT AUTO_INCREMENT PRIMARY KEY,
     SIM_NUMBER VARCHAR(20) NOT NULL UNIQUE COMMENT 'SIM card number',
     PROVIDER_ID INT NOT NULL COMMENT 'Provider ID, references tbl_providers',
@@ -189,7 +192,7 @@ INSERT INTO tbl_sim_cards (SIM_NUMBER, PROVIDER_ID, TARIFF_ID, LOC_ID, STATUS_ID
 ('1928374658', 2, 2, 1, 1, '4321', '4315', '1421', '6472', '2022-02-01', '2023-02-01', 'Tenth SIM card'),
 ('3746581928', 3, 3, 2, 2, '1421', '6472', '6798', '8642', '2022-03-01', '2023-03-01', 'Eleventh SIM card');
 
-CREATE TABLE tbl_stores (
+CREATE TABLE IF NOT EXISTS tbl_stores (
     STORE_ID INT AUTO_INCREMENT PRIMARY KEY,
     STORE_NAME VARCHAR(255) NOT NULL COMMENT 'Name of the store',
     STORE_LOCATION VARCHAR(255) COMMENT 'Location of the store'
@@ -207,7 +210,7 @@ INSERT INTO tbl_stores (STORE_NAME, STORE_LOCATION) VALUES
 ('Store I', 'Location I'),
 ('Store J', 'Location J');
 
-CREATE TABLE tbl_suppliers (
+CREATE TABLE IF NOT EXISTS tbl_suppliers (
     SUPPLIER_ID INT AUTO_INCREMENT PRIMARY KEY,
     SUPPLIER_NAME VARCHAR(255) NOT NULL COMMENT 'Name of the supplier',
     SUPPLIER_CONTACT VARCHAR(255) COMMENT 'Contact information of the supplier'
@@ -225,7 +228,7 @@ INSERT INTO tbl_suppliers (SUPPLIER_NAME, SUPPLIER_CONTACT) VALUES
 ('Supplier I', 'Contact I'),
 ('Supplier J', 'Contact J');
 
-CREATE TABLE tbl_currencies (
+CREATE TABLE IF NOT EXISTS tbl_currencies (
     CURRENCY_ID INT AUTO_INCREMENT PRIMARY KEY,
     CURRENCY_CODE VARCHAR(10) NOT NULL UNIQUE COMMENT 'Currency code (e.g., USD, EUR)',
     CURRENCY_NAME VARCHAR(50) NOT NULL COMMENT 'Currency name (e.g., US Dollar, Euro)'
@@ -243,7 +246,7 @@ INSERT INTO tbl_currencies (CURRENCY_CODE, CURRENCY_NAME) VALUES
 ('SEK', 'Swedish Krona'),
 ('NZD', 'New Zealand Dollar');
 
-CREATE TABLE tbl_hardware (
+CREATE TABLE IF NOT EXISTS tbl_hardware (
     HA_ID INT AUTO_INCREMENT PRIMARY KEY,
     HA_NAME VARCHAR(255) NOT NULL COMMENT 'Name of the hardware',
     HA_TYPE INT NOT NULL COMMENT 'Type of the hardware, references tbl_hardware_types',
