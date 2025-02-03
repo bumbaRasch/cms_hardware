@@ -37,17 +37,40 @@ window.operateEvents['click .edit'] = function (e, value, row, index) {
 const generateEditForm = (row) => {
     let formHtml = '<form id="editForm">';
     for (const key in row) {
-        if (key !== 'USER_ID') {
+        if (key !== 'USER_ID' && key !== 'UPDATED_AT' && key !== 'CREATED_AT' && key !== 'DELETED_AT') {
             formHtml += `
                 <div class="mb-3">
                     <label for="${key}" class="form-label">${key.replace('_', ' ')}</label>
-                    <input type="text" class="form-control" id="${key}" name="${key}" value="${row[key]}">
+                    <div class="input-group">
+                        <input type="text" class="form-control" id="${key}" name="${key}" value="${row[key]}">
+                        ${key === 'PASSWORD' ? '<a class="input-group-text" href="#" onclick="generateRandomPassword()"><i class="bi bi-dice-5"></i></a>' : ''}
+                    </div>
                 </div>
             `;
         }
     }
     formHtml += '</form>';
     return formHtml;
+};
+
+const generateRandomPassword = () => {
+    const passwordField = document.getElementById('PASSWORD');
+    const length = 12;
+    const charset = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*()_+~`|}{[]:;?><,./-=";
+    let password = "";
+
+    password += "abcdefghijklmnopqrstuvwxyz".charAt(Math.floor(Math.random() * 26));
+    password += "ABCDEFGHIJKLMNOPQRSTUVWXYZ".charAt(Math.floor(Math.random() * 26));
+    password += "0123456789".charAt(Math.floor(Math.random() * 10));
+    password += "!@#$%^&*()_+~`|}{[]:;?><,./-=".charAt(Math.floor(Math.random() * 32));
+
+    for (let i = 4; i < length; i++) {
+        password += charset.charAt(Math.floor(Math.random() * charset.length));
+    }
+
+    password = password.split('').sort(() => 0.5 - Math.random()).join('');
+
+    passwordField.value = password;
 };
 
 const showModal = ({ title, body, actionText, actionClass, onConfirm }) => {
@@ -129,5 +152,5 @@ function operateFormatter(value, row, index) {
     return [
         '<button class="btn btn-sm btn-warning edit" title="Edit"><i class="bi bi-pencil"></i></button>',
         '<button class="btn btn-sm btn-danger delete" title="Delete"><i class="bi bi-trash"></i></button>'
-    ].join(' ');
+    ].join('');
 }
