@@ -2,7 +2,7 @@ import prisma from '../configs/database.js';
 import { formatDate } from '../utils/date.js';
 
 export const hardwareService = {
-    getHardware: async ({ page = 1, limit = 10, sort = 'HA_CREATED_AT', order = 'desc', filter = {}, search = '' }) => {
+    getHardware: async ({ offset = 0, limit = 10, sort = 'HA_CREATED_AT', order = 'desc', filter = {}, search = '' }) => {
         const whereClauses = {};
         for (const [key, value] of Object.entries(filter)) {
             if (value) {
@@ -59,7 +59,7 @@ export const hardwareService = {
         const hardware = await prisma.tbl_hardware.findMany({
             where: whereClauses,
             orderBy,
-            skip: (parseInt(page) - 1) * parseInt(limit),
+            skip: parseInt(offset),
             take: parseInt(limit),
             include: {
                 tbl_hardware_types: { select: { HT_NAME: true } },
@@ -103,7 +103,7 @@ export const hardwareService = {
                 HA_CREATED_AT: formatDate(item.HA_CREATED_AT)
             })),
             total: parseInt(total),
-            page: parseInt(page),
+            offset: parseInt(offset),
             limit: parseInt(limit),
         };
     },
