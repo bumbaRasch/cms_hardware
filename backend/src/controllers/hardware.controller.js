@@ -3,8 +3,8 @@ import { hardwareService } from "../services/hardware.service.js";
 
 export const hardwareController = {
     getHardware: async (request, reply) => {
-        const { offset, limit, sortBy, sortOrder, search, ...filter } = request.query;
-        const hardware = await hardwareService.getHardware({ offset, limit, sortBy, sortOrder, filter, search });
+        const { offset, limit, sort, order, search, ...filter } = request.query;
+        const hardware = await hardwareService.getHardware({ offset, limit, sort, order, filter, search });
         return reply.send({
             total: hardware.total,
             totalNotFiltered: hardware.total,
