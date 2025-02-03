@@ -18,6 +18,7 @@
   },
   "homepage": "https://github.com/bumbaRasch/cms_hardware#readme",
   "devDependencies": {
+    "@faker-js/faker": "^9.4.0",
     "nodemon": "^3.1.9",
     "prisma": "^6.3.0"
   },
