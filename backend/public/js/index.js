@@ -1,31 +1,24 @@
-document.addEventListener("DOMContentLoaded", function(event) {
+document.addEventListener("DOMContentLoaded", () => {
     const showNavbar = (toggleId, navId, bodyId, headerId) => {
-        const toggle = document.getElementById(toggleId),
-            nav = document.getElementById(navId),
-            bodypd = document.getElementById(bodyId),
-            headerpd = document.getElementById(headerId);
+        const elements = [toggleId, navId, bodyId, headerId].map(id => document.getElementById(id));
+        if (elements.some(el => !el)) return;
 
-        if (toggle && nav && bodypd && headerpd) {
+        const [toggle, nav, bodypd, headerpd] = elements;
             toggle.addEventListener('click', () => {
                 nav.classList.toggle('show-sidebar');
                 toggle.classList.toggle('bx-x');
                 bodypd.classList.toggle('body-pd');
                 headerpd.classList.toggle('body-pd');
             });
-        }
     };
 
     showNavbar('header-toggle', 'nav-bar', 'body-pd', 'header');
-
-    const linkColor = document.querySelectorAll('.nav_link');
-
-    function colorLink() {
-        if (linkColor) {
-            linkColor.forEach(l => l.classList.remove('active'));
-            this.classList.add('active');
+    document.querySelector('.nav_list')?.addEventListener('click', event => {
+        if (event.target.classList.contains('nav_link')) {
+            document.querySelectorAll('.nav_link').forEach(link => link.classList.remove('active'));
+            event.target.classList.add('active');
         }
-    }
-    linkColor.forEach(l => l.addEventListener('click', colorLink));
+    });
 });
 
 window.onload = function() {
