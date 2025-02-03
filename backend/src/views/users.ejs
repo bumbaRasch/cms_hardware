@@ -48,6 +48,7 @@
                 <th data-field="CREATED_AT" data-sortable="true">Created At</th>
                 <th data-field="UPDATED_AT" data-sortable="true">Updated At</th>
                 <th data-field="DELETED_AT" data-sortable="true">Deleted At</th>
+                <th data-field="operate" data-formatter="operateFormatter" data-events="operateEvents">Actions</th>
             </tr>
         </thead>
         </table>
@@ -62,7 +63,7 @@
     <script src="https://cdn.jsdelivr.net/npm/tableexport.jquery.plugin@1.29.0/tableExport.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap-table@1.24.0/dist/bootstrap-table-locale-all.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap-table@1.24.0/dist/extensions/export/bootstrap-table-export.min.js"></script>
-    <script scr="/public/js/index.js"></script>
+    <script src="/public/js/sidebar.js" defer></script>
     <script src="/public/js/users.js" defer></script>
 </body>
 </html>
