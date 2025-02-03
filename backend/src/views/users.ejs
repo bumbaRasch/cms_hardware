@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Users</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-table@1.24.0/dist/bootstrap-table.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/boxicons@2.1.1/css/boxicons.min.css">
+    <link rel="stylesheet" href="/public/css/styles.css">
+</head>
+<body id="body-pd">
+    <div id="alert-container"></div>
+    <%- include('header') %>
+    <%- include('sidebar', { currentPath: currentPath }) %>
+    <div class="container">
+        <h4>Users</h4>
+        <table 
+            data-show-export="true"
+            id="table"
+            data-toggle="table"
+            data-toolbar="#toolbar"
+            data-search="true"
+            data-show-toggle="true"
+            data-show-fullscreen="true"
+            data-show-columns="true"
+            data-show-columns-toggle-all="true"
+            data-pagination="true"
+            data-click-to-select="true"
+            data-show-footer="true"
+            data-show-pagination-switch="true"
+            data-page-list="[10, 25, 50, all]"
+            data-sortable="true"
+            data-id-field="SIM_ID"
+            data-locale="en-US"
+            data-url="/api/users"
+            data-side-pagination="server"
+            class="table table-bordered table-hover">
+        <thead class="table-primary">
+            <tr>
+                <th data-field="USER_ID" data-sortable="true">UUID</th>
+                <th data-field="FIRST_NAME" data-sortable="true">First Name</th>
+                <th data-field="LAST_NAME" data-sortable="true">Last Name</th>
+                <th data-field="USERNAME" data-sortable="true">Username</th>
+                <th data-field="EMAIL" data-sortable="true">Email</th>
+                <th data-field="PASSWORD" data-sortable="true">Password</th>
+                <th data-field="CREATED_AT" data-sortable="true">Created At</th>
+                <th data-field="UPDATED_AT" data-sortable="true">Updated At</th>
+                <th data-field="DELETED_AT" data-sortable="true">Deleted At</th>
+            </tr>
+        </thead>
+        </table>
+    </div>
+
+    <!-- Modal -->
+    <%- include('partials/modal') %>
+
+    <script src="https://cdn.jsdelivr.net/npm/jquery/dist/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap-table@1.24.0/dist/bootstrap-table.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/tableexport.jquery.plugin@1.29.0/tableExport.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap-table@1.24.0/dist/bootstrap-table-locale-all.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap-table@1.24.0/dist/extensions/export/bootstrap-table-export.min.js"></script>
+    <script scr="/public/js/index.js"></script>
+    <script src="/public/js/users.js" defer></script>
+</body>
+</html>
