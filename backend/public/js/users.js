@@ -4,8 +4,8 @@ window.operateEvents['click .edit'] = function (e, value, row, index) {
     showModal({
         title: 'Edit User',
         body: generateEditForm(row),
-        actionText: 'Save',
-        actionClass: 'btn-primary',
+        actionText: 'Update',
+        actionClass: 'btn-success',
         onConfirm: async () => {
             const formData = new FormData(document.getElementById('editForm'));
             const updatedData = Object.fromEntries(formData.entries());
@@ -20,18 +20,15 @@ window.operateEvents['click .edit'] = function (e, value, row, index) {
                 });
 
                 if (response.ok) {
-                    $('#table').bootstrapTable('updateByUniqueId', {
-                        id: row.USER_ID,
-                        row: updatedData
-                    });
-                    $('#table').bootstrapTable('refresh');
+                    updateTableRow(row.USER_ID, updatedData);
                     showAlert(`User <b>${row.USERNAME}</b> was successfully updated!`, 'success');
                 } else {
-                    showAlert(`Failed to update user ${row.USERNAME}`, 'danger');
+                    const errorText = await response.text();
+                    showAlert(`Failed to update user ${row.USERNAME}: ${errorText}`, 'danger');
                 }
             } catch (error) {
                 console.error('Error updating user:', error);
-                showAlert('An error occurred while updating the user.', 'danger');
+                showAlert(`An error occurred while updating the user: ${error.message}`, 'danger');
             }
         }
     });
@@ -88,6 +85,14 @@ const showAlert = (message, type) => {
     setTimeout(() => alert.remove(), 5000);
 };
 
+const updateTableRow = (id, updatedData) => {
+    $('#table').bootstrapTable('updateByUniqueId', {
+        id: id,
+        row: updatedData
+    });
+    $('#table').bootstrapTable('refresh');
+};
+
 window.operateEvents['click .delete'] = function (e, value, row, index) {
     const itemName = row.USERNAME;
 
@@ -109,11 +114,12 @@ window.operateEvents['click .delete'] = function (e, value, row, index) {
                     });
                     showAlert(`${itemName} was successfully deleted!`, 'success');
                 } else {
-                    showAlert('Failed to delete user.', 'danger');
+                    const errorText = await response.text();
+                    showAlert(`Failed to delete user: ${errorText}`, 'danger');
                 }
             } catch (error) {
                 console.error('Error deleting user:', error);
-                showAlert('An error occurred while deleting the user.', 'danger');
+                showAlert(`An error occurred while deleting the user: ${error.message}`, 'danger');
             }
         }
     });
