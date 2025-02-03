@@ -1,8 +1,9 @@
+//backend/src/services/sim.service.js
 import prisma from '../configs/database.js';
 import { formatDate } from '../utils/date.js';
 
 export const simService = {
-    getSims: async ({ page = 1, limit = 10, sort = 'SIM_CREATED_AT', order = 'desc', filter = {}, search = '' }) => {
+    getSims: async ({ offset = 0, limit = 10, sort = 'SIM_CREATED_AT', order = 'desc', filter = {}, search = '' }) => {
         const whereClauses = {};
         for (const [key, value] of Object.entries(filter)) {
             if (value) {
@@ -37,7 +38,7 @@ export const simService = {
         const sims = await prisma.tbl_sim_cards.findMany({
             where: whereClauses,
             orderBy,
-            skip: (parseInt(page) - 1) * parseInt(limit),
+            skip: parseInt(offset),
             take: parseInt(limit),
             include: {
                 tbl_locations: { select: { LOC_NAME: true } },
@@ -71,7 +72,7 @@ export const simService = {
                 SIM_DELETED_AT: formatDate(item.SIM_DELETED_AT)
             })),
             total: parseInt(total),
-            page: parseInt(page),
+            offset: parseInt(offset),
             limit: parseInt(limit),
         };
     },
