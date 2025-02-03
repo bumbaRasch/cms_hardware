@@ -7,8 +7,8 @@ export const hardwareRouter = async (fastify, options) => {
         return reply.view('hardware', { currentPath: '/hardware' });
     });
     fastify.get('/api/hardware', hardwareController.getHardware);
-    fastify.post('/hardware', hardwareController.createHardware);
-    fastify.delete('/hardware/:id', hardwareController.deleteHardware);
+    fastify.post('/api/hardware', hardwareController.createHardware);
+    fastify.delete('/api/hardware/:id', hardwareController.deleteHardware);
 };
 
 

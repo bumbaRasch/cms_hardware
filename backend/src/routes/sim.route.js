@@ -6,5 +6,5 @@ export const simRouter = async (fastify, options) => {
         return reply.view('sim', { currentPath: '/sim-cards' });
     });
     fastify.get('/api/sim-cards', simController.getSims);
-    fastify.delete('/sim-cards/:id', simController.deleteSim);
+    fastify.delete('/api/sim-cards/:id', simController.deleteSim);
 }
