@@ -36,8 +36,6 @@ export const simService = {
             },
         });
 
-        console.log(sims);
-
         const total = await prisma.tbl_sim_cards.count({
             where: whereClauses
         });
