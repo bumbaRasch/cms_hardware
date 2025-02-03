@@ -13,19 +13,30 @@ export const simService = {
         if (search) {
             whereClauses.OR = [
                 { SIM_NUMBER: { contains: search } },
-                { PROVIDER_NAME: { contains: search } },
-                { TARIFF_NAME: { contains: search } },
-                { LOC_NAME: { contains: search } },
-                { ST_NAME: { contains: search } },
+                { tbl_providers: { PROVIDER_NAME: { contains: search } } },
+                { tbl_tariffs: { TARIFF_NAME: { contains: search } } },
+                { tbl_locations: { LOC_NAME: { contains: search } } },
+                { tbl_statuses: { ST_NAME: { contains: search } } },
                 { COMMENTS: { contains: search } }
             ];
         }
 
+        const orderBy = [];
+        if (sort === 'PROVIDER_NAME') {
+            orderBy.push({ tbl_providers: { PROVIDER_NAME: order } });
+        } else if (sort === 'TARIFF_NAME') {
+            orderBy.push({ tbl_tariffs: { TARIFF_NAME: order } });
+        } else if (sort === 'LOC_NAME') {
+            orderBy.push({ tbl_locations: { LOC_NAME: order } });
+        } else if (sort === 'ST_NAME') {
+            orderBy.push({ tbl_statuses: { ST_NAME: order } });
+        } else {
+            orderBy.push({ [sort]: order });
+        }
+
         const sims = await prisma.tbl_sim_cards.findMany({
             where: whereClauses,
-            orderBy: { 
-                [sort]: order 
-            },
+            orderBy,
             skip: (parseInt(page) - 1) * parseInt(limit),
             take: parseInt(limit),
             include: {
@@ -68,10 +79,10 @@ export const simService = {
         const sim = await prisma.tbl_sim_cards.create({
             data: {
                 SIM_NUMBER: body.SIM_NUMBER,
-                PROVIDER_NAME: body.PROVIDER_NAME,
-                TARIFF_NAME: body.TARIFF_NAME,
-                LOC_NAME: body.LOC_NAME,
-                ST_NAME: body.ST_NAME,
+                PROVIDER_ID: body.PROVIDER_ID,
+                TARIFF_ID: body.TARIFF_ID,
+                LOC_ID: body.LOC_ID,
+                STATUS_ID: body.STATUS_ID,
                 PIN1: body.PIN1,
                 PUK1: body.PUK1,
                 PIN2: body.PIN2,
@@ -79,16 +90,22 @@ export const simService = {
                 ACTIVATION_DATE: new Date(body.ACTIVATION_DATE).toISOString(),
                 EXPIRATION_DATE: new Date(body.EXPIRATION_DATE).toISOString(),
                 COMMENTS: body.COMMENTS
+            },
+            include: {
+                tbl_locations: { select: { LOC_NAME: true } },
+                tbl_statuses: { select: { ST_NAME: true } },
+                tbl_tariffs: { select: { TARIFF_NAME: true } },
+                tbl_providers: { select: { PROVIDER_NAME: true } }
             }
         });
 
         return {
             SIM_ID: sim.SIM_ID,
             SIM_NUMBER: sim.SIM_NUMBER,
-            PROVIDER_NAME: sim.PROVIDER_NAME,
-            TARIFF_NAME: sim.TARIFF_NAME,
-            LOC_NAME: sim.LOC_NAME,
-            ST_NAME: sim.ST_NAME,
+            PROVIDER_NAME: sim.tbl_providers.PROVIDER_NAME,
+            TARIFF_NAME: sim.tbl_tariffs.TARIFF_NAME,
+            LOC_NAME: sim.tbl_locations.LOC_NAME,
+            ST_NAME: sim.tbl_statuses.ST_NAME,
             PIN1: sim.PIN1,
             PUK1: sim.PUK1,
             PIN2: sim.PIN2,
