@@ -31,11 +31,38 @@ export const hardwareService = {
             ];
         }
 
+        const orderBy = [];
+        if (sort === 'HT_NAME') {
+            orderBy.push({ tbl_hardware_types: { HT_NAME: order } });
+        } 
+        else if (sort === 'LOC_NAME') {
+            orderBy.push({ tbl_locations: { LOC_NAME: order } });
+        } 
+        else if (sort === 'ST_NAME') {
+            orderBy.push({ tbl_statuses: { ST_NAME: order } });
+        } 
+        else if (sort === 'USER_NAME') {
+            orderBy.push({ tbl_users: { USER_NAME: order } });
+        } 
+        else if (sort === 'SIM_NUMBER') {
+            orderBy.push({ tbl_sim_cards: { SIM_NUMBER: order } });
+        } 
+        else if (sort === 'STORE_NAME') {
+            orderBy.push({ tbl_stores: { STORE_NAME: order } });
+        } 
+        else if (sort === 'SUPPLIER_NAME') {
+            orderBy.push({ tbl_suppliers: { SUPPLIER_NAME: order } });
+        } 
+        else if (sort === 'CURRENCY_CODE') {
+            orderBy.push({ tbl_currencies: { CURRENCY_CODE: order } });
+        } 
+        else {
+            orderBy.push({ [sort]: order });
+        }
+
         const hardware = await prisma.tbl_hardware.findMany({
             where: whereClauses,
-            orderBy: { 
-                [sort]: order 
-            },
+            orderBy,
             skip: (parseInt(page) - 1) * parseInt(limit),
             take: parseInt(limit),
             include: {
