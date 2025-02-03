@@ -137,6 +137,7 @@ model tbl_tariffs {
   TARIFF_ID     Int             @id @default(autoincrement())
   TARIFF_NAME   String          @db.VarChar(255)
   PROVIDER_ID   Int
+  PRICE         Float?
   tbl_sim_cards tbl_sim_cards[]
   tbl_providers tbl_providers   @relation(fields: [PROVIDER_ID], references: [PROVIDER_ID], onUpdate: Restrict, map: "tbl_tariffs_ibfk_1")
 
@@ -146,7 +147,14 @@ model tbl_tariffs {
 /// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
 model tbl_users {
   USER_ID            String               @id @db.Char(36)
-  USER_NAME          String               @unique(map: "USER_NAME") @db.VarChar(255)
+  FIRST_NAME         String?              @db.VarChar(255)
+  LAST_NAME          String?              @db.VarChar(255)
+  USERNAME           String               @unique(map: "USERNAME") @db.VarChar(255)
+  EMAIL              String               @unique(map: "EMAIL") @db.VarChar(255)
+  PASSWORD           String               @db.VarChar(255)
+  CREATED_AT         DateTime?            @default(now()) @db.Timestamp(0)
+  UPDATED_AT         DateTime?            @default(now()) @db.Timestamp(0)
+  DELETED_AT         DateTime?            @db.Timestamp(0)
   tbl_user_companies tbl_user_companies[]
   tbl_user_roles     tbl_user_roles[]
 }
