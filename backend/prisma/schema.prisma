@@ -18,7 +18,6 @@ model tbl_hardware {
   HA_WARRANTY_EXPIRY_DATE  DateTime?          @db.Date
   HA_LOCATION              Int
   HA_STATUS                Int
-  HA_ASSIGNED_TO           String?            @db.Char(36)
   HA_LAST_MAINTENANCE_DATE DateTime?          @db.Date
   HA_NOTES                 String?            @db.Text
   HA_SIM_CARD              Int?
@@ -37,7 +36,6 @@ model tbl_hardware {
   tbl_hardware_types       tbl_hardware_types @relation(fields: [HA_TYPE], references: [HT_ID], onUpdate: Restrict, map: "tbl_hardware_ibfk_1")
   tbl_locations            tbl_locations      @relation(fields: [HA_LOCATION], references: [LOC_ID], onUpdate: Restrict, map: "tbl_hardware_ibfk_2")
   tbl_statuses             tbl_statuses       @relation(fields: [HA_STATUS], references: [ST_ID], onUpdate: Restrict, map: "tbl_hardware_ibfk_3")
-  tbl_users                tbl_users?         @relation(fields: [HA_ASSIGNED_TO], references: [USER_ID], onDelete: Restrict, onUpdate: Restrict, map: "tbl_hardware_ibfk_4")
   tbl_sim_cards            tbl_sim_cards?     @relation(fields: [HA_SIM_CARD], references: [SIM_ID], onDelete: Restrict, onUpdate: Restrict, map: "tbl_hardware_ibfk_5")
   tbl_stores               tbl_stores?        @relation(fields: [HA_STORE], references: [STORE_ID], onDelete: Restrict, onUpdate: Restrict, map: "tbl_hardware_ibfk_6")
   tbl_suppliers            tbl_suppliers?     @relation(fields: [HA_SUPPLIER], references: [SUPPLIER_ID], onDelete: Restrict, onUpdate: Restrict, map: "tbl_hardware_ibfk_7")
@@ -46,7 +44,6 @@ model tbl_hardware {
   @@index([HA_LOCATION], map: "HA_LOCATION")
   @@index([HA_STATUS], map: "HA_STATUS")
   @@index([HA_TYPE], map: "HA_TYPE")
-  @@index([HA_ASSIGNED_TO], map: "HA_ASSIGNED_TO")
   @@index([HA_CURRENCY], map: "HA_CURRENCY")
   @@index([HA_SIM_CARD], map: "HA_SIM_CARD")
   @@index([HA_STORE], map: "HA_STORE")
@@ -148,7 +145,51 @@ model tbl_tariffs {
 
 /// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
 model tbl_users {
-  USER_ID      String         @id @db.Char(36)
-  USER_NAME    String         @unique(map: "USER_NAME") @db.VarChar(255)
-  tbl_hardware tbl_hardware[]
+  USER_ID            String               @id @db.Char(36)
+  USER_NAME          String               @unique(map: "USER_NAME") @db.VarChar(255)
+  tbl_user_companies tbl_user_companies[]
+  tbl_user_roles     tbl_user_roles[]
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model tbl_companies {
+  COMPANY_ID         String               @id @db.Char(36)
+  COMPANY_NAME       String               @unique(map: "COMPANY_NAME") @db.VarChar(255)
+  COMPANY_EMAIL      String               @unique(map: "COMPANY_EMAIL") @db.VarChar(255)
+  COMPANY_PHONE      String?              @db.VarChar(20)
+  COMPANY_WEB        String?              @db.VarChar(255)
+  CREATED_AT         DateTime?            @default(now()) @db.Timestamp(0)
+  UPDATED_AT         DateTime?            @default(now()) @db.Timestamp(0)
+  tbl_user_companies tbl_user_companies[]
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model tbl_roles {
+  ROLE_ID        Int              @id @default(autoincrement())
+  ROLE_NAME      String           @unique(map: "ROLE_NAME") @db.VarChar(255)
+  CREATED_AT     DateTime?        @default(now()) @db.Timestamp(0)
+  UPDATED_AT     DateTime?        @default(now()) @db.Timestamp(0)
+  tbl_user_roles tbl_user_roles[]
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model tbl_user_companies {
+  USER_ID       String        @db.Char(36)
+  COMPANY_ID    String        @db.Char(36)
+  tbl_users     tbl_users     @relation(fields: [USER_ID], references: [USER_ID], onUpdate: Restrict, map: "tbl_user_companies_ibfk_1")
+  tbl_companies tbl_companies @relation(fields: [COMPANY_ID], references: [COMPANY_ID], onUpdate: Restrict, map: "tbl_user_companies_ibfk_2")
+
+  @@id([USER_ID, COMPANY_ID])
+  @@index([COMPANY_ID], map: "COMPANY_ID")
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model tbl_user_roles {
+  USER_ID   String    @db.Char(36)
+  ROLE_ID   Int
+  tbl_users tbl_users @relation(fields: [USER_ID], references: [USER_ID], onUpdate: Restrict, map: "tbl_user_roles_ibfk_1")
+  tbl_roles tbl_roles @relation(fields: [ROLE_ID], references: [ROLE_ID], onUpdate: Restrict, map: "tbl_user_roles_ibfk_2")
+
+  @@id([USER_ID, ROLE_ID])
+  @@index([ROLE_ID], map: "ROLE_ID")
 }

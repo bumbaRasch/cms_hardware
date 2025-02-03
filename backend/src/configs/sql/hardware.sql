@@ -48,17 +48,82 @@ INSERT INTO tbl_statuses (ST_NAME) VALUES
 
 CREATE TABLE tbl_users (
     USER_ID CHAR(36) PRIMARY KEY,
-    USER_NAME VARCHAR(255) NOT NULL UNIQUE COMMENT 'Name of the user or department'
+    FIRST_NAME VARCHAR(255) COMMENT 'First name of the user',
+    LAST_NAME VARCHAR(255) COMMENT 'Last name of the user',
+    USERNAME VARCHAR(255) NOT NULL UNIQUE COMMENT 'Username for login',
+    EMAIL VARCHAR(255) NOT NULL UNIQUE COMMENT 'Email of the user',
+    PASSWORD VARCHAR(255) NOT NULL COMMENT 'Password for login',
+    CREATED_AT TIMESTAMP DEFAULT CURRENT_TIMESTAMP COMMENT 'Timestamp when the user was created',
+    UPDATED_AT TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT 'Timestamp when the user was last updated',
+    DELETED_AT TIMESTAMP COMMENT 'Timestamp when the user was deleted'
 ) COMMENT 'Table for storing users or departments';
 
 INSERT INTO tbl_users (USER_ID, USER_NAME) VALUES
-(UUID(), 'John Doe'),
-(UUID(), 'Jane Smith'),
-(UUID(), 'IT Department'),
-(UUID(), 'Finance Department'),
-(UUID(), 'HR Department'),
-(UUID(), 'Sales Department'),
-(UUID(), 'Marketing Department');
+(UUID(), 'John', 'Doe', 'john.doe', 'john@gmail.com', 'password'),
+(UUID(), 'Jane', 'Smith', 'jane.smith', 'jane@gmail.com','test123'),
+(UUID(), 'IT Department', '', 'it.department', 'te@gmail.com', 'password'),
+(UUID(), 'Finance Department', '', 'finance.department', 'f@gmail.com', 'password'),
+(UUID(), 'HR Department', '', 'hr.department', 'hr@gmail.com', 'password'),
+(UUID(), 'Sales Department', '', 'sales.department', 'sales@gmail.com', 'password'),
+(UUID(), 'Marketing Department', '', 'marketing.department', 'marketing@gmail.com', 'password');
+
+CREATE TABLE tbl_roles (
+    ROLE_ID INT AUTO_INCREMENT PRIMARY KEY,
+    ROLE_NAME VARCHAR(255) NOT NULL UNIQUE COMMENT 'Name of the role',
+    CREATED_AT TIMESTAMP DEFAULT CURRENT_TIMESTAMP COMMENT 'Timestamp when the role was created',
+    UPDATED_AT TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT 'Timestamp when the role was last updated'
+) COMMENT 'Table for storing roles';
+
+INSERT INTO tbl_roles (ROLE_NAME) VALUES
+('Admin'),
+('User'),
+('Guest'),
+('Manager'),
+('Supervisor'),
+('Technician'),
+('Engineer'),
+('Analyst'),
+('Developer'),
+('Designer');
+
+CREATE TABLE tbl_user_roles (
+    USER_ID CHAR(36),
+    ROLE_ID INT,
+    PRIMARY KEY (USER_ID, ROLE_ID),
+    FOREIGN KEY (USER_ID) REFERENCES tbl_users(USER_ID),
+    FOREIGN KEY (ROLE_ID) REFERENCES tbl_roles(ROLE_ID)
+) COMMENT 'Table for storing user-role relationships';
+
+CREATE TABLE tbl_companies (
+    COMPANY_ID CHAR(36) PRIMARY KEY,
+    COMPANY_NAME VARCHAR(255) NOT NULL UNIQUE COMMENT 'Name of the company',
+    COMPANY_EMAIL VARCHAR(255) NOT NULL UNIQUE COMMENT 'Email of the company',
+    COMPANY_PHONE VARCHAR(20) COMMENT 'Phone number of the company',
+    COMPANY_WEB VARCHAR(255) COMMENT 'Website of the company',
+    CREATED_AT TIMESTAMP DEFAULT CURRENT_TIMESTAMP COMMENT 'Timestamp when the company was created',
+    UPDATED_AT TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT 'Timestamp when the company was last updated'
+) COMMENT 'Table for storing companies';
+
+INSERT INTO tbl_companies (COMPANY_ID, COMPANY_NAME, COMPANY_EMAIL, COMPANY_PHONE, COMPANY_WEB) VALUES
+(UUID(), 'Tech Solutions', 'info@techsolutions.com', '123-456-7890', 'www.techsolutions.com'),
+(UUID(), 'Innovative Systems', 'contact@innovativesystems.com', '234-567-8901', 'www.innovativesystems.com'),
+(UUID(), 'Global Enterprises', 'support@globalenterprises.com', '345-678-9012', 'www.globalenterprises.com'),
+(UUID(), 'NextGen Technologies', 'sales@nextgentechnologies.com', '456-789-0123', 'www.nextgentechnologies.com'),
+(UUID(), 'Alpha Corp', 'info@alphacorp.com', '567-890-1234', 'www.alphacorp.com'),
+(UUID(), 'Beta Innovations', 'contact@betainnovations.com', '678-901-2345', 'www.betainnovations.com'),
+(UUID(), 'Gamma Solutions', 'support@gammasolutions.com', '789-012-3456', 'www.gammasolutions.com'),
+(UUID(), 'Delta Enterprises', 'sales@deltaenterprises.com', '890-123-4567', 'www.deltaenterprises.com'),
+(UUID(), 'Epsilon Tech', 'info@epsilontech.com', '901-234-5678', 'www.epsilontech.com'),
+(UUID(), 'Zeta Systems', 'contact@zetasystems.com', '012-345-6789', 'www.zetasystems.com');
+
+
+CREATE TABLE tbl_user_companies (
+    USER_ID CHAR(36),
+    COMPANY_ID CHAR(36),
+    PRIMARY KEY (USER_ID, COMPANY_ID),
+    FOREIGN KEY (USER_ID) REFERENCES tbl_users(USER_ID),
+    FOREIGN KEY (COMPANY_ID) REFERENCES tbl_companies(COMPANY_ID)
+) COMMENT 'Table for storing user-company relationships';
 
 CREATE TABLE tbl_providers (
     PROVIDER_ID INT AUTO_INCREMENT PRIMARY KEY,
@@ -189,7 +254,6 @@ CREATE TABLE tbl_hardware (
     HA_WARRANTY_EXPIRY_DATE DATE COMMENT 'Warranty expiry date of the hardware',
     HA_LOCATION INT NOT NULL COMMENT 'Location of the hardware, references tbl_locations',
     HA_STATUS INT NOT NULL COMMENT 'Status of the hardware, references tbl_statuses',
-    HA_ASSIGNED_TO CHAR(36) COMMENT 'Assigned user or department, references tbl_users',
     HA_LAST_MAINTENANCE_DATE DATE COMMENT 'Last maintenance date of the hardware',
     HA_NOTES TEXT COMMENT 'Additional notes about the hardware',
     HA_SIM_CARD INT COMMENT 'SIM card associated with the hardware, references tbl_sim_cards',
@@ -208,22 +272,21 @@ CREATE TABLE tbl_hardware (
     FOREIGN KEY (HA_TYPE) REFERENCES tbl_hardware_types(HT_ID),
     FOREIGN KEY (HA_LOCATION) REFERENCES tbl_locations(LOC_ID),
     FOREIGN KEY (HA_STATUS) REFERENCES tbl_statuses(ST_ID),
-    FOREIGN KEY (HA_ASSIGNED_TO) REFERENCES tbl_users(USER_ID),
     FOREIGN KEY (HA_SIM_CARD) REFERENCES tbl_sim_cards(SIM_ID),
     FOREIGN KEY (HA_STORE) REFERENCES tbl_stores(STORE_ID),
     FOREIGN KEY (HA_SUPPLIER) REFERENCES tbl_suppliers(SUPPLIER_ID),
     FOREIGN KEY (HA_CURRENCY) REFERENCES tbl_currencies(CURRENCY_ID)
 ) COMMENT 'Table for storing hardware information';
 
-INSERT INTO tbl_hardware (HA_NAME, HA_TYPE, HA_MANUFACTURER, HA_MODEL, HA_SERIAL_NUMBER, HA_PURCHASE_DATE, HA_WARRANTY_EXPIRY_DATE, HA_LOCATION, HA_STATUS, HA_ASSIGNED_TO, HA_LAST_MAINTENANCE_DATE, HA_NOTES, HA_SIM_CARD, HA_STORE, HA_SUPPLIER, HA_COST, HA_CURRENCY, HA_CONDITION, HA_DEPLOYMENT_DATE, HA_RETIREMENT_DATE, HA_IP_ADDRESS, HA_MAC_ADDRESS) VALUES
-('Desktop', 1, 'HP', 'EliteDesk 800', 'GHI123456', '2021-05-10', '2022-05-10', 3, 1, (SELECT USER_ID FROM tbl_users WHERE USER_NAME = 'IT Department'), '2021-11-01', 'Upgrade RAM', NULL, 2, 2, 1200.00, (SELECT CURRENCY_ID FROM tbl_currencies WHERE CURRENCY_CODE = 'USD'), 'New', '2021-05-15', NULL, '192.168.1.12', '00:1A:2B:3C:4D:60'),
-('Router', 3, 'Cisco', 'RV340', 'JKL789012', '2020-08-20', '2021-08-20', 4, 1, (SELECT USER_ID FROM tbl_users WHERE USER_NAME = 'IT Department'), '2020-12-15', 'Firmware update', NULL, 2, 3, 500.00, (SELECT CURRENCY_ID FROM tbl_currencies WHERE CURRENCY_CODE = 'USD'), 'New', '2020-08-25', NULL, '192.168.1.13', '00:1A:2B:3C:4D:61'),
-('Switch', 4, 'Netgear', 'GS108', 'MNO345678', '2019-03-15', '2020-03-15', 1, 2, (SELECT USER_ID FROM tbl_users WHERE USER_NAME = 'IT Department'), '2019-09-01', 'Replace power supply', NULL, 1, 1, 200.00, (SELECT CURRENCY_ID FROM tbl_currencies WHERE CURRENCY_CODE = 'USD'), 'Used', '2019-03-20', NULL, '192.168.1.14', '00:1A:2B:3C:4D:62'),
-('Laptop', 1, 'Lenovo', 'ThinkPad X1', 'PQR567890', '2021-07-25', '2022-07-25', 2, 1, (SELECT USER_ID FROM tbl_users WHERE USER_NAME = 'Jane Smith'), '2021-12-01', 'Battery replacement', NULL, 1, 2, 1800.00, (SELECT CURRENCY_ID FROM tbl_currencies WHERE CURRENCY_CODE = 'USD'), 'New', '2021-07-30', NULL, '192.168.1.15', '00:1A:2B:3C:4D:63'),
-('Printer', 2, 'Canon', 'PIXMA G6020', 'STU901234', '2020-11-10', '2021-11-10', 3, 2, (SELECT USER_ID FROM tbl_users WHERE USER_NAME = 'Finance Department'), '2020-11-15', 'Replace ink', NULL, 2, 2, 250.00, (SELECT CURRENCY_ID FROM tbl_currencies WHERE CURRENCY_CODE = 'USD'), 'Used', '2020-11-15', NULL, '192.168.1.16', '00:1A:2B:3C:4D:64'),
-('Desktop', 1, 'Apple', 'iMac', 'VWX345678', '2022-02-20', '2023-02-20', 4, 1, (SELECT USER_ID FROM tbl_users WHERE USER_NAME = 'John Doe'), '2022-08-01', 'Upgrade SSD', NULL, 1, 1, 2500.00, (SELECT CURRENCY_ID FROM tbl_currencies WHERE CURRENCY_CODE = 'USD'), 'New', '2022-02-25', NULL, '192.168.1.17', '00:1A:2B:3C:4D:65'),
-('Router', 3, 'TP-Link', 'Archer C7', 'YZA567890', '2019-06-15', '2020-06-15', 1, 2, (SELECT USER_ID FROM tbl_users WHERE USER_NAME = 'IT Department'), '2019-12-01', 'Firmware update', NULL, 1, 2, 150.00, (SELECT CURRENCY_ID FROM tbl_currencies WHERE CURRENCY_CODE = 'USD'), 'Used', '2019-06-20', NULL, '192.168.1.18', '00:1A:2B:3C:4D:66'),
-('Switch', 4, 'D-Link', 'DGS-1210', 'BCD789012', '2021-09-10', '2022-09-10', 2, 1, (SELECT USER_ID FROM tbl_users WHERE USER_NAME = 'IT Department'), '2021-12-15', 'Replace fan', NULL, 1, 1, 300.00, (SELECT CURRENCY_ID FROM tbl_currencies WHERE CURRENCY_CODE = 'USD'), 'New', '2021-09-15', NULL, '192.168.1.19', '00:1A:2B:3C:4D:67'),
-('Laptop', 1, 'Acer', 'Aspire 5', 'EFG123456', '2020-04-20', '2021-04-20', 3, 2, (SELECT USER_ID FROM tbl_users WHERE USER_NAME = 'Jane Smith'), '2020-10-01', 'Replace keyboard', NULL, 1, 1, 700.00, (SELECT CURRENCY_ID FROM tbl_currencies WHERE CURRENCY_CODE = 'USD'), 'Used', '2020-04-25', NULL, '192.168.1.20', '00:1A:2B:3C:4D:68'),
-('Printer', 2, 'Brother', 'HL-L2350DW', 'HIJ345678', '2018-12-15', '2019-12-15', 4, 2, (SELECT USER_ID FROM tbl_users WHERE USER_NAME = 'Finance Department'), '2019-06-01', 'Replace toner', NULL, 2, 2, 150.00, (SELECT CURRENCY_ID FROM tbl_currencies WHERE CURRENCY_CODE = 'USD'), 'Used', '2018-12-20', NULL, '192.168.1.21', '00:1A:2B:3C:4D:69'),
-('Desktop', 1, 'Asus', 'VivoPC', 'KLM567890', '2021-03-10', '2022-03-10', 1, 1, (SELECT USER_ID FROM tbl_users WHERE USER_NAME = 'John Doe'), '2021-09-01', 'Upgrade RAM', NULL, 1, 1, 900.00, (SELECT CURRENCY_ID FROM tbl_currencies WHERE CURRENCY_CODE = 'USD'), 'New', '2021-03-15', NULL, '192.168.1.22', '00:1A:2B:3C:4D:70');
+INSERT INTO tbl_hardware (HA_NAME, HA_TYPE, HA_MANUFACTURER, HA_MODEL, HA_SERIAL_NUMBER, HA_PURCHASE_DATE, HA_WARRANTY_EXPIRY_DATE, HA_LOCATION, HA_STATUS, HA_LAST_MAINTENANCE_DATE, HA_NOTES, HA_SIM_CARD, HA_STORE, HA_SUPPLIER, HA_COST, HA_CURRENCY, HA_CONDITION, HA_DEPLOYMENT_DATE, HA_RETIREMENT_DATE, HA_IP_ADDRESS, HA_MAC_ADDRESS) VALUES
+('Desktop', 1, 'HP', 'EliteDesk 800', 'GHI123456', '2021-05-10', '2022-05-10', 3, 1, '2021-11-01', 'Upgrade RAM', NULL, 2, 2, 1200.00, (SELECT CURRENCY_ID FROM tbl_currencies WHERE CURRENCY_CODE = 'USD'), 'New', '2021-05-15', NULL, '192.168.1.12', '00:1A:2B:3C:4D:60'),
+('Router', 3, 'Cisco', 'RV340', 'JKL789012', '2020-08-20', '2021-08-20', 4, 1, '2020-12-15', 'Firmware update', NULL, 2, 3, 500.00, (SELECT CURRENCY_ID FROM tbl_currencies WHERE CURRENCY_CODE = 'USD'), 'New', '2020-08-25', NULL, '192.168.1.13', '00:1A:2B:3C:4D:61'),
+('Switch', 4, 'Netgear', 'GS108', 'MNO345678', '2019-03-15', '2020-03-15', 1, 2, '2019-09-01', 'Replace power supply', NULL, 1, 1, 200.00, (SELECT CURRENCY_ID FROM tbl_currencies WHERE CURRENCY_CODE = 'USD'), 'Used', '2019-03-20', NULL, '192.168.1.14', '00:1A:2B:3C:4D:62'),
+('Laptop', 1, 'Lenovo', 'ThinkPad X1', 'PQR567890', '2021-07-25', '2022-07-25', 2, 1, '2021-12-01', 'Battery replacement', NULL, 1, 2, 1800.00, (SELECT CURRENCY_ID FROM tbl_currencies WHERE CURRENCY_CODE = 'USD'), 'New', '2021-07-30', NULL, '192.168.1.15', '00:1A:2B:3C:4D:63'),
+('Printer', 2, 'Canon', 'PIXMA G6020', 'STU901234', '2020-11-10', '2021-11-10', 3, 2, '2020-11-15', 'Replace ink', NULL, 2, 2, 250.00, (SELECT CURRENCY_ID FROM tbl_currencies WHERE CURRENCY_CODE = 'USD'), 'Used', '2020-11-15', NULL, '192.168.1.16', '00:1A:2B:3C:4D:64'),
+('Desktop', 1, 'Apple', 'iMac', 'VWX345678', '2022-02-20', '2023-02-20', 4, 1, '2022-08-01', 'Upgrade SSD', NULL, 1, 1, 2500.00, (SELECT CURRENCY_ID FROM tbl_currencies WHERE CURRENCY_CODE = 'USD'), 'New', '2022-02-25', NULL, '192.168.1.17', '00:1A:2B:3C:4D:65'),
+('Router', 3, 'TP-Link', 'Archer C7', 'YZA567890', '2019-06-15', '2020-06-15', 1, 2, '2019-12-01', 'Firmware update', NULL, 1, 2, 150.00, (SELECT CURRENCY_ID FROM tbl_currencies WHERE CURRENCY_CODE = 'USD'), 'Used', '2019-06-20', NULL, '192.168.1.18', '00:1A:2B:3C:4D:66'),
+('Switch', 4, 'D-Link', 'DGS-1210', 'BCD789012', '2021-09-10', '2022-09-10', 2, 1, '2021-12-15', 'Replace fan', NULL, 1, 1, 300.00, (SELECT CURRENCY_ID FROM tbl_currencies WHERE CURRENCY_CODE = 'USD'), 'New', '2021-09-15', NULL, '192.168.1.19', '00:1A:2B:3C:4D:67'),
+('Laptop', 1, 'Acer', 'Aspire 5', 'EFG123456', '2020-04-20', '2021-04-20', 3, 2, '2020-10-01', 'Replace keyboard', NULL, 1, 1, 700.00, (SELECT CURRENCY_ID FROM tbl_currencies WHERE CURRENCY_CODE = 'USD'), 'Used', '2020-04-25', NULL, '192.168.1.20', '00:1A:2B:3C:4D:68'),
+('Printer', 2, 'Brother', 'HL-L2350DW', 'HIJ345678', '2018-12-15', '2019-12-15', 4, 2, '2019-06-01', 'Replace toner', NULL, 2, 2, 150.00, (SELECT CURRENCY_ID FROM tbl_currencies WHERE CURRENCY_CODE = 'USD'), 'Used', '2018-12-20', NULL, '192.168.1.21', '00:1A:2B:3C:4D:69'),
+('Desktop', 1, 'Asus', 'VivoPC', 'KLM567890', '2021-03-10', '2022-03-10', 1, 1, '2021-09-01', 'Upgrade RAM', NULL, 1, 1, 900.00, (SELECT CURRENCY_ID FROM tbl_currencies WHERE CURRENCY_CODE = 'USD'), 'New', '2021-03-15', NULL, '192.168.1.22', '00:1A:2B:3C:4D:70');
