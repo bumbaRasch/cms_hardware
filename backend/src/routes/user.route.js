@@ -7,5 +7,6 @@ export const userRouter = async (fastify, options) => {
     });
     fastify.get('/api/users', userController.getUsers);
     fastify.put('/api/users/:id', userController.updateUser);
+    fastify.post('/api/users/:id/reset-password', userController.resetPassword);
     fastify.delete('/api/users/:id', userController.deleteUser);
 }

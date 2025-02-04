@@ -74,5 +74,13 @@ export const userService = {
         return await prisma.tbl_users.delete({
             where: { USER_ID: id }
         });
+    },
+
+    resetPassword: async (id, data) => {
+        const { salt, hash } = hashPassword(data.PASSWORD);
+        return await prisma.tbl_users.update({
+            where: { USER_ID: id },
+            data: { PASSWORD: `${salt}:${hash}` }
+        });
     }
 };

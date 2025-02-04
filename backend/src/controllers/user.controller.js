@@ -24,5 +24,12 @@ export const userController = {
         return user 
             ? reply.code(204).send() 
             : reply.code(404).send({ message: 'User not found' });
+    },
+
+    resetPassword: async (request, reply) => {
+        const user = await userService.resetPassword(request.params.id, request.body);
+        return user 
+            ? reply.send(user) 
+            : reply.code(404).send({ message: 'User not found' });
     }
 };
