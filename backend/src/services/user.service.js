@@ -1,5 +1,6 @@
 import prisma from '../configs/database.js';
 import { formatDate } from '../utils/date.js';
+import { hashPassword, verifyPassword } from '../utils/password.js';
 
 export const userService = {
     getUsers: async ({ offset = 0, limit = 10, sort = 'CREATED_AT', order = 'desc', filter = {}, search = '' }) => {
@@ -52,15 +53,21 @@ export const userService = {
     },
 
     updateUser: async (id, data) => {
+        const updateData = {
+            FIRST_NAME: data.FIRST_NAME,
+            LAST_NAME: data.LAST_NAME,
+            USERNAME: data.USERNAME,
+            EMAIL: data.EMAIL
+        };
+
+        if (data.PASSWORD) {
+            const { salt, hash } = hashPassword(data.PASSWORD);
+            updateData.PASSWORD = `${salt}:${hash}`;
+        }
+
         return await prisma.tbl_users.update({
             where: { USER_ID: id },
-            data: {
-                FIRST_NAME: data.FIRST_NAME,
-                LAST_NAME: data.LAST_NAME,
-                USERNAME: data.USERNAME,
-                EMAIL: data.EMAIL,
-                PASSWORD: data.PASSWORD
-            }
+            data: updateData
         });
     },
     
