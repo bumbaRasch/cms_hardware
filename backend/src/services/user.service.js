@@ -43,7 +43,6 @@ export const userService = {
                 EMAIL: item.EMAIL,
                 CREATED_AT: formatDate(item.CREATED_AT),
                 UPDATED_AT: formatDate(item.UPDATED_AT),
-                DELETED_AT: formatDate(item.DELETED_AT)
             })),
             total: parseInt(total),
             offset: parseInt(offset),
