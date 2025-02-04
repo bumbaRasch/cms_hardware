@@ -14,43 +14,43 @@
     <div id="alert-container"></div>
     <%- include('header') %>
     <%- include('sidebar', { currentPath: currentPath }) %>
-    <div class="container">
         <h4>Users</h4>
-        <table 
-            data-show-export="true"
-            id="table"
-            data-toggle="table"
-            data-toolbar="#toolbar"
-            data-search="true"
-            data-show-toggle="true"
-            data-show-fullscreen="true"
-            data-show-columns="true"
-            data-show-columns-toggle-all="true"
-            data-pagination="true"
-            data-click-to-select="true"
-            data-show-footer="true"
-            data-show-pagination-switch="true"
-            data-page-list="[10, 25, 50, all]"
-            data-sortable="true"
-            data-id-field="USER_ID"
-            data-locale="en-US"
-            data-url="/api/users"
-            data-side-pagination="server"
-            class="table table-bordered table-hover">
-        <thead class="table-primary">
-            <tr>
-                <th data-field="FIRST_NAME" data-sortable="true">First Name</th>
-                <th data-field="LAST_NAME" data-sortable="true">Last Name</th>
-                <th data-field="USERNAME" data-sortable="true">Username</th>
-                <th data-field="EMAIL" data-sortable="true">Email</th>
-                <th data-field="CREATED_AT" data-sortable="true">Created At</th>
-                <th data-field="UPDATED_AT" data-sortable="true">Updated At</th>
-                <th data-field="DELETED_AT" data-sortable="true">Deleted At</th>
-                <th data-field="operate" data-formatter="operateFormatter" data-events="operateEvents">Actions</th>
-            </tr>
-        </thead>
-        </table>
-    </div>
+        <div class="table-responsive">
+            <table 
+                data-show-export="true"
+                id="table"
+                data-toggle="table"
+                data-toolbar="#toolbar"
+                data-search="true"
+                data-show-toggle="true"
+                data-show-fullscreen="true"
+                data-show-columns="true"
+                data-show-columns-toggle-all="true"
+                data-pagination="true"
+                data-click-to-select="true"
+                data-show-footer="true"
+                data-show-pagination-switch="true"
+                data-page-list="[10, 25, 50, all]"
+                data-sortable="true"
+                data-id-field="USER_ID"
+                data-locale="en-US"
+                data-url="/api/users"
+                data-side-pagination="server"
+                class="table table-bordered table-striped table-hover">
+            <thead class="table-primary">
+                <tr>
+                    <th data-field="FIRST_NAME" data-sortable="true">First Name</th>
+                    <th data-field="LAST_NAME" data-sortable="true">Last Name</th>
+                    <th data-field="USERNAME" data-sortable="true">Username</th>
+                    <th data-field="EMAIL" data-sortable="true">Email</th>
+                    <th data-field="CREATED_AT" data-sortable="true">Created At</th>
+                    <th data-field="UPDATED_AT" data-sortable="true">Updated At</th>
+                    <th data-field="DELETED_AT" data-sortable="true">Deleted At</th>
+                    <th data-field="operate" data-formatter="operateFormatter" data-events="operateEvents">Actions</th>
+                </tr>
+            </thead>
+            </table>
+        </div>
 
     <!-- Modal -->
     <%- include('partials/modal') %>
