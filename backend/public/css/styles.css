@@ -173,3 +173,9 @@ a {
     transform: translateX(-50%);
     z-index: 1050;
 }
+
+.input-group-text:hover {
+    background-color: var(--first-color-light);
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
