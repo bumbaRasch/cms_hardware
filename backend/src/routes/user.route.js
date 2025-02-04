@@ -6,8 +6,6 @@ export const userRouter = async (fastify, options) => {
         return reply.view('users', { currentPath: '/users' });
     });
 
-    fastify.get('/api/users/roles', userController.getRoles);
-
     fastify.get('/api/users', {
         schema: {
             querystring: {
@@ -22,6 +20,24 @@ export const userRouter = async (fastify, options) => {
             }
         }
     }, userController.getUsers);
+
+    fastify.get('/users/:id', async (request, reply) => {
+        return reply.view('user', { currentPath: '/users', id: request.params.id });
+    });
+
+    fastify.get('/api/users/:id', {
+        schema: {
+            params: {
+                type: 'object',
+                properties: {
+                    id: { type: 'string', format: 'uuid' }
+                },
+                required: ['id']
+            }
+        }
+    }, userController.getUserById);
+
+    fastify.get('/api/users/roles', userController.getRoles);
 
     fastify.put('/api/users/:id', {
         schema: {

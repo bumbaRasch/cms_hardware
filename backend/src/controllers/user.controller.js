@@ -12,6 +12,15 @@ export const userController = {
         });
     },
 
+    getUserById: async (request, reply) => {
+        const user = await userService.getUserById(request.params.id);
+        return reply.send({ 
+            rows: user ? [user] : reply.code(404).send({ message: 'User not found' }),
+            total: user ? 1 : 0,
+            totalNotFiltered: user ? 1 : 0
+        });
+    },
+
     getRoles: async (request, reply) => {
         const roles = await userService.getRoles();
         return reply.send(roles);

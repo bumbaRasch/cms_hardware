@@ -61,6 +61,35 @@ export const userService = {
         };
     },
 
+    getUserById: async (id) => {
+        const user = await prisma.tbl_users.findUnique({
+            where: { USER_ID: id },
+            select: {
+                USER_ID: true,
+                FIRST_NAME: true,
+                LAST_NAME: true,
+                USERNAME: true,
+                EMAIL: true,
+                ROLE_ID: true,
+                CREATED_AT: true,
+                UPDATED_AT: true,
+                tbl_roles: { select: { ROLE_NAME: true } }
+            }
+        });
+
+        return user ? {
+            USER_ID: user.USER_ID,
+            FIRST_NAME: user.FIRST_NAME,
+            LAST_NAME: user.LAST_NAME,
+            USERNAME: user.USERNAME,
+            EMAIL: user.EMAIL,
+            ROLE_ID: user.ROLE_ID,
+            CREATED_AT: formatDate(user.CREATED_AT),
+            UPDATED_AT: formatDate(user.UPDATED_AT),
+            ROLE_NAME: user.tbl_roles ? user.tbl_roles.ROLE_NAME : null
+        } : null;
+    },
+
     getRoles: async () => {
         return await prisma.tbl_roles.findMany({
             select: {
