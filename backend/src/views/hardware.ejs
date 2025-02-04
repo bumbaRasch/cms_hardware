@@ -14,8 +14,8 @@
     <div id="alert-container"></div>
     <%- include('header') %>
     <%- include('sidebar', { currentPath: currentPath }) %>
-    <div class="container">
-        <h4>Hardware List</h4>
+    <h4>Hardware List</h4>
+    <div class="table-responsive">
         <table 
             data-show-export="true"
             id="table"
@@ -37,7 +37,7 @@
             data-locale="en-US"
             data-url="/api/hardware"
             data-side-pagination="server"
-            class="table table-bordered table-hover">
+            class="table table-bordered table-striped table-hover">
             <thead>
                 <tr>
                     <th data-field="HA_ID" data-sortable="true">ID</th>
