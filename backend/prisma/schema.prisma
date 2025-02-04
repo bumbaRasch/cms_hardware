@@ -152,11 +152,14 @@ model tbl_users {
   USERNAME           String               @unique(map: "USERNAME") @db.VarChar(255)
   EMAIL              String               @unique(map: "EMAIL") @db.VarChar(255)
   PASSWORD           String               @db.VarChar(255)
+  ROLE_ID            Int
   CREATED_AT         DateTime?            @default(now()) @db.Timestamp(0)
   UPDATED_AT         DateTime?            @default(now()) @db.Timestamp(0)
   DELETED_AT         DateTime?            @db.Timestamp(0)
   tbl_user_companies tbl_user_companies[]
-  tbl_user_roles     tbl_user_roles[]
+  tbl_roles          tbl_roles            @relation(fields: [ROLE_ID], references: [ROLE_ID], onUpdate: Restrict, map: "tbl_users_ibfk_1")
+
+  @@index([ROLE_ID], map: "ROLE_ID")
 }
 
 /// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
@@ -173,11 +176,11 @@ model tbl_companies {
 
 /// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
 model tbl_roles {
-  ROLE_ID        Int              @id @default(autoincrement())
-  ROLE_NAME      String           @unique(map: "ROLE_NAME") @db.VarChar(255)
-  CREATED_AT     DateTime?        @default(now()) @db.Timestamp(0)
-  UPDATED_AT     DateTime?        @default(now()) @db.Timestamp(0)
-  tbl_user_roles tbl_user_roles[]
+  ROLE_ID    Int         @id @default(autoincrement())
+  ROLE_NAME  String      @unique(map: "ROLE_NAME") @db.VarChar(255)
+  CREATED_AT DateTime?   @default(now()) @db.Timestamp(0)
+  UPDATED_AT DateTime?   @default(now()) @db.Timestamp(0)
+  tbl_users  tbl_users[]
 }
 
 /// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
@@ -189,15 +192,4 @@ model tbl_user_companies {
 
   @@id([USER_ID, COMPANY_ID])
   @@index([COMPANY_ID], map: "COMPANY_ID")
-}
-
-/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
-model tbl_user_roles {
-  USER_ID   String    @db.Char(36)
-  ROLE_ID   Int
-  tbl_users tbl_users @relation(fields: [USER_ID], references: [USER_ID], onUpdate: Restrict, map: "tbl_user_roles_ibfk_1")
-  tbl_roles tbl_roles @relation(fields: [ROLE_ID], references: [ROLE_ID], onUpdate: Restrict, map: "tbl_user_roles_ibfk_2")
-
-  @@id([USER_ID, ROLE_ID])
-  @@index([ROLE_ID], map: "ROLE_ID")
 }

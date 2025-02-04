@@ -9,6 +9,7 @@ async function createRandomUser() {
         USERNAME: faker.person.fullName(),
         EMAIL: faker.internet.email(),
         PASSWORD: faker.internet.password(),
+        ROLE_ID: faker.number.int({ min: 1, max: 5 }),
         CREATED_AT: faker.date.past(),
         UPDATED_AT: faker.date.recent(),
     };

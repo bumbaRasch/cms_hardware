@@ -1,3 +1,4 @@
+// backend/src/services/user.service.js
 import prisma from '../configs/database.js';
 import { formatDate } from '../utils/date.js';
 import { hashPassword, verifyPassword } from '../utils/password.js';
@@ -21,13 +22,21 @@ export const userService = {
         }
 
         const orderBy = [];
-        orderBy.push({ [sort]: order });
+        if (sort === 'ROLE_NAME') {
+            orderBy.push({ tbl_roles:  { ROLE_NAME: order } } );
+
+        } else {
+            orderBy.push({ [sort]: order });
+        }
 
         const users = await prisma.tbl_users.findMany({
             where: whereClauses,
             orderBy,
             skip: parseInt(offset),
             take: parseInt(limit),
+            include: {
+                tbl_roles: { select: { ROLE_NAME: true }}
+            }
         });
 
         const total = await prisma.tbl_users.count({
@@ -36,6 +45,7 @@ export const userService = {
 
         return {
             data: users.map(item => ({
+                ROLE_NAME: item.tbl_roles ? item.tbl_roles.ROLE_NAME : null,
                 USER_ID: item.USER_ID,
                 FIRST_NAME: item.FIRST_NAME,
                 LAST_NAME: item.LAST_NAME,

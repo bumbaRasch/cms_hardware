@@ -50,27 +50,6 @@ INSERT INTO tbl_statuses (ST_NAME) VALUES
 ('Damaged'),
 ('Other');
 
-CREATE TABLE IF NOT EXISTS tbl_users (
-    USER_ID CHAR(36) PRIMARY KEY,
-    FIRST_NAME VARCHAR(255) COMMENT 'First name of the user',
-    LAST_NAME VARCHAR(255) COMMENT 'Last name of the user',
-    USERNAME VARCHAR(255) NOT NULL UNIQUE COMMENT 'Username for login',
-    EMAIL VARCHAR(255) NOT NULL UNIQUE COMMENT 'Email of the user',
-    PASSWORD VARCHAR(255) NOT NULL COMMENT 'Password for login',
-    CREATED_AT TIMESTAMP DEFAULT CURRENT_TIMESTAMP COMMENT 'Timestamp when the user was created',
-    UPDATED_AT TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT 'Timestamp when the user was last updated',
-    DELETED_AT TIMESTAMP COMMENT 'Timestamp when the user was deleted'
-) COMMENT 'Table for storing users or departments';
-
-INSERT INTO tbl_users (USER_ID, FIRST_NAME, LAST_NAME, USERNAME, EMAIL, PASSWORD) VALUES
-(UUID(), 'John', 'Doe', 'john.doe', 'john@gmail.com', 'password'),
-(UUID(), 'Jane', 'Smith', 'jane.smith', 'jane@gmail.com','test123'),
-(UUID(), 'IT Department', '', 'it.department', 'te@gmail.com', 'password'),
-(UUID(), 'Finance Department', '', 'finance.department', 'f@gmail.com', 'password'),
-(UUID(), 'HR Department', '', 'hr.department', 'hr@gmail.com', 'password'),
-(UUID(), 'Sales Department', '', 'sales.department', 'sales@gmail.com', 'password'),
-(UUID(), 'Marketing Department', '', 'marketing.department', 'marketing@gmail.com', 'password');
-
 CREATE TABLE IF NOT EXISTS tbl_roles (
     ROLE_ID INT AUTO_INCREMENT PRIMARY KEY,
     ROLE_NAME VARCHAR(255) NOT NULL UNIQUE COMMENT 'Name of the role',
@@ -90,13 +69,28 @@ INSERT INTO tbl_roles (ROLE_NAME) VALUES
 ('Developer'),
 ('Designer');
 
-CREATE TABLE IF NOT EXISTS tbl_user_roles (
-    USER_ID CHAR(36),
-    ROLE_ID INT,
-    PRIMARY KEY (USER_ID, ROLE_ID),
-    FOREIGN KEY (USER_ID) REFERENCES tbl_users(USER_ID),
+CREATE TABLE IF NOT EXISTS tbl_users (
+    USER_ID CHAR(36) PRIMARY KEY,
+    FIRST_NAME VARCHAR(255) COMMENT 'First name of the user',
+    LAST_NAME VARCHAR(255) COMMENT 'Last name of the user',
+    USERNAME VARCHAR(255) NOT NULL UNIQUE COMMENT 'Username for login',
+    EMAIL VARCHAR(255) NOT NULL UNIQUE COMMENT 'Email of the user',
+    PASSWORD VARCHAR(255) NOT NULL COMMENT 'Password for login',
+    ROLE_ID INT NOT NULL COMMENT 'Role ID, references tbl_roles',
+    CREATED_AT TIMESTAMP DEFAULT CURRENT_TIMESTAMP COMMENT 'Timestamp when the user was created',
+    UPDATED_AT TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT 'Timestamp when the user was last updated',
+    DELETED_AT TIMESTAMP COMMENT 'Timestamp when the user was deleted',
     FOREIGN KEY (ROLE_ID) REFERENCES tbl_roles(ROLE_ID)
-) COMMENT 'Table for storing user-role relationships';
+) COMMENT 'Table for storing users or departments';
+
+INSERT INTO tbl_users (USER_ID, FIRST_NAME, LAST_NAME, USERNAME, EMAIL, PASSWORD, ROLE) VALUES
+(UUID(), 'John', 'Doe', 'john.doe', 'john@gmail.com', 'password', (SELECT ROLE_ID FROM tbl_roles WHERE ROLE_NAME = 'Guest')),
+(UUID(), 'Jane', 'Smith', 'jane.smith', 'jane@gmail.com','test123', (SELECT ROLE_ID FROM tbl_roles WHERE ROLE_NAME = 'Guest')),
+(UUID(), 'IT Department', '', 'it.department', 'te@gmail.com', 'password', (SELECT ROLE_ID FROM tbl_roles WHERE ROLE_NAME = 'Guest')),
+(UUID(), 'Finance Department', '', 'finance.department', 'f@gmail.com', 'password', (SELECT ROLE_ID FROM tbl_roles WHERE ROLE_NAME = 'Guest')),
+(UUID(), 'HR Department', '', 'hr.department', 'hr@gmail.com', 'password', (SELECT ROLE_ID FROM tbl_roles WHERE ROLE_NAME = 'Guest')),
+(UUID(), 'Sales Department', '', 'sales.department', 'sales@gmail.com', 'password', (SELECT ROLE_ID FROM tbl_roles WHERE ROLE_NAME = 'Guest')),
+(UUID(), 'Marketing Department', '', 'marketing.department', 'marketing@gmail.com', 'password', (SELECT ROLE_ID FROM tbl_roles WHERE ROLE_NAME = 'Guest'));
 
 CREATE TABLE IF NOT EXISTS tbl_companies (
     COMPANY_ID CHAR(36) PRIMARY KEY,
