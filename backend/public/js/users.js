@@ -57,6 +57,7 @@ window.operateEvents['click .reset-password'] = function (e, value, row, index) 
                 });
 
                 if (response.ok) {
+                    updateTableRow(row.USER_ID, { ...row, PASSWORD: updatedData.PASSWORD });
                     showAlert(`Password for user <b>${row.USERNAME}</b> was successfully reset!`, 'success');
                 } else {
                     const errorText = await response.text();
