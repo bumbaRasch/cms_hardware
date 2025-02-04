@@ -1,3 +1,4 @@
+// public/src/js/users.js
 window.operateEvents = window.operateEvents || {};
 
 window.operateEvents['click .edit'] = function (e, value, row, index) {
@@ -72,26 +73,24 @@ window.operateEvents['click .reset-password'] = function (e, value, row, index) 
     });
 };
 
+const excludedFields = ['USER_ID', 'UPDATED_AT', 'CREATED_AT', 'DELETED_AT', 'PASSWORD'];
+
 const generateEditForm = (row) => {
-    let formHtml = '<form id="editForm">';
-    for (const key in row) {
-        if (key !== 'USER_ID' && key !== 'UPDATED_AT' && key !== 'CREATED_AT' && key !== 'DELETED_AT' && key !== 'PASSWORD') {
-            formHtml += `
+    return `<form id="editForm">
+        ${Object.entries(row)
+            .filter(([key]) => !excludedFields.includes(key))
+            .map(([key, value]) => `
                 <div class="mb-3">
                     <label for="${key}" class="form-label">${key.replace('_', ' ')}</label>
-                    <div class="input-group">
-                        <input type="text" class="form-control" id="${key}" name="${key}" value="${row[key]}">
-                    </div>
+                    <input type="text" class="form-control" id="${key}" name="${key}" value="${value}">
                 </div>
-            `;
-        }
-    }
-    formHtml += '</form>';
-    return formHtml;
+            `)
+            .join('')}
+    </form>`;
 };
 
 const generateResetPasswordForm = (row) => {
-    return `
+    const formHtml = `
         <form id="resetPasswordForm">
             <div class="mb-3">
                 <label for="newPassword" class="form-label">New Password</label>
@@ -101,28 +100,45 @@ const generateResetPasswordForm = (row) => {
                     <a class="input-group-text" href="#" onclick="togglePasswordVisibility('newPassword', this)"><i class="bi bi-eye-fill"></i></a>
                 </div>
             </div>
+            <div class="mb-3">
+                <label for="passwordLength" class="form-label">Password Length <span id="passwordLengthLabel"><b>12</b></span></label>
+                <input type="range" class="form-range" min="8" max="32" id="passwordLength" value="12" oninput="updatePasswordLengthLabel(this.value); generateRandomPassword();">
+            </div>
         </form>
     `;
+    setTimeout(generateRandomPassword, 0);
+    return formHtml;
 };
 
 const generateRandomPassword = () => {
-    const passwordField = document.getElementById('newPassword');
-    const length = 12;
-    const charset = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*()_+~`|}{[]:;?><,./-=";
-    let password = "";
+    const lowerCase = "abcdefghijklmnopqrstuvwxyz";
+    const upperCase = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+    const digits = "0123456789";
+    const specialChars = "!@#$%^&*()_+";
+    const allChars = lowerCase + upperCase + digits + specialChars;
 
-    password += "abcdefghijklmnopqrstuvwxyz".charAt(Math.floor(Math.random() * 26));
-    password += "ABCDEFGHIJKLMNOPQRSTUVWXYZ".charAt(Math.floor(Math.random() * 26));
-    password += "0123456789".charAt(Math.floor(Math.random() * 10));
-    password += "!@#$%^&*()_+~`|}{[]:;?><,./-=".charAt(Math.floor(Math.random() * 32));
+    const getRandomChar = (charset) => charset[Math.floor(Math.random() * charset.length)];
+
+    const length = document.getElementById('passwordLength').value;
+
+    let password = [
+        getRandomChar(lowerCase),
+        getRandomChar(upperCase),
+        getRandomChar(digits),
+        getRandomChar(specialChars)
+    ];
 
     for (let i = 4; i < length; i++) {
-        password += charset.charAt(Math.floor(Math.random() * charset.length));
+        password.push(getRandomChar(allChars));
     }
 
-    password = password.split('').sort(() => 0.5 - Math.random()).join('');
+    password = password.sort(() => Math.random() - 0.5).join('');
 
-    passwordField.value = password;
+    document.getElementById('newPassword').value = password;
+};
+
+const updatePasswordLengthLabel = (value) => {
+    document.getElementById('passwordLengthLabel').textContent = value;
 };
 
 const togglePasswordVisibility = (passwordFieldId, iconElement) => {
@@ -214,8 +230,12 @@ window.operateEvents['click .delete'] = function (e, value, row, index) {
 
 function operateFormatter(value, row, index) {
     return [
-        '<button class="btn btn-sm btn-info reset-password" title="Reset Password"><i class="bi bi-key"></i></button>',
-        '<button class="btn btn-sm btn-warning edit" title="Edit"><i class="bi bi-pencil"></i></button>',
-        '<button class="btn btn-sm btn-danger delete" title="Delete"><i class="bi bi-trash"></i></button>',
+        `
+            <div class="d-grid gap-2 d-md-flex justify-content-md-center">
+                <button class="btn btn-sm btn-info reset-password" title="Reset Password"><i class="bi bi-key"></i></button>
+                <button class="btn btn-sm btn-warning edit" title="Edit"><i class="bi bi-pencil"></i></button>
+                <button class="btn btn-sm btn-danger delete" title="Delete"><i class="bi bi-trash"></i></button>
+            </div>    
+        `
     ].join('');
 }
