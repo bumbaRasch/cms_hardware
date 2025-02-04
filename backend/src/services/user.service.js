@@ -45,12 +45,13 @@ export const userService = {
 
         return {
             data: users.map(item => ({
-                ROLE_NAME: item.tbl_roles ? item.tbl_roles.ROLE_NAME : null,
                 USER_ID: item.USER_ID,
                 FIRST_NAME: item.FIRST_NAME,
                 LAST_NAME: item.LAST_NAME,
                 USERNAME: item.USERNAME,
                 EMAIL: item.EMAIL,
+                ROLE_NAME: item.tbl_roles ? item.tbl_roles.ROLE_NAME : null,
+                ROLE_ID: item.ROLE_ID,
                 CREATED_AT: formatDate(item.CREATED_AT),
                 UPDATED_AT: formatDate(item.UPDATED_AT),
             })),
@@ -60,12 +61,22 @@ export const userService = {
         };
     },
 
+    getRoles: async () => {
+        return await prisma.tbl_roles.findMany({
+            select: {
+                ROLE_ID: true,
+                ROLE_NAME: true
+            }
+        });
+    },
+
     updateUser: async (id, data) => {
         const updateData = {
             FIRST_NAME: data.FIRST_NAME,
             LAST_NAME: data.LAST_NAME,
             USERNAME: data.USERNAME,
-            EMAIL: data.EMAIL
+            EMAIL: data.EMAIL,
+            ROLE_ID: parseInt(data.ROLE_ID)
         };
 
         if (data.PASSWORD) {

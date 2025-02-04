@@ -1,10 +1,12 @@
 // public/src/js/users.js
 window.operateEvents = window.operateEvents || {};
 
-window.operateEvents['click .edit'] = function (e, value, row, index) {
+window.operateEvents['click .edit'] = async function (e, value, row, index) {
+    const roles = await fetchRoles();
+
     showModal({
         title: 'Edit User',
-        body: generateEditForm(row),
+        body: generateEditForm(row, roles),
         actionText: 'Update',
         actionClass: 'btn-success',
         onConfirm: async () => {
@@ -33,6 +35,11 @@ window.operateEvents['click .edit'] = function (e, value, row, index) {
             }
         }
     });
+};
+
+const fetchRoles = async () => {
+    const response = await fetch('/api/users/roles');
+    return await response.json();
 };
 
 window.operateEvents['click .reset-password'] = function (e, value, row, index) {
@@ -73,18 +80,33 @@ window.operateEvents['click .reset-password'] = function (e, value, row, index) 
     });
 };
 
-const excludedFields = ['USER_ID', 'UPDATED_AT', 'CREATED_AT', 'DELETED_AT', 'PASSWORD'];
+const excludedFields = ['USER_ID', 'UPDATED_AT', 'CREATED_AT', 'DELETED_AT', 'PASSWORD', 'ROLE_ID'];
 
-const generateEditForm = (row) => {
+const generateEditForm = (row, roles) => {
     return `<form id="editForm">
         ${Object.entries(row)
             .filter(([key]) => !excludedFields.includes(key))
-            .map(([key, value]) => `
-                <div class="mb-3">
-                    <label for="${key}" class="form-label">${key.replace('_', ' ')}</label>
-                    <input type="text" class="form-control" id="${key}" name="${key}" value="${value}">
-                </div>
-            `)
+            .map(([key, value]) => {
+                if (key === 'ROLE_NAME') {
+                    return `
+                        <div class="mb-3">
+                            <label for="ROLE_ID" class="form-label">Role</label>
+                            <select class="form-control" id="ROLE_ID" name="ROLE_ID">
+                                ${roles.map(role => `
+                                    <option value="${role.ROLE_ID}" ${role.ROLE_ID === row.ROLE_ID ? 'selected' : ''}>${role.ROLE_NAME}</option>
+                                `).join('')}
+                            </select>
+                        </div>
+                    `;
+                } else {
+                    return `
+                        <div class="mb-3">
+                            <label for="${key}" class="form-label">${key.replace('_', ' ')}</label>
+                            <input type="text" class="form-control" id="${key}" name="${key}" value="${value}">
+                        </div>
+                    `;
+                }
+            })
             .join('')}
     </form>`;
 };

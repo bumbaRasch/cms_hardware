@@ -6,6 +6,8 @@ export const userRouter = async (fastify, options) => {
         return reply.view('users', { currentPath: '/users' });
     });
 
+    fastify.get('/api/users/roles', userController.getRoles);
+
     fastify.get('/api/users', {
         schema: {
             querystring: {

@@ -11,6 +11,11 @@ export const userController = {
             rows: users.data,    
         });
     },
+
+    getRoles: async (request, reply) => {
+        const roles = await userService.getRoles();
+        return reply.send(roles);
+    },
     
     updateUser: async (request, reply) => {
         const user = await userService.updateUser(request.params.id, request.body);
