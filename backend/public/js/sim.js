@@ -7,12 +7,12 @@ const apiRequest = async (url, method, data = null) => {
         method,
         headers: {}
     };
-    
+
     if (method !== 'DELETE' && data) {
         options.headers['Content-Type'] = 'application/json';
         options.body = JSON.stringify(data);
     }
-    
+
     const response = await fetch(url, options);
     if (!response.ok) {
         const errorText = await response.text();
@@ -25,12 +25,28 @@ const apiRequest = async (url, method, data = null) => {
     return response.json();
 };
 
+const fetchSelectOptions = async () => {
+    const [providers, tariffs, statuses, locations] = await Promise.all([
+        apiRequest('/api/providers', 'GET'),
+        apiRequest('/api/tariffs', 'GET'),
+        apiRequest('/api/statuses', 'GET'),
+        apiRequest('/api/locations', 'GET')
+    ]);
+
+    return {
+        PROVIDER_ID: providers.rows,
+        TARIFF_ID: tariffs.rows,
+        STATUS_ID: statuses.rows,
+        LOC_ID: locations.rows
+    };
+};
+
 window.operateEvents['click .edit'] = async function (e, value, row, index) {
-    const roles = await apiRequest('/api/users/roles', 'GET');
+    const selectOptions = await fetchSelectOptions();
 
     showModal({
-        title: 'Edit User',
-        body: generateEditForm(row, roles),
+        title: 'Edit SIM',
+        body: generateEditForm(row, selectOptions),
         actionText: 'Update',
         actionClass: 'btn-success',
         onConfirm: async () => {
@@ -49,37 +65,48 @@ window.operateEvents['click .edit'] = async function (e, value, row, index) {
     });
 };
 
-const excludedFields = ['SIM_ID', 'SIM_UPDATED_AT', 'SIM_CREATED_AT', 'SIM_DELETED_AT', 'PASSWORD', 'ROLE_ID'];
+const excludedFields = ['SIM_ID', 'SIM_UPDATED_AT', 'SIM_CREATED_AT', 'SIM_DELETED_AT', 'PROVIDER_NAME', 'TARIFF_NAME', 'LOC_NAME', 'ST_NAME'];
 
-const generateEditForm = (row, roles) => {
+const labelMapping = {
+    PROVIDER_ID: 'PROVIDER',
+    TARIFF_ID: 'TARIFF',
+    LOC_ID: 'LOCATION',
+    STATUS_ID: 'STATUS'
+};
+
+const generateEditForm = (row, selectOptions) => {
     return `<form id="editForm">
         ${Object.entries(row)
             .filter(([key]) => !excludedFields.includes(key))
-            .map(([key, value]) => {
-                if (key === 'ROLE_NAME') {
-                    return `
-                        <div class="mb-3">
-                            <label for="ROLE_ID" class="form-label">Role</label>
-                            <select class="form-control" id="ROLE_ID" name="ROLE_ID">
-                                ${roles.map(role => `
-                                    <option value="${role.ROLE_ID}" ${role.ROLE_ID === row.ROLE_ID ? 'selected' : ''}>${role.ROLE_NAME}</option>
-                                `).join('')}
-                            </select>
-                        </div>
-                    `;
-                } else {
-                    return `
-                        <div class="mb-3">
-                            <label for="${key}" class="form-label">${key.replace('_', ' ')}</label>
-                            <input type="text" class="form-control" id="${key}" name="${key}" value="${value}">
-                        </div>
-                    `;
-                }
-            })
+            .map(([key, value]) => selectOptions[key] ? generateSelectField(key, value, selectOptions[key]) : generateInputField(key, value))
             .join('')}
     </form>`;
 };
 
+const generateSelectField = (key, value, options) => {
+    const label = labelMapping[key] || key.replace('_', ' ');
+    const optionKey = key === 'STATUS_ID' ? 'ST_ID' : key;
+    const optionName = key === 'STATUS_ID' ? 'ST_NAME' : key.replace('_ID', '_NAME');
+    return `
+        <div class="mb-3">
+            <label for="${key}" class="form-label">${label}</label>
+            <select class="form-control" id="${key}" name="${key}">
+                ${options.map(option => `
+                    <option value="${option[optionKey]}" ${option[optionKey] === value ? 'selected' : ''}>${option[optionName]}</option>
+                `).join('')}
+            </select>
+        </div>
+    `;
+};
+
+const generateInputField = (key, value) => {
+    return `
+        <div class="mb-3">
+            <label for="${key}" class="form-label">${key.replace('_', ' ')}</label>
+            <input type="text" class="form-control" id="${key}" name="${key}" value="${value}">
+        </div>
+    `;
+};
 
 const showModal = ({ title, body, actionText, actionClass, onConfirm }) => {
     const modalLabel = document.getElementById('universalModalLabel');
@@ -128,7 +155,7 @@ window.operateEvents['click .delete'] = function (e, value, row, index) {
     const itemName = row.SIM_NUMBER;
 
     showModal({
-        title: 'Delete User',
+        title: 'Delete SIM',
         body: `Are you sure you want to delete <strong>${itemName}</strong>?`,
         actionText: 'Delete',
         actionClass: 'btn-danger',
@@ -141,20 +168,18 @@ window.operateEvents['click .delete'] = function (e, value, row, index) {
                 });
                 showAlert(`${itemName} was successfully deleted!`, 'success');
             } catch (error) {
-                console.error('Error deleting user:', error);
-                showAlert(`Failed to delete user: ${error.message}`, 'danger');
+                console.error('Error deleting SIM:', error);
+                showAlert(`Failed to delete SIM: ${error.message}`, 'danger');
             }
         }
     });
 };
 
 function operateFormatter(value, row, index) {
-    return [
-        `
-            <div class="d-grid gap-2 d-md-flex justify-content-md-center">
-                <button class="btn btn-sm btn-warning edit" title="Edit"><i class="bi bi-pencil"></i></button>
-                <button class="btn btn-sm btn-danger delete" title="Delete"><i class="bi bi-trash"></i></button>
-            </div>    
-        `
-    ].join('');
+    return `
+        <div class="d-grid gap-2 d-md-flex justify-content-md-center">
+            <button class="btn btn-sm btn-warning edit" title="Edit"><i class="bi bi-pencil"></i></button>
+            <button class="btn btn-sm btn-danger delete" title="Delete"><i class="bi bi-trash"></i></button>
+        </div>
+    `;
 }
