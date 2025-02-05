@@ -91,11 +91,13 @@ const labelMapping = {
 };
 
 const generateEditForm = (row, selectOptions) => {
-    return `<form id="editForm">
-        ${Object.entries(row)
-            .filter(([key]) => !excludedFields.includes(key))
-            .map(([key, value]) => selectOptions[key] ? generateSelectField(key, value, selectOptions[key]) : generateInputField(key, value))
-            .join('')}
+    const fields = Object.entries(row)
+        .filter(([key]) => !excludedFields.includes(key))
+        .map(([key, value]) => selectOptions[key] ? generateSelectField(key, value, selectOptions[key]) : generateInputField(key, value))
+        .join('');
+
+    return `<form id="editForm" class="row g-3">
+        ${fields}
     </form>`;
 };
 
@@ -104,7 +106,7 @@ const generateSelectField = (key, value, options) => {
     const optionKey = key === 'STATUS_ID' ? 'ST_ID' : key;
     const optionName = key === 'STATUS_ID' ? 'ST_NAME' : key.replace('_ID', '_NAME');
     return `
-        <div class="mb-3">
+        <div class="col-md-6">
             <label for="${key}" class="form-label">${label}</label>
             <select class="form-control" id="${key}" name="${key}">
                 ${options.map(option => `
@@ -118,7 +120,7 @@ const generateSelectField = (key, value, options) => {
 const generateInputField = (key, value) => {
     if (key === 'ACTIVATION_DATE' || key === 'EXPIRATION_DATE') {
         return `
-            <div class="mb-3">
+            <div class="col-md-6">
                 <label for="${key}" class="form-label">${key.replace('_', ' ')}</label>
                 <div class="input-group">
                     <input type="text" class="form-control" id="${key}" name="${key}" value="${value || ''}">
@@ -128,7 +130,7 @@ const generateInputField = (key, value) => {
         `;
     }
     return `
-        <div class="mb-3">
+        <div class="col-md-6">
             <label for="${key}" class="form-label">${key.replace('_', ' ')}</label>
             <input type="text" class="form-control" id="${key}" name="${key}" value="${value}">
         </div>
