@@ -15,8 +15,6 @@ export const providerService = {
         if (search) {
             whereClauses.OR = [
                 { PROVIDER_NAME: { contains: search } },
-                { PROVIDER_CODE: { contains: search } },
-                { COMMENTS: { contains: search } }
             ];
         }
 
@@ -38,10 +36,6 @@ export const providerService = {
             data: providers.map(item => ({
                 PROVIDER_ID: item.PROVIDER_ID,
                 PROVIDER_NAME: item.PROVIDER_NAME,
-                PROVIDER_CODE: item.PROVIDER_CODE,
-                COMMENTS: item.COMMENTS,
-                CREATED_AT: formatDate(item.CREATED_AT),
-                UPDATED_AT: formatDate(item.UPDATED_AT),
             })),
             total: parseInt(total),
         };
