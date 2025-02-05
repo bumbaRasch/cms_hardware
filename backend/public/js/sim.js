@@ -63,6 +63,22 @@ window.operateEvents['click .edit'] = async function (e, value, row, index) {
             }
         }
     });
+
+    const activationDatePicker = flatpickr("#ACTIVATION_DATE", { 
+        dateFormat: "d.m.Y",
+        defaultDate: row.ACTIVATION_DATE || null
+    });
+    const expirationDatePicker = flatpickr("#EXPIRATION_DATE", { 
+        dateFormat: "d.m.Y",
+        defaultDate: row.EXPIRATION_DATE || null
+    });
+
+    document.querySelector("#ACTIVATION_DATE + .input-group-text").addEventListener('click', () => {
+        activationDatePicker.open();
+    });
+    document.querySelector("#EXPIRATION_DATE + .input-group-text").addEventListener('click', () => {
+        expirationDatePicker.open();
+    });
 };
 
 const excludedFields = ['SIM_ID', 'SIM_UPDATED_AT', 'SIM_CREATED_AT', 'SIM_DELETED_AT', 'PROVIDER_NAME', 'TARIFF_NAME', 'LOC_NAME', 'ST_NAME'];
@@ -100,6 +116,17 @@ const generateSelectField = (key, value, options) => {
 };
 
 const generateInputField = (key, value) => {
+    if (key === 'ACTIVATION_DATE' || key === 'EXPIRATION_DATE') {
+        return `
+            <div class="mb-3">
+                <label for="${key}" class="form-label">${key.replace('_', ' ')}</label>
+                <div class="input-group">
+                    <input type="text" class="form-control" id="${key}" name="${key}" value="${value || ''}">
+                    <span class="input-group-text"><i class="bi bi-calendar2-date"></i></span>
+                </div>
+            </div>
+        `;
+    }
     return `
         <div class="mb-3">
             <label for="${key}" class="form-label">${key.replace('_', ' ')}</label>
