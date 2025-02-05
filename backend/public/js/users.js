@@ -1,8 +1,32 @@
-// public/src/js/users.js
+//backend/public/js/users.js
+
 window.operateEvents = window.operateEvents || {};
 
+const apiRequest = async (url, method, data = null) => {
+    const options = {
+        method,
+        headers: {}
+    };
+    
+    if (method !== 'DELETE' && data) {
+        options.headers['Content-Type'] = 'application/json';
+        options.body = JSON.stringify(data);
+    }
+    
+    const response = await fetch(url, options);
+    if (!response.ok) {
+        const errorText = await response.text();
+        throw new Error(errorText);
+    }
+
+    if (method === 'DELETE' && response.status === 204) {
+        return {};
+    }
+    return response.json();
+};
+
 window.operateEvents['click .edit'] = async function (e, value, row, index) {
-    const roles = await fetchRoles();
+    const roles = await apiRequest('/api/users/roles', 'GET');
 
     showModal({
         title: 'Edit User',
@@ -14,32 +38,15 @@ window.operateEvents['click .edit'] = async function (e, value, row, index) {
             const updatedData = Object.fromEntries(formData.entries());
 
             try {
-                const response = await fetch(`/api/users/${row.USER_ID}`, {
-                    method: 'PUT',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify(updatedData)
-                });
-
-                if (response.ok) {
-                    updateTableRow(row.USER_ID, updatedData);
-                    showAlert(`User <b>${row.USERNAME}</b> was successfully updated!`, 'success');
-                } else {
-                    const errorText = await response.text();
-                    showAlert(`Failed to update user ${row.USERNAME}: ${errorText}`, 'danger');
-                }
+                await apiRequest(`/api/users/${row.USER_ID}`, 'PUT', updatedData);
+                updateTableRow(row.USER_ID, updatedData);
+                showAlert(`User <b>${row.USERNAME}</b> was successfully updated!`, 'success');
             } catch (error) {
                 console.error('Error updating user:', error);
-                showAlert(`An error occurred while updating the user: ${error.message}`, 'danger');
+                showAlert(`Failed to update user ${row.USERNAME}: ${error.message}`, 'danger');
             }
         }
     });
-};
-
-const fetchRoles = async () => {
-    const response = await fetch('/api/users/roles');
-    return await response.json();
 };
 
 window.operateEvents['click .reset-password'] = function (e, value, row, index) {
@@ -51,30 +58,16 @@ window.operateEvents['click .reset-password'] = function (e, value, row, index) 
         onConfirm: async () => {
             const formData = new FormData(document.getElementById('resetPasswordForm'));
             const updatedData = Object.fromEntries(formData.entries());
-
             updatedData.PASSWORD = updatedData.newPassword;
             delete updatedData.newPassword;
 
             try {
-                const response = await fetch(`/api/users/${row.USER_ID}/reset-password`, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify(updatedData)
-                });
-
-                if (response.ok) {
-                    updateTableRow(row.USER_ID, { ...row, PASSWORD: updatedData.PASSWORD });
-                    showAlert(`Password for user <b>${row.USERNAME}</b> was successfully reset!`, 'success');
-                } else {
-                    const errorText = await response.text();
-                    console.error(`Failed to reset password for user ${row.USERNAME} Error resetting password: ${errorText}`);
-                    showAlert(`Failed to reset password for user ${row.USERNAME}: ${errorText}`, 'danger');
-                }
+                await apiRequest(`/api/users/${row.USER_ID}/reset-password`, 'POST', updatedData);
+                updateTableRow(row.USER_ID, { ...row, PASSWORD: updatedData.PASSWORD });
+                showAlert(`Password for user <b>${row.USERNAME}</b> was successfully reset!`, 'success');
             } catch (error) {
                 console.error('Error resetting password:', error);
-                showAlert(`An error occurred while resetting the password: ${error.message}`, 'danger');
+                showAlert(`Failed to reset password for user ${row.USERNAME}: ${error.message}`, 'danger');
             }
         }
     });
@@ -228,23 +221,15 @@ window.operateEvents['click .delete'] = function (e, value, row, index) {
         actionClass: 'btn-danger',
         onConfirm: async () => {
             try {
-                const response = await fetch(`/api/users/${row.USER_ID}`, {
-                    method: 'DELETE'
+                await apiRequest(`/api/users/${row.USER_ID}`, 'DELETE');
+                $('#table').bootstrapTable('remove', {
+                    field: 'USER_ID',
+                    values: [row.USER_ID]
                 });
-
-                if (response.ok) {
-                    $('#table').bootstrapTable('remove', {
-                        field: 'USER_ID',
-                        values: [row.USER_ID]
-                    });
-                    showAlert(`${itemName} was successfully deleted!`, 'success');
-                } else {
-                    const errorText = await response.text();
-                    showAlert(`Failed to delete user: ${errorText}`, 'danger');
-                }
+                showAlert(`${itemName} was successfully deleted!`, 'success');
             } catch (error) {
                 console.error('Error deleting user:', error);
-                showAlert(`An error occurred while deleting the user: ${error.message}`, 'danger');
+                showAlert(`Failed to delete user: ${error.message}`, 'danger');
             }
         }
     });

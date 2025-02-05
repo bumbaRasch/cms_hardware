@@ -5,7 +5,9 @@ import { hashPassword, verifyPassword } from '../utils/password.js';
 
 export const userService = {
     getUsers: async ({ offset = 0, limit = 10, sort = 'CREATED_AT', order = 'desc', filter = {}, search = '' }) => {
-        const whereClauses = {};
+        const whereClauses = {
+            DELETED_AT: null
+        };
         for (const [key, value] of Object.entries(filter)) {
             if (value) {
                 whereClauses[key] = { contains: value };
@@ -120,8 +122,11 @@ export const userService = {
     },
     
     deleteUser: async (id) => {
-        return await prisma.tbl_users.delete({
-            where: { USER_ID: id }
+        return await prisma.tbl_users.update({
+            where: { USER_ID: id },
+            data: { 
+                DELETED_AT: new Date()
+            }
         });
     },
 
