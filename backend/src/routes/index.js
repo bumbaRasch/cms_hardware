@@ -5,6 +5,7 @@ import {simRouter} from './sim.route.js';
 import {userRouter} from './user.route.js';
 import {providerRouter} from './provider.route.js';
 import {tariffRouter} from './tariff.route.js';
+import {locationRouter} from './location.route.js';
 
 async function routes(fastify, options) {
   fastify.register(homeRouter);
@@ -13,6 +14,7 @@ async function routes(fastify, options) {
   fastify.register(userRouter);
   fastify.register(providerRouter);
   fastify.register(tariffRouter);
+  fastify.register(locationRouter);
 }
 
 export default routes;
