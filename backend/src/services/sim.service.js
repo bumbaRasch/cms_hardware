@@ -56,9 +56,13 @@ export const simService = {
             data: sims.map(item => ({
                 SIM_ID: item.SIM_ID,
                 SIM_NUMBER: item.SIM_NUMBER,
+                PROVIDER_ID: item.PROVIDER_ID,
                 PROVIDER_NAME: item.tbl_providers.PROVIDER_NAME,
+                TARIFF_ID: item.TARIFF_ID,
                 TARIFF_NAME: item.tbl_tariffs.TARIFF_NAME,
+                LOC_ID: item.LOC_ID,
                 LOC_NAME: item.tbl_locations.LOC_NAME,
+                STATUS_ID: item.STATUS_ID,
                 ST_NAME: item.tbl_statuses.ST_NAME,
                 PIN1: item.PIN1,
                 PUK1: item.PUK1,
@@ -120,6 +124,30 @@ export const simService = {
         };
     },
 
+    updateSim: async (id, body) => {
+        const updateData = {
+            SIM_NUMBER: body.SIM_NUMBER,
+            PROVIDER_ID: parseInt(body.PROVIDER_ID),
+            TARIFF_ID: parseInt(body.TARIFF_ID),
+            LOC_ID: parseInt(body.LOC_ID),
+            STATUS_ID: parseInt(body.STATUS_ID),
+            PIN1: body.PIN1,
+            PUK1: body.PUK1,
+            PIN2: body.PIN2,
+            PUK2: body.PUK2,
+            ACTIVATION_DATE: isValidDate(body.ACTIVATION_DATE) ? new Date(body.ACTIVATION_DATE).toISOString() : null,
+            EXPIRATION_DATE: isValidDate(body.EXPIRATION_DATE) ? new Date(body.EXPIRATION_DATE).toISOString() : null,
+            COMMENTS: body.COMMENTS
+        };
+
+        return await prisma.tbl_sim_cards.update({
+            where: {
+                SIM_ID: parseInt(id)
+            },
+            data: updateData,
+        });
+    },
+
     deleteSim: async (id) => {
         try {
             await prisma.tbl_hardware.updateMany({
@@ -143,4 +171,9 @@ export const simService = {
             return null;
         }
     }
+};
+
+const isValidDate = (dateString) => {
+    const date = new Date(dateString);
+    return !isNaN(date.getTime());
 };

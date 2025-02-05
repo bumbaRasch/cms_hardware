@@ -16,6 +16,13 @@ export const simController = {
         return sim;
     },
 
+    updateSim: async (request, reply) => {
+        const sim = await simService.updateSim(request.params.id, request.body);
+        return sim 
+            ? reply.send(sim) 
+            : reply.code(404).send({ message: 'Sim not found' });
+    },
+
     deleteSim: async (request, reply) => {
         const sim = await simService.deleteSim(request.params.id);
         return sim 
