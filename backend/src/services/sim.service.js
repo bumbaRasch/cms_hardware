@@ -4,7 +4,9 @@ import { formatDate } from '../utils/date.js';
 
 export const simService = {
     getSims: async ({ offset = 0, limit = 10, sort = 'SIM_CREATED_AT', order = 'desc', filter = {}, search = '' }) => {
-        const whereClauses = {};
+        const whereClauses = {
+            SIM_DELETED_AT: null
+        };
         for (const [key, value] of Object.entries(filter)) {
             if (value) {
                 whereClauses[key] = { contains: value };
