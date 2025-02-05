@@ -65,11 +65,11 @@ window.operateEvents['click .edit'] = async function (e, value, row, index) {
     });
 
     const activationDatePicker = flatpickr("#ACTIVATION_DATE", { 
-        dateFormat: "d.m.Y",
+        dateFormat: "Y-m-d",
         defaultDate: row.ACTIVATION_DATE || null
     });
     const expirationDatePicker = flatpickr("#EXPIRATION_DATE", { 
-        dateFormat: "d.m.Y",
+        dateFormat: "Y-m-d",
         defaultDate: row.EXPIRATION_DATE || null
     });
 
