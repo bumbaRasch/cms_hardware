@@ -7,6 +7,7 @@ import {providerRouter} from './provider.route.js';
 import {tariffRouter} from './tariff.route.js';
 import {locationRouter} from './location.route.js';
 import {statusRouter} from './status.route.js';
+import {typeRouter} from './type.route.js';
 
 async function routes(fastify, options) {
   fastify.register(homeRouter);
@@ -17,6 +18,7 @@ async function routes(fastify, options) {
   fastify.register(tariffRouter);
   fastify.register(locationRouter);
   fastify.register(statusRouter);
+  fastify.register(typeRouter);
 }
 
 export default routes;
