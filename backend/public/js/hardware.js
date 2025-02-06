@@ -2,99 +2,22 @@
 
 window.operateEvents = window.operateEvents || {};
 
-const apiRequest = async (url, method, data = null) => {
-    const options = {
-        method,
-        headers: {}
-    };
-
-    if (method !== 'DELETE' && data) {
-        options.headers['Content-Type'] = 'application/json';
-        options.body = JSON.stringify(data);
-    }
-
-    const response = await fetch(url, options);
-    if (!response.ok) {
-        const errorText = await response.text();
-        throw new Error(errorText);
-    }
-
-    if (method === 'DELETE' && response.status === 204) {
-        return {};
-    }
-    return response.json();
+const API_URLS = {
+    STATUSES: '/api/statuses',
+    LOCATIONS: '/api/locations',
+    TYPES: '/api/types',
+    CURRENCIES: '/api/currencies',
+    SUPPLIERS: '/api/suppliers',
+    STORES: '/api/stores',
+    HARDWARE: '/api/hardware',
+    SIMS: '/api/sim-cards',
 };
 
-const fetchSelectOptions = async () => {
-    const [statuses, locations, types, currencies, suppliers, stores] = await Promise.all([
-        apiRequest('/api/statuses', 'GET'),
-        apiRequest('/api/locations', 'GET'),
-        apiRequest('/api/types', 'GET'),
-        apiRequest('/api/currencies', 'GET'),
-        apiRequest('/api/suppliers', 'GET'),
-        apiRequest('/api/stores', 'GET'),
-    ]);
-    return {
-        ST_NAME: statuses.rows,
-        LOC_NAME: locations.rows,
-        HT_NAME: types.rows,
-        CURRENCY_CODE: currencies.rows,
-        SUPPLIER_NAME: suppliers.rows,
-        STORE_NAME: stores.rows,
-    };
-};
+const EXCLUDED_FIELDS = ['HA_ID', 'HT_NAME', 'HA_LOCATION', 'HA_STATUS', 'HA_CURRENCY', 'HA_SUPPLIER', 'HA_STORE', 'HA_SIM_CARD', 'HA_CREATED_AT', 'HA_DELETED_AT', 'ST_ID', 'LOC_ID', 'PROVIDER_NAME', 'TARIFF_NAME'];
 
-window.operateEvents['click .edit'] = async function (e, value, row, index) {
-    const selectOptions = await fetchSelectOptions();
-
-    showModal({
-        title: 'Edit HARDWARE',
-        body: generateEditForm(row, selectOptions),
-        actionText: 'Update',
-        actionClass: 'btn-success',
-        size: 'modal-lg',
-        onConfirm: async () => {
-            const formData = new FormData(document.getElementById('editForm'));
-            const updatedData = Object.fromEntries(formData.entries());
-
-            if (updatedData.HA_COST) {
-                updatedData.HA_COST = parseFloat(updatedData.HA_COST);
-            }
-
-            Object.keys(updatedData).forEach(key => {
-                if (updatedData[key] === '') {
-                    updatedData[key] = null;
-                }
-            });
-
-            try {
-                await apiRequest(`/api/hardware/${row.HA_ID}`, 'PUT', updatedData);
-                updateTableRow(row.HA_ID, updatedData);
-                showAlert(`Hardware <b>${row.HA_NAME}</b> was successfully updated!`, 'success');
-            } catch (error) {
-                console.error('Error updating hardware:', error);
-                showAlert(`Failed to update hardware ${row.HA_NAME}: ${error.message}`, 'danger');
-            }
-        }
-    });
-
-    const dateFields = ['HA_LAST_MAINTENANCE_DATE', 'HA_RETIREMENT_DATE', 'HA_WARRANTY_EXPIRY_DATE', 'HA_DEPLOYMENT_DATE', 'HA_PURCHASE_DATE'];
-    dateFields.forEach(field => {
-        const datePicker = flatpickr(`#${field}`, { 
-            dateFormat: "Y-m-d",
-            defaultDate: row[field] || null
-        });
-        document.querySelector(`#${field} + .input-group-text`).addEventListener('click', () => {
-            datePicker.open();
-        });
-    });
-};
-
-const excludedFields = ['HA_ID', 'HA_TYPE', 'HA_LOCATION', 'HA_STATUS', 'HA_CURRENCY', 'HA_SUPPLIER', 'HA_STORE', 'HA_SIM_CARD', 'HA_CREATED_AT', 'HA_DELETED_AT', 'ST_ID', 'LOC_ID','PROVIDER_NAME', 'TARIFF_NAME',];
-
-const labelMapping = {
+const LABEL_MAPPING = {
     HA_NAME: 'NAME',
-    HT_NAME: 'HARDWARE TYPE',
+    HA_TYPE: 'HARDWARE TYPE',
     HA_MANUFACTURER: 'MANUFACTURER',
     HA_MODEL: 'MODEL',
     HA_SERIAL_NUMBER: 'SERIAL NUMBER',
@@ -108,7 +31,7 @@ const labelMapping = {
     STORE_NAME: 'STORE',
     SUPPLIER_NAME: 'SUPPLIER',
     HA_COST: 'COST',
-    CURRENCY_CODE: 'CURRENCY',
+    HA_CURRENCY: 'CURRENCY',
     HA_CONDITION: 'CONDITION',
     HA_DEPLOYMENT_DATE: 'DEPLOYMENT DATE',
     HA_RETIREMENT_DATE: 'RETIREMENT DATE',
@@ -116,9 +39,118 @@ const labelMapping = {
     HA_MAC_ADDRESS: 'MAC ADDRESS'
 };
 
+const FIELD_MAPPINGS = {
+    HA_TYPE: { id: 'HT_ID', name: 'HT_NAME' },
+    CURRENCY_CODE: { id: 'CURRENCY_ID', name: 'CURRENCY_CODE' }
+};
+
+function costFormatter(value) {
+    return value ? parseFloat(value).toFixed(2).replace('.', ',') : '';
+}
+
+const apiRequest = async (url, method, data = null) => {
+    const options = {
+        method,
+        headers: {}
+    };
+
+    if (method !== 'DELETE' && data) {
+        options.headers['Content-Type'] = 'application/json';
+        options.body = JSON.stringify(data);
+    }
+
+    try {
+        const response = await fetch(url, options);
+        if (!response.ok) {
+            const errorText = await response.text();
+            throw new Error(errorText);
+        }
+
+        if (method === 'DELETE' && response.status === 204) {
+            return {};
+        }
+        return response.json();
+    } catch (error) {
+        console.error(`Error with ${method} request to ${url}:`, error);
+        throw error;
+    }
+};
+
+const fetchSelectOptions = async () => {
+    const [statuses, locations, types, currencies, suppliers, stores, sims] = await Promise.all([
+        apiRequest(API_URLS.STATUSES, 'GET'),
+        apiRequest(API_URLS.LOCATIONS, 'GET'),
+        apiRequest(API_URLS.TYPES, 'GET'),
+        apiRequest(API_URLS.CURRENCIES, 'GET'),
+        apiRequest(API_URLS.SUPPLIERS, 'GET'),
+        apiRequest(API_URLS.STORES, 'GET'),
+        apiRequest(API_URLS.SIMS, 'GET'),
+    ]);
+
+    return {
+        ST_NAME: statuses.rows,
+        LOC_NAME: locations.rows,
+        HA_TYPE: types.rows,
+        CURRENCY_CODE: currencies.rows,
+        SUPPLIER_NAME: suppliers.rows,
+        STORE_NAME: stores.rows,
+        SIM_NUMBER: sims.rows,
+    };
+};
+
+const handleEditClick = async (e, value, row, index) => {
+    const selectOptions = await fetchSelectOptions();
+
+    showModal({
+        title: 'Edit HARDWARE',
+        body: generateEditForm(row, selectOptions),
+        actionText: 'Update',
+        actionClass: 'btn-success',
+        size: 'modal-lg',
+        onConfirm: async () => {
+            const formData = new FormData(document.getElementById('editForm'));
+            const updatedData = Object.fromEntries(formData.entries());
+
+            if (updatedData.HA_COST) {
+                updatedData.HA_COST = parseFloat(updatedData.HA_COST.replace(',', '.'));
+            }
+
+            Object.keys(updatedData).forEach(key => {
+                if (updatedData[key] === '') {
+                    updatedData[key] = null;
+                }
+            });
+
+            try {
+                await apiRequest(`${API_URLS.HARDWARE}/${row.HA_ID}`, 'PUT', updatedData);
+                updateTableRow(row.HA_ID, updatedData);
+                showAlert(`Hardware <b>${row.HA_NAME}</b> was successfully updated!`, 'success');
+            } catch (error) {
+                console.error('Error updating hardware:', error);
+                showAlert(`Failed to update hardware ${row.HA_NAME}: ${error.message}`, 'danger');
+            }
+        }
+    });
+
+    initializeDatePickers(row);
+};
+
+const initializeDatePickers = (row) => {
+    const dateFields = ['HA_LAST_MAINTENANCE_DATE', 'HA_RETIREMENT_DATE', 'HA_WARRANTY_EXPIRY_DATE', 'HA_DEPLOYMENT_DATE', 'HA_PURCHASE_DATE'];
+    dateFields.forEach(field => {
+        const datePicker = flatpickr(`#${field}`, { 
+            dateFormat: "Y-m-d",
+            defaultDate: row[field] || null
+        });
+        document.querySelector(`#${field} + .input-group-text`).addEventListener('click', () => {
+            datePicker.open();
+        });
+    });
+};
+
 const generateEditForm = (row, selectOptions) => {
     const fields = Object.entries(row)
-        .filter(([key]) => !excludedFields.includes(key))
+        .filter(([key]) => !EXCLUDED_FIELDS.includes(key))
         .map(([key, value]) => selectOptions[key] ? generateSelectField(key, value, selectOptions[key]) : generateInputField(key, value))
         .join('');
 
@@ -128,13 +160,17 @@ const generateEditForm = (row, selectOptions) => {
 };
 
 const generateSelectField = (key, value, options) => {
-    const label = labelMapping[key] || key.replace('_', ' ');
+    const label = LABEL_MAPPING[key] || key.replace('_', ' ');
+    let fieldMapping = FIELD_MAPPINGS[key] || { id: key.replace('_NAME', '_ID'), name: key };
+    const optionKey = fieldMapping.id;
+    console.log(key)
+    const optionText = fieldMapping.name;
     return `
         <div class="col-md-4">
             <label for="${key}" class="form-label">${label}</label>
             <select class="form-control" id="${key}" name="${key}">
                 ${options.map(option => `
-                    <option value="${option[key]}" ${option[key] === value ? 'selected' : ''}>${option[key]}</option>
+                    <option value="${option[optionKey]}" ${option[optionKey] === value ? 'selected' : ''}>${option[optionText]}</option>
                 `).join('')}
             </select>
         </div>
@@ -145,7 +181,7 @@ const generateInputField = (key, value) => {
     if (['HA_LAST_MAINTENANCE_DATE', 'HA_RETIREMENT_DATE', 'HA_WARRANTY_EXPIRY_DATE', 'HA_DEPLOYMENT_DATE', 'HA_PURCHASE_DATE'].includes(key)) {
         return `
             <div class="col-md-4">
-                <label for="${key}" class="form-label">${labelMapping[key] || key.replace('_', ' ')}</label>
+                <label for="${key}" class="form-label">${LABEL_MAPPING[key] || key.replace('_', ' ')}</label>
                 <div class="input-group">
                     <input type="text" class="form-control" id="${key}" name="${key}" value="${value || ''}">
                     <span class="input-group-text"><i class="bi bi-calendar2-date"></i></span>
@@ -153,9 +189,12 @@ const generateInputField = (key, value) => {
             </div>
         `;
     }
+    if (key === 'HA_COST') {
+        value = value ? parseFloat(value).toFixed(2).replace('.', ',') : '';
+    }
     return `
         <div class="col-md-4">
-            <label for="${key}" class="form-label">${labelMapping[key] || key.replace('_', ' ')}</label>
+            <label for="${key}" class="form-label">${LABEL_MAPPING[key] || key.replace('_', ' ')}</label>
             <input type="text" class="form-control" id="${key}" name="${key}" value="${value}">
         </div>
     `;
@@ -206,6 +245,8 @@ const updateTableRow = (id, updatedData) => {
     $('#table').bootstrapTable('refresh');
 };
 
+window.operateEvents['click .edit'] = handleEditClick;
+
 window.operateEvents['click .delete'] = function (e, value, row, index) {
     const itemName = row.HA_NAME;
 
@@ -216,7 +257,7 @@ window.operateEvents['click .delete'] = function (e, value, row, index) {
         actionClass: 'btn-danger',
         onConfirm: async () => {
             try {
-                await apiRequest(`/api/hardware/${row.HA_ID}`, 'DELETE');
+                await apiRequest(`${API_URLS.HARDWARE}/${row.HA_ID}`, 'DELETE');
                 $('#table').bootstrapTable('remove', {
                     field: 'HA_ID',
                     values: [row.HA_ID]
