@@ -52,6 +52,7 @@ window.operateEvents['click .edit'] = async function (e, value, row, index) {
         body: generateEditForm(row, selectOptions),
         actionText: 'Update',
         actionClass: 'btn-success',
+        size: 'modal-lg',
         onConfirm: async () => {
             const formData = new FormData(document.getElementById('editForm'));
             const updatedData = Object.fromEntries(formData.entries());
@@ -150,15 +151,17 @@ const generateInputField = (key, value) => {
     `;
 };
 
-const showModal = ({ title, body, actionText, actionClass, onConfirm }) => {
+const showModal = ({ title, body, actionText, actionClass, onConfirm, size = '' }) => {
     const modalLabel = document.getElementById('universalModalLabel');
     const modalBody = document.getElementById('universalModalBody');
     const saveButton = document.getElementById('universalModalSave');
+    const modalDialog = document.getElementById('universalModalDialog');
 
     modalLabel.textContent = title;
     modalBody.innerHTML = body;
     saveButton.textContent = actionText;
     saveButton.className = `btn ${actionClass}`;
+    modalDialog.className = `modal-dialog ${size}`;
 
     const newSaveButton = saveButton.cloneNode(true);
     saveButton.replaceWith(newSaveButton);
