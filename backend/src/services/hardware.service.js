@@ -181,6 +181,39 @@ export const hardwareService = {
         };
     },
 
+    updateHardware: async (id, body) => {
+        const updateData = {
+            HA_NAME: body.HA_NAME,
+            HA_TYPE: body.HA_TYPE,
+            HA_MANUFACTURER: body.HA_MANUFACTURER,
+            HA_MODEL: body.HA_MODEL,
+            HA_SERIAL_NUMBER: body.HA_SERIAL_NUMBER,
+            HA_PURCHASE_DATE: new Date(body.HA_PURCHASE_DATE).toISOString(),
+            HA_WARRANTY_EXPIRY_DATE: new Date(body.HA_WARRANTY_EXPIRY_DATE).toISOString(),
+            HA_LOCATION: body.HA_LOCATION,
+            HA_STATUS: body.HA_STATUS,
+            HA_LAST_MAINTENANCE_DATE: new Date(body.HA_LAST_MAINTENANCE_DATE).toISOString(),
+            HA_NOTES: body.HA_NOTES,
+            HA_SIM_CARD: body.HA_SIM_CARD,
+            HA_STORE: body.HA_STORE,
+            HA_SUPPLIER: body.HA_SUPPLIER,
+            HA_COST: body.HA_COST,
+            HA_CURRENCY: body.HA_CURRENCY,
+            HA_CONDITION: body.HA_CONDITION,
+            HA_DEPLOYMENT_DATE: new Date(body.HA_DEPLOYMENT_DATE).toISOString(),
+            HA_RETIREMENT_DATE: body.HA_RETIREMENT_DATE ? new Date(body.HA_RETIREMENT_DATE).toISOString() : null,
+            HA_IP_ADDRESS: body.HA_IP_ADDRESS,
+            HA_MAC_ADDRESS: body.HA_MAC_ADDRESS,
+        };
+
+        return await prisma.tbl_hardware.update({
+            where: {
+                HA_ID: parseInt(id)
+            },
+            data: updateData,
+        });
+    },
+
     deleteHardware: async (id) => {
         try {
             const hardware = await prisma.tbl_hardware.delete({

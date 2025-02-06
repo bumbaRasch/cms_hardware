@@ -16,6 +16,13 @@ export const hardwareController = {
         return hardware;
     },
 
+    updateHardware: async (request, reply) => {
+        const hardware = await hardwareService.updateHardware(request.params.id, request.body);
+        return hardware 
+            ? reply.send(hardware) 
+            : reply.code(401).send({ message: 'Hardware not found' });
+    },
+
     deleteHardware: async (request, reply) => {
         const hardware = await hardwareService.deleteHardware(request.params.id);
         return hardware 
