@@ -13,7 +13,7 @@ const API_URLS = {
     SIMS: '/api/sim-cards',
 };
 
-const EXCLUDED_FIELDS = ['HA_ID', 'HT_NAME', 'HA_LOCATION', 'HA_STATUS', 'HA_CURRENCY', 'HA_SUPPLIER', 'HA_STORE', 'HA_SIM_CARD', 'HA_CREATED_AT', 'HA_DELETED_AT', 'ST_ID', 'LOC_ID', 'PROVIDER_NAME', 'TARIFF_NAME'];
+const EXCLUDED_FIELDS = ['HA_ID', 'HT_NAME', 'HA_LOCATION', 'HA_STATUS', 'CURRENCY_CODE', 'HA_SUPPLIER', 'HA_STORE', 'HA_SIM_CARD', 'HA_CREATED_AT', 'HA_DELETED_AT', 'ST_ID', 'LOC_ID', 'PROVIDER_NAME', 'TARIFF_NAME'];
 
 const LABEL_MAPPING = {
     HA_NAME: 'NAME',
@@ -41,7 +41,7 @@ const LABEL_MAPPING = {
 
 const FIELD_MAPPINGS = {
     HA_TYPE: { id: 'HT_ID', name: 'HT_NAME' },
-    CURRENCY_CODE: { id: 'CURRENCY_ID', name: 'CURRENCY_CODE' }
+    HA_CURRENCY: { id: 'CURRENCY_ID', name: 'CURRENCY_CODE' }
 };
 
 function costFormatter(value) {
@@ -91,7 +91,7 @@ const fetchSelectOptions = async () => {
         ST_NAME: statuses.rows,
         LOC_NAME: locations.rows,
         HA_TYPE: types.rows,
-        CURRENCY_CODE: currencies.rows,
+        HA_CURRENCY: currencies.rows,
         SUPPLIER_NAME: suppliers.rows,
         STORE_NAME: stores.rows,
         SIM_NUMBER: sims.rows,
