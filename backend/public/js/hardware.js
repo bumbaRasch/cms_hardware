@@ -115,6 +115,13 @@ const handleEditClick = async (e, value, row, index) => {
                 updatedData.HA_COST = parseFloat(updatedData.HA_COST.replace(',', '.'));
             }
 
+            const integerFields = ['HA_TYPE', 'LOC_NAME', 'ST_NAME', 'STORE_NAME', 'SUPPLIER_NAME', 'HA_CURRENCY'];
+            integerFields.forEach(field => {
+                if (updatedData[field]) {
+                    updatedData[field] = parseInt(updatedData[field], 10);
+                }
+            });
+
             Object.keys(updatedData).forEach(key => {
                 if (updatedData[key] === '') {
                     updatedData[key] = null;
@@ -163,7 +170,6 @@ const generateSelectField = (key, value, options) => {
     const label = LABEL_MAPPING[key] || key.replace('_', ' ');
     let fieldMapping = FIELD_MAPPINGS[key] || { id: key.replace('_NAME', '_ID'), name: key };
     const optionKey = fieldMapping.id;
-    console.log(key)
     const optionText = fieldMapping.name;
     return `
         <div class="col-md-4">
