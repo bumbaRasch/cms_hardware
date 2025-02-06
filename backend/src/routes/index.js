@@ -9,7 +9,8 @@ import {locationRouter} from './location.route.js';
 import {statusRouter} from './status.route.js';
 import {typeRouter} from './type.route.js';
 import {currencyRouter} from './currency.route.js';
-import { supplierRouter } from './supplier.route.js';
+import {supplierRouter} from './supplier.route.js';
+import {storeRouter} from './store.route.js';
 
 async function routes(fastify, options) {
   fastify.register(homeRouter);
@@ -23,6 +24,7 @@ async function routes(fastify, options) {
   fastify.register(typeRouter);
   fastify.register(currencyRouter);
   fastify.register(supplierRouter);
+  fastify.register(storeRouter);
 }
 
 export default routes;

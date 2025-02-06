@@ -26,13 +26,13 @@ const apiRequest = async (url, method, data = null) => {
 };
 
 const fetchSelectOptions = async () => {
-    const [statuses, locations, types, currencies, suppliers] = await Promise.all([
+    const [statuses, locations, types, currencies, suppliers, stores] = await Promise.all([
         apiRequest('/api/statuses', 'GET'),
         apiRequest('/api/locations', 'GET'),
         apiRequest('/api/types', 'GET'),
         apiRequest('/api/currencies', 'GET'),
         apiRequest('/api/suppliers', 'GET'),
-        // apiRequest('/api/stores', 'GET'),
+        apiRequest('/api/stores', 'GET'),
     ]);
     return {
         ST_NAME: statuses.rows,
@@ -40,6 +40,7 @@ const fetchSelectOptions = async () => {
         HT_NAME: types.rows,
         CURRENCY_CODE: currencies.rows,
         SUPPLIER_NAME: suppliers.rows,
+        STORE_NAME: stores.rows,
     };
 };
 
@@ -79,7 +80,7 @@ window.operateEvents['click .edit'] = async function (e, value, row, index) {
     });
 };
 
-const excludedFields = ['HA_ID', 'HA_TYPE', 'HA_LOCATION', 'HA_STATUS', 'HA_CURRENCY', 'HA_SUPPLIER', 'HA_SIM_CARD', 'HA_CREATED_AT', 'HA_DELETED_AT', 'ST_ID', 'LOC_ID','PROVIDER_NAME', 'TARIFF_NAME', 'STORE_NAME',];
+const excludedFields = ['HA_ID', 'HA_TYPE', 'HA_LOCATION', 'HA_STATUS', 'HA_CURRENCY', 'HA_SUPPLIER', 'HA_STORE', 'HA_SIM_CARD', 'HA_CREATED_AT', 'HA_DELETED_AT', 'ST_ID', 'LOC_ID','PROVIDER_NAME', 'TARIFF_NAME',];
 
 const labelMapping = {
     LOC_NAME: 'LOCATION',
@@ -87,6 +88,7 @@ const labelMapping = {
     HT_NAME: 'HARDWARE TYPE',
     CURRENCY_CODE: 'CURRENCY',
     SUPPLIER_NAME: 'SUPPLIER',
+    STORE_NAME: 'STORE',
 };
 
 const generateEditForm = (row, selectOptions) => {
@@ -101,7 +103,6 @@ const generateEditForm = (row, selectOptions) => {
 };
 
 const generateSelectField = (key, value, options) => {
-    console.log(key, value, options);
     const label = labelMapping[key] || key.replace('_', ' ');
     return `
         <div class="col-md-4">
