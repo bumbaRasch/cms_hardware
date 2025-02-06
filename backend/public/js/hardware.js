@@ -67,7 +67,6 @@ window.operateEvents['click .edit'] = async function (e, value, row, index) {
         }
     });
 
-    // Initialize Flatpickr on all date fields
     const dateFields = ['HA_LAST_MAINTENANCE_DATE', 'HA_RETIREMENT_DATE', 'HA_WARRANTY_EXPIRY_DATE', 'HA_DEPLOYMENT_DATE', 'HA_PURCHASE_DATE'];
     dateFields.forEach(field => {
         const datePicker = flatpickr(`#${field}`, { 
@@ -83,12 +82,27 @@ window.operateEvents['click .edit'] = async function (e, value, row, index) {
 const excludedFields = ['HA_ID', 'HA_TYPE', 'HA_LOCATION', 'HA_STATUS', 'HA_CURRENCY', 'HA_SUPPLIER', 'HA_STORE', 'HA_SIM_CARD', 'HA_CREATED_AT', 'HA_DELETED_AT', 'ST_ID', 'LOC_ID','PROVIDER_NAME', 'TARIFF_NAME',];
 
 const labelMapping = {
+    HA_NAME: 'NAME',
+    HT_NAME: 'HARDWARE TYPE',
+    HA_MANUFACTURER: 'MANUFACTURER',
+    HA_MODEL: 'MODEL',
+    HA_SERIAL_NUMBER: 'SERIAL NUMBER',
+    HA_PURCHASE_DATE: 'PURCHASE DATE',
+    HA_WARRANTY_EXPIRY_DATE: 'WARRANTY EXPIRY DATE',
     LOC_NAME: 'LOCATION',
     ST_NAME: 'STATUS',
-    HT_NAME: 'HARDWARE TYPE',
-    CURRENCY_CODE: 'CURRENCY',
-    SUPPLIER_NAME: 'SUPPLIER',
+    HA_LAST_MAINTENANCE_DATE: 'LAST MAINTENANCE DATE',
+    HA_NOTES: 'NOTES',
+    SIM_NUMBER: 'SIM NUMBER',
     STORE_NAME: 'STORE',
+    SUPPLIER_NAME: 'SUPPLIER',
+    HA_COST: 'COST',
+    CURRENCY_CODE: 'CURRENCY',
+    HA_CONDITION: 'CONDITION',
+    HA_DEPLOYMENT_DATE: 'DEPLOYMENT DATE',
+    HA_RETIREMENT_DATE: 'RETIREMENT DATE',
+    HA_IP_ADDRESS: 'IP ADDRESS',
+    HA_MAC_ADDRESS: 'MAC ADDRESS'
 };
 
 const generateEditForm = (row, selectOptions) => {
@@ -120,7 +134,7 @@ const generateInputField = (key, value) => {
     if (['HA_LAST_MAINTENANCE_DATE', 'HA_RETIREMENT_DATE', 'HA_WARRANTY_EXPIRY_DATE', 'HA_DEPLOYMENT_DATE', 'HA_PURCHASE_DATE'].includes(key)) {
         return `
             <div class="col-md-4">
-                <label for="${key}" class="form-label">${key.replace('_', ' ')}</label>
+                <label for="${key}" class="form-label">${labelMapping[key] || key.replace('_', ' ')}</label>
                 <div class="input-group">
                     <input type="text" class="form-control" id="${key}" name="${key}" value="${value || ''}">
                     <span class="input-group-text"><i class="bi bi-calendar2-date"></i></span>
@@ -130,7 +144,7 @@ const generateInputField = (key, value) => {
     }
     return `
         <div class="col-md-4">
-            <label for="${key}" class="form-label">${key.replace('_', ' ')}</label>
+            <label for="${key}" class="form-label">${labelMapping[key] || key.replace('_', ' ')}</label>
             <input type="text" class="form-control" id="${key}" name="${key}" value="${value}">
         </div>
     `;
