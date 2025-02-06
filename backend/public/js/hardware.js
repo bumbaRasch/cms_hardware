@@ -57,13 +57,23 @@ window.operateEvents['click .edit'] = async function (e, value, row, index) {
             const formData = new FormData(document.getElementById('editForm'));
             const updatedData = Object.fromEntries(formData.entries());
 
+            if (updatedData.HA_COST) {
+                updatedData.HA_COST = parseFloat(updatedData.HA_COST);
+            }
+
+            Object.keys(updatedData).forEach(key => {
+                if (updatedData[key] === '') {
+                    updatedData[key] = null;
+                }
+            });
+
             try {
                 await apiRequest(`/api/hardware/${row.HA_ID}`, 'PUT', updatedData);
                 updateTableRow(row.HA_ID, updatedData);
-                showAlert(`Hardware <b>${row.HA_ID}</b> was successfully updated!`, 'success');
+                showAlert(`Hardware <b>${row.HA_NAME}</b> was successfully updated!`, 'success');
             } catch (error) {
                 console.error('Error updating hardware:', error);
-                showAlert(`Failed to update hardware ${row.HA_ID}: ${error.message}`, 'danger');
+                showAlert(`Failed to update hardware ${row.HA_NAME}: ${error.message}`, 'danger');
             }
         }
     });
