@@ -14,6 +14,7 @@ export const statusService = {
         if (search) {
             whereClauses.OR = [
                 { ST_NAME: { contains: search } },
+                { ST_DESCRIPTION: { contains: search } },
             ];
         }
 
@@ -35,6 +36,7 @@ export const statusService = {
             data: status.map(item => ({
                 ST_ID: item.ST_ID,
                 ST_NAME: item.ST_NAME,
+                ST_DESCRIPTION: item.ST_DESCRIPTION,
             })),
             total: parseInt(total),
 
