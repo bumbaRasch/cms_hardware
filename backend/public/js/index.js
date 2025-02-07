@@ -4,3 +4,10 @@ const getItemName = (row) => {
     if (pathname === 'sim-cards') return row.SIM_NUMBER;
     if (pathname === 'users') return row.USERNAME;
 };
+
+document.addEventListener('DOMContentLoaded', () => {
+    const footerYear = document.getElementById('footer-year');
+    if (footerYear) {
+        footerYear.textContent = new Date().getFullYear();
+    }
+});

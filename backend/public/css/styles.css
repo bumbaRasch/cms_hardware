@@ -1,6 +1,7 @@
 @import url("https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap");
 :root {
     --header-height: 3rem;
+    --footer-height: 3rem;
     --nav-width: 68px;
     --first-color: #4723D9;
     --first-color-light: #AFA5D9;
@@ -8,6 +9,7 @@
     --body-font: 'Nunito', sans-serif;
     --normal-font-size: 1rem;
     --z-fixed: 100;
+    --z-sidebar: 101;
     --box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 *, ::before, ::after {
@@ -15,7 +17,7 @@
 }
 body {
     position: relative;
-    margin: var(--header-height) 0 0 0;
+    margin: var(--header-height) 0 var(--footer-height) 0;
     padding: 0 1rem;
     font-family: var(--body-font);
     font-size: var(--normal-font-size);
@@ -34,6 +36,21 @@ a {
     display: flex;
     align-items: center;
     justify-content: space-between;
+    padding: 0 1rem;
+    background-color: var(--white-color);
+    box-shadow: var(--box-shadow);
+    z-index: var(--z-fixed);
+    transition: .5s;
+}
+.footer {
+    width: 100%;
+    height: var(--footer-height);
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
     padding: 0 1rem;
     background-color: var(--white-color);
     box-shadow: var(--box-shadow);
@@ -86,7 +103,7 @@ a {
     background-color: var(--first-color);
     padding: .5rem 1rem 0 0;
     transition: .5s;
-    z-index: var(--z-fixed);
+    z-index: var(--z-sidebar);
     box-shadow: var(--box-shadow);
 }
 .nav {
@@ -148,12 +165,16 @@ a {
 }
 @media screen and (min-width: 768px) {
     body {
-        margin: calc(var(--header-height) + 1rem) 0 0 0;
+        margin: calc(var(--header-height) + 1rem) 0 calc(var(--footer-height) + 1rem) 0;
         padding-left: calc(var(--nav-width) + 2rem);
     }
     .header {
         height: calc(var(--header-height) + 1rem);
         padding: 0 2rem 0 calc(var(--nav-width) + 2rem);
+    }
+    .footer {
+        height: calc(var(--footer-height) + 1rem);
+        padding: 0 2rem;
     }
     .header_img {
         width: 40px;
@@ -178,13 +199,15 @@ a {
     .header {
         padding: 0 2rem 0 calc(var(--nav-width) + 4rem);
     }
+    .footer {
+        padding: 0 2rem;
+    }
     .l-navbar {
         padding: 1rem 1rem 0 0;
     }
     .body-pd {
         padding-left: calc(var(--nav-width) + 188px);
     }
-    
 }
 
 @media screen and (max-width: 767px) {
