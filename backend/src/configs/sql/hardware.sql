@@ -246,20 +246,26 @@ INSERT INTO tbl_stores (STORE_NAME, STORE_DESCRIPTION, LOC_ID, ST_ID) VALUES
 CREATE TABLE IF NOT EXISTS tbl_suppliers (
     SUPPLIER_ID INT AUTO_INCREMENT PRIMARY KEY,
     SUPPLIER_NAME VARCHAR(255) NOT NULL COMMENT 'Name of the supplier',
-    SUPPLIER_CONTACT VARCHAR(255) COMMENT 'Contact information of the supplier'
+    SUPPLIER_DESCRIPTION TEXT COMMENT 'Description of the supplier',
+    LOC_ID INT NOT NULL COMMENT 'Location ID, references tbl_locations',
+    ST_ID INT NOT NULL COMMENT 'Status ID, references tbl_statuses',
+    SUPPLIER_CREATED_AT TIMESTAMP DEFAULT CURRENT_TIMESTAMP COMMENT 'Timestamp when the supplier was created',
+    SUPPLIER_UPDATED_AT TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT 'Timestamp when the supplier was last updated',
+    FOREIGN KEY (LOC_ID) REFERENCES tbl_locations(LOC_ID),
+    FOREIGN KEY (ST_ID) REFERENCES tbl_statuses(ST_ID)
 ) COMMENT 'Table for storing suppliers';
 
-INSERT INTO tbl_suppliers (SUPPLIER_NAME, SUPPLIER_CONTACT) VALUES
-('Supplier A', 'Contact A'),
-('Supplier B', 'Contact B'),
-('Supplier C', 'Contact C'),
-('Supplier D', 'Contact D'),
-('Supplier E', 'Contact E'),
-('Supplier F', 'Contact F'),
-('Supplier G', 'Contact G'),
-('Supplier H', 'Contact H'),
-('Supplier I', 'Contact I'),
-('Supplier J', 'Contact J');
+INSERT INTO tbl_suppliers (SUPPLIER_NAME, SUPPLIER_DESCRIPTION, LOC_ID, ST_ID ) VALUES
+('Supplier A', 'Main supplier for hardware', 1, 1),
+('Supplier B', 'Secondary supplier for hardware', 2, 1),
+('Supplier C', 'Tertiary supplier for hardware', 3, 2),
+('Supplier D', 'Quaternary supplier for hardware', 4, 1),
+('Supplier E', 'Quinary supplier for hardware', 5, 1),
+('Supplier F', 'Senary supplier for hardware', 1, 2),
+('Supplier G', 'Septenary supplier for hardware', 2, 1),
+('Supplier H', 'Octonary supplier for hardware', 3, 1),
+('Supplier I', 'Nonary supplier for hardware', 4, 2),
+('Supplier J', 'Decenary supplier for hardware', 5, 1);
 
 CREATE TABLE IF NOT EXISTS tbl_currencies (
     CURRENCY_ID INT AUTO_INCREMENT PRIMARY KEY,

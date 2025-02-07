@@ -76,6 +76,7 @@ model tbl_locations {
   tbl_providers      tbl_providers[]
   tbl_sim_cards      tbl_sim_cards[]
   tbl_stores         tbl_stores[]
+  tbl_suppliers      tbl_suppliers[]
 }
 
 model tbl_statuses {
@@ -88,6 +89,7 @@ model tbl_statuses {
   tbl_providers  tbl_providers[]
   tbl_sim_cards  tbl_sim_cards[]
   tbl_stores     tbl_stores[]
+  tbl_suppliers  tbl_suppliers[]
 }
 
 /// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
@@ -168,10 +170,19 @@ model tbl_stores {
 
 /// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
 model tbl_suppliers {
-  SUPPLIER_ID      Int            @id @default(autoincrement())
-  SUPPLIER_NAME    String         @db.VarChar(255)
-  SUPPLIER_CONTACT String?        @db.VarChar(255)
-  tbl_hardware     tbl_hardware[]
+  SUPPLIER_ID          Int            @id @default(autoincrement())
+  SUPPLIER_NAME        String         @db.VarChar(255)
+  SUPPLIER_DESCRIPTION String?        @db.Text
+  LOC_ID               Int
+  ST_ID                Int
+  SUPPLIER_CREATED_AT  DateTime?      @default(now()) @db.Timestamp(0)
+  SUPPLIER_UPDATED_AT  DateTime?      @default(now()) @db.Timestamp(0)
+  tbl_hardware         tbl_hardware[]
+  tbl_locations        tbl_locations  @relation(fields: [LOC_ID], references: [LOC_ID], onUpdate: Restrict, map: "tbl_suppliers_ibfk_1")
+  tbl_statuses         tbl_statuses   @relation(fields: [ST_ID], references: [ST_ID], onUpdate: Restrict, map: "tbl_suppliers_ibfk_2")
+
+  @@index([LOC_ID], map: "LOC_ID")
+  @@index([ST_ID], map: "ST_ID")
 }
 
 /// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
