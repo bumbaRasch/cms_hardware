@@ -51,9 +51,13 @@ model tbl_hardware {
 }
 
 model tbl_hardware_types {
-  HT_ID        Int            @id @default(autoincrement())
-  HT_NAME      String         @db.VarChar(255)
-  tbl_hardware tbl_hardware[]
+  HT_ID          Int            @id @default(autoincrement())
+  HT_NAME        String         @db.VarChar(255)
+  HT_DESCRIPTION String?        @db.Text
+  HT_CATEGORY    String?        @db.VarChar(100)
+  HT_CREATED_AT  DateTime?      @default(now()) @db.Timestamp(0)
+  HT_UPDATED_AT  DateTime?      @default(now()) @db.Timestamp(0)
+  tbl_hardware   tbl_hardware[]
 }
 
 model tbl_locations {

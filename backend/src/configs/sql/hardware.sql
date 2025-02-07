@@ -29,20 +29,24 @@ INSERT INTO tbl_locations (LOC_NAME, LOC_ADDRESS, LOC_CITY, LOC_STATE, LOC_COUNT
 
 CREATE TABLE IF NOT EXISTS tbl_hardware_types (
     HT_ID INT AUTO_INCREMENT PRIMARY KEY,
-    HT_NAME VARCHAR(255) NOT NULL UNIQUE COMMENT 'Name of the hardware type'
+    HT_NAME VARCHAR(255) NOT NULL UNIQUE COMMENT 'Name of the hardware type',
+    HT_DESCRIPTION TEXT COMMENT 'Description of the hardware type',
+    HT_CATEGORY VARCHAR(100) COMMENT 'Category of the hardware type',
+    HT_CREATED_AT TIMESTAMP DEFAULT CURRENT_TIMESTAMP COMMENT 'Timestamp when the hardware type was created',
+    HT_UPDATED_AT TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT 'Timestamp when the hardware type was last updated'
 ) COMMENT 'Table for storing hardware types';
 
-INSERT INTO tbl_hardware_types (HT_NAME) VALUES
-('Computer'),
-('Printer'),
-('Router'),
-('Switch'),
-('Laptop'),
-('Server'),
-('Storage Device'),
-('Network Device'),
-('Peripheral Device'),
-('Other');
+INSERT INTO tbl_hardware_types (HT_NAME, HT_DESCRIPTION, HT_CATEGORY) VALUES
+('Computer', 'A general-purpose computing device', 'Computing'),
+('Printer', 'A device that prints documents', 'Peripheral'),
+('Router', 'A device that forwards data packets between computer networks', 'Networking'),
+('Switch', 'A device that connects devices within a network', 'Networking'),
+('Laptop', 'A portable personal computer', 'Computing'),
+('Server', 'A computer that provides data to other computers', 'Computing'),
+('Storage Device', 'A device used to store data', 'Storage'),
+('Network Device', 'A device used to manage network traffic', 'Networking'),
+('Peripheral Device', 'An external device that provides input and output for the computer', 'Peripheral'),
+('Other', 'Any other type of hardware not listed', 'Miscellaneous');
 
 
 
