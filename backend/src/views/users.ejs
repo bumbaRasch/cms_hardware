@@ -11,63 +11,64 @@
     <link rel="stylesheet" href="/public/css/styles.css">
 </head>
 <body id="body-pd">
-    <div id="alert-container"></div>
+
     <!-- Alert message -->
     <div id="alert-container"></div>
     <!-- Header -->
     <%- include('header') %>
     <!-- Siderbar -->
     <%- include('sidebar', { currentPath: currentPath }) %>
-        <h4>Users</h4>
-        <div class="table-responsive">
-            <table 
-                data-show-export="true"
-                id="table"
-                data-toggle="table"
-                data-toolbar="#toolbar"
-                data-search="true"
-                data-show-toggle="true"
-                data-show-fullscreen="true"
-                data-show-columns="true"
-                data-show-columns-toggle-all="true"
-                data-pagination="true"
-                data-click-to-select="true"
-                data-show-footer="true"
-                data-show-pagination-switch="true"
-                data-page-list="[10, 25, 50, all]"
-                data-sortable="true"
-                data-id-field="USER_ID"
-                data-locale="en-US"
-                data-url="/api/users"
-                data-side-pagination="server"
-                class="table table-bordered table-striped table-hover">
-            <thead class="table-primary">
-                <tr>
-                    <th data-field="FIRST_NAME" data-sortable="true">First Name</th>
-                    <th data-field="LAST_NAME" data-sortable="true">Last Name</th>
-                    <th data-field="USERNAME" data-sortable="true">Username</th>
-                    <th data-field="EMAIL" data-sortable="true">Email</th>
-                    <th data-field="ROLE_NAME" data-sortable="true">Role</th>
-                    <th data-field="CREATED_AT" data-sortable="true">Created At</th>
-                    <th data-field="UPDATED_AT" data-sortable="true">Updated At</th>
-                    <th data-field="operate" data-formatter="operateFormatter" data-events="operateEvents">Actions</th>
-                </tr>
-            </thead>
-            </table>
-        </div>
+    <h4>Users</h4>
+    <div class="table-responsive">
+        <table 
+            data-show-export="true"
+            id="table"
+            data-toggle="table"
+            data-toolbar="#toolbar"
+            data-search="true"
+            data-show-toggle="true"
+            data-show-fullscreen="true"
+            data-show-columns="true"
+            data-show-columns-toggle-all="true"
+            data-pagination="true"
+            data-click-to-select="true"
+            data-show-footer="true"
+            data-show-pagination-switch="true"
+            data-page-list="[10, 25, 50, all]"
+            data-sortable="true"
+            data-id-field="USER_ID"
+            data-locale="en-US"
+            data-url="/api/users"
+            data-side-pagination="server"
+            class="table table-bordered table-striped table-hover">
+        <thead class="table-primary">
+            <tr>
+                <th data-field="FIRST_NAME" data-sortable="true">First Name</th>
+                <th data-field="LAST_NAME" data-sortable="true">Last Name</th>
+                <th data-field="USERNAME" data-sortable="true">Username</th>
+                <th data-field="EMAIL" data-sortable="true">Email</th>
+                <th data-field="ROLE_NAME" data-sortable="true">Role</th>
+                <th data-field="CREATED_AT" data-sortable="true">Created At</th>
+                <th data-field="UPDATED_AT" data-sortable="true">Updated At</th>
+                <th data-field="operate" data-formatter="operateFormatter" data-events="operateEvents">Actions</th>
+            </tr>
+        </thead>
+        </table>
+    </div>
 
     <!-- Modal -->
     <%- include('partials/modal') %>
     <!-- Footer -->
     <%- include('footer') %>
-    <script src="https://cdn.jsdelivr.net/npm/jquery/dist/jquery.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap-table@1.24.0/dist/bootstrap-table.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/tableexport.jquery.plugin@1.29.0/tableExport.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap-table@1.24.0/dist/bootstrap-table-locale-all.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap-table@1.24.0/dist/extensions/export/bootstrap-table-export.min.js"></script>
-    <script src="/public/js/index.js"defer></script>
-    <script src="/public/js/sidebar.js" defer></script>
-    <script src="/public/js/users.js" defer></script>
+    <script src="https://cdn.jsdelivr.net/npm/jquery/dist/jquery.min.js" nonce="<%= locals.nonce %>"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous" nonce="<%= locals.nonce %>"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap-table@1.24.0/dist/bootstrap-table.min.js" nonce="<%= locals.nonce %>"></script>
+    <script src="https://cdn.jsdelivr.net/npm/tableexport.jquery.plugin@1.29.0/tableExport.min.js" nonce="<%= locals.nonce %>"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap-table@1.24.0/dist/bootstrap-table-locale-all.min.js" nonce="<%= locals.nonce %>"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap-table@1.24.0/dist/extensions/export/bootstrap-table-export.min.js" nonce="<%= locals.nonce %>"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap-table@1.24.0/dist/extensions/auto-refresh/bootstrap-table-auto-refresh.min.js" nonce="<%= locals.nonce %>"></script>
+    <script src="/public/js/index.js" defer nonce="<%= locals.nonce %>"></script>
+    <script src="/public/js/sidebar.js" defer nonce="<%= locals.nonce %>"></script>
+    <script src="/public/js/users.js" defer nonce="<%= locals.nonce %>"></script>
 </body>
 </html>

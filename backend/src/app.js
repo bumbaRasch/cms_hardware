@@ -8,6 +8,7 @@ import fastifyCors from '@fastify/cors';
 import fastifyStatic from '@fastify/static';
 import fastifyHelmet from '@fastify/helmet';
 import dotenv from 'dotenv';
+import crypto from 'crypto';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -31,6 +32,13 @@ const logger = isProd
     };
 
 const fastify = Fastify({ logger });
+
+fastify.addHook('onRequest', (request, reply, done) => {
+    const nonce = crypto.randomBytes(16).toString('base64');
+    reply.locals = { nonce };
+    reply.header('Content-Security-Policy', `script-src 'self' 'nonce-${nonce}' https://cdn.jsdelivr.net; style-src 'self' https://cdn.jsdelivr.net https://fonts.googleapis.com; font-src 'self' https://cdn.jsdelivr.net https://fonts.gstatic.com; img-src 'self' data: https://cdn.jsdelivr.net; connect-src 'self' https://cdn.jsdelivr.net; object-src 'none'; upgrade-insecure-requests;`);
+    done();
+});
 
 fastify.register(fastifyView, {
     engine: {
