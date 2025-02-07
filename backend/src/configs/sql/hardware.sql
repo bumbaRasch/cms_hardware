@@ -2,9 +2,34 @@ CREATE DATABASE IF NOT EXISTS cms_hardware;
 
 USE cms_hardware;
 
+CREATE TABLE IF NOT EXISTS tbl_locations (
+    LOC_ID INT AUTO_INCREMENT PRIMARY KEY,
+    LOC_NAME VARCHAR(255) NOT NULL UNIQUE COMMENT 'Name of the location',
+    LOC_ADDRESS VARCHAR(255) COMMENT 'Address of the location',
+    LOC_CITY VARCHAR(100) COMMENT 'City where the location is situated',
+    LOC_STATE VARCHAR(100) COMMENT 'State or province of the location',
+    LOC_COUNTRY VARCHAR(100) COMMENT 'Country of the location',
+    LOC_POSTAL_CODE VARCHAR(20) COMMENT 'Postal code of the location',
+    LOC_CONTACT_PERSON VARCHAR(100) COMMENT 'Contact person at the location',
+    LOC_CONTACT_PHONE VARCHAR(20) COMMENT 'Phone number of the contact person',
+    LOC_CONTACT_EMAIL VARCHAR(100) COMMENT 'Email address of the contact person',
+    LOC_DESCRIPTION TEXT COMMENT 'Additional information or notes about the location'
+) COMMENT 'Table for storing locations';
+
+INSERT INTO tbl_locations (LOC_NAME, LOC_ADDRESS, LOC_CITY, LOC_STATE, LOC_COUNTRY, LOC_POSTAL_CODE, LOC_CONTACT_PERSON, LOC_CONTACT_PHONE, LOC_CONTACT_EMAIL, LOC_DESCRIPTION) VALUES
+('Office 101', '101 Office St', 'Business City', 'Business State', 'Business Country', '54321', 'Jane Smith', '987-654-3210', 'janesmith@office101.com', 'Main office for administrative tasks'),
+('Office 102', '102 Office St', 'Business City', 'Business State', 'Business Country', '54321', 'Alice Johnson', '555-123-4567', 'alicejohnson@office102.com', 'Secondary office for administrative tasks'),
+('Warehouse', '456 Warehouse Ave', 'Storage City', 'Storage State', 'Storage Country', '98765', 'Frank Green', '666-777-8888', 'frankgreen@warehouse.com', 'Main warehouse for storing equipment'),
+('Data Center', '123 Data Center Blvd', 'Tech City', 'Tech State', 'Tech Country', '12345', 'John Doe', '123-456-7890', 'johndoe@datacenter.com', 'Main data center for all operations'),
+('Remote Site A', 'A Remote Rd', 'Remote City', 'Remote State', 'Remote Country', '67890', 'Bob Brown', '444-555-6666', 'bobbrown@remotesitea.com', 'Remote site for field operations'),
+('Remote Site B', 'B Remote Rd', 'Remote City', 'Remote State', 'Remote Country', '67890', 'Charlie Davis', '333-444-5555', 'charliedavis@remotesiteb.com', 'Remote site for field operations'),
+('Remote Site C', 'C Remote Rd', 'Remote City', 'Remote State', 'Remote Country', '67890', 'Diana Evans', '222-333-4444', 'dianaevans@remotesitec.com', 'Remote site for field operations'),
+('Remote Site D', 'D Remote Rd', 'Remote City', 'Remote State', 'Remote Country', '67890', 'Evan Foster', '111-222-3333', 'evanfoster@remotesited.com', 'Remote site for field operations');
+
+
 CREATE TABLE IF NOT EXISTS tbl_hardware_types (
     HT_ID INT AUTO_INCREMENT PRIMARY KEY,
-    HT_NAME VARCHAR(255) NOT NULL COMMENT 'Name of the hardware type'
+    HT_NAME VARCHAR(255) NOT NULL UNIQUE COMMENT 'Name of the hardware type'
 ) COMMENT 'Table for storing hardware types';
 
 INSERT INTO tbl_hardware_types (HT_NAME) VALUES
@@ -19,20 +44,7 @@ INSERT INTO tbl_hardware_types (HT_NAME) VALUES
 ('Peripheral Device'),
 ('Other');
 
-CREATE TABLE IF NOT EXISTS tbl_locations (
-    LOC_ID INT AUTO_INCREMENT PRIMARY KEY,
-    LOC_NAME VARCHAR(255) NOT NULL UNIQUE COMMENT 'Name of the location'
-) COMMENT 'Table for storing locations';
 
-INSERT INTO tbl_locations (LOC_NAME) VALUES
-('Office 101'),
-('Office 102'),
-('Warehouse'),
-('Data Center'),
-('Remote Site A'),
-('Remote Site B'),
-('Remote Site C'),
-('Remote Site D');
 
 CREATE TABLE IF NOT EXISTS tbl_statuses (
     ST_ID INT AUTO_INCREMENT PRIMARY KEY,

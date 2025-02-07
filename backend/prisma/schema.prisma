@@ -57,10 +57,19 @@ model tbl_hardware_types {
 }
 
 model tbl_locations {
-  LOC_ID        Int             @id @default(autoincrement())
-  LOC_NAME      String          @unique(map: "LOC_NAME") @db.VarChar(255)
-  tbl_hardware  tbl_hardware[]
-  tbl_sim_cards tbl_sim_cards[]
+  LOC_ID             Int             @id @default(autoincrement())
+  LOC_NAME           String          @unique(map: "LOC_NAME") @db.VarChar(255)
+  LOC_ADDRESS        String?         @db.VarChar(255)
+  LOC_CITY           String?         @db.VarChar(100)
+  LOC_STATE          String?         @db.VarChar(100)
+  LOC_COUNTRY        String?         @db.VarChar(100)
+  LOC_POSTAL_CODE    String?         @db.VarChar(20)
+  LOC_CONTACT_PERSON String?         @db.VarChar(100)
+  LOC_CONTACT_PHONE  String?         @db.VarChar(20)
+  LOC_CONTACT_EMAIL  String?         @db.VarChar(100)
+  LOC_DESCRIPTION    String?         @db.Text
+  tbl_hardware       tbl_hardware[]
+  tbl_sim_cards      tbl_sim_cards[]
 }
 
 model tbl_statuses {
