@@ -13,6 +13,8 @@ export const typeService = {
         if (search) {
             whereClauses.OR = [
                 { HT_NAME: { contains: search } },
+                { HT_DESCRIPTION: { contains: search } },
+                { HT_CATEGORY: { contains: search } },
             ];
         }
 
@@ -34,6 +36,8 @@ export const typeService = {
             data: types.map(item => ({
                 HT_ID: item.HT_ID,
                 HT_NAME: item.HT_NAME,
+                HT_DESCRIPTION: item.HT_DESCRIPTION,
+                HT_CATEGORY: item.HT_CATEGORY,
             })),
             total: parseInt(total),
             offset: parseInt(offset),
