@@ -111,13 +111,13 @@ const generateResetPasswordForm = (row) => {
                 <label for="newPassword" class="form-label">New Password</label>
                 <div class="input-group">
                     <input type="password" class="form-control" id="newPassword" name="newPassword">
-                    <a class="input-group-text" href="#" onclick="generateRandomPassword()"><i class="bi bi-dice-5"></i></a>
-                    <a class="input-group-text" href="#" onclick="togglePasswordVisibility('newPassword', this)"><i class="bi bi-eye-fill"></i></a>
+                    <a class="input-group-text" href="#" id="generatePassword"><i class="bi bi-dice-5"></i></a>
+                    <a class="input-group-text" href="#" id="togglePasswordVisibility"><i class="bi bi-eye-fill"></i></a>
                 </div>
             </div>
             <div class="mb-3">
                 <label for="passwordLength" class="form-label">Password Length <span id="passwordLengthLabel"><b>12</b></span></label>
-                <input type="range" class="form-range" min="8" max="32" id="passwordLength" value="12" oninput="updatePasswordLengthLabel(this.value); generateRandomPassword();">
+                <input type="range" class="form-range" min="8" max="32" id="passwordLength" value="12">
             </div>
         </form>
     `;
@@ -191,6 +191,21 @@ const showModal = ({ title, body, actionText, actionClass, onConfirm }) => {
     });
 
     new bootstrap.Modal(document.getElementById('universalModal')).show();
+
+    document.getElementById('generatePassword').addEventListener('click', (e) => {
+        e.preventDefault();
+        generateRandomPassword();
+    });
+
+    document.getElementById('togglePasswordVisibility').addEventListener('click', (e) => {
+        e.preventDefault();
+        togglePasswordVisibility('newPassword', e.currentTarget);
+    });
+
+    document.getElementById('passwordLength').addEventListener('input', (e) => {
+        updatePasswordLengthLabel(e.target.value);
+        generateRandomPassword();
+    });
 };
 
 const showAlert = (message, type) => {
