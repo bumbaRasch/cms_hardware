@@ -222,20 +222,26 @@ INSERT INTO tbl_sim_cards (SIM_NUMBER, PROVIDER_ID, TARIFF_ID, LOC_ID, STATUS_ID
 CREATE TABLE IF NOT EXISTS tbl_stores (
     STORE_ID INT AUTO_INCREMENT PRIMARY KEY,
     STORE_NAME VARCHAR(255) NOT NULL COMMENT 'Name of the store',
-    STORE_LOCATION VARCHAR(255) COMMENT 'Location of the store'
+    STORE_DESCRIPTION TEXT COMMENT 'Description of the store',
+    LOC_ID INT NOT NULL COMMENT 'Location ID, references tbl_locations',
+    ST_ID INT NOT NULL COMMENT 'Status ID, references tbl_statuses',
+    STORE_CREATED_AT TIMESTAMP DEFAULT CURRENT_TIMESTAMP COMMENT 'Timestamp when the store was created',
+    STORE_UPDATED_AT TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT 'Timestamp when the store was last updated',
+    FOREIGN KEY (LOC_ID) REFERENCES tbl_locations(LOC_ID),
+    FOREIGN KEY (ST_ID) REFERENCES tbl_statuses(ST_ID)
 ) COMMENT 'Table for storing stores';
 
-INSERT INTO tbl_stores (STORE_NAME, STORE_LOCATION) VALUES
-('Store A', 'Location A'),
-('Store B', 'Location B'),
-('Store C', 'Location C'),
-('Store D', 'Location D'),
-('Store E', 'Location E'),
-('Store F', 'Location F'),
-('Store G', 'Location G'),
-('Store H', 'Location H'),
-('Store I', 'Location I'),
-('Store J', 'Location J');
+INSERT INTO tbl_stores (STORE_NAME, STORE_DESCRIPTION, LOC_ID, ST_ID) VALUES
+('Store A', 'Main store for sales', 1, 1),
+('Store B', 'Secondary store for sales', 2, 1),
+('Store C', 'Tertiary store for sales', 3, 2),
+('Store D', 'Quaternary store for sales', 4, 1),
+('Store E', 'Quinary store for sales', 5, 1),
+('Store F', 'Senary store for sales', 1, 2),
+('Store G', 'Septenary store for sales', 2, 1),
+('Store H', 'Octonary store for sales', 3, 1),
+('Store I', 'Nonary store for sales', 4, 2),
+('Store J', 'Decenary store for sales', 5, 1);
 
 CREATE TABLE IF NOT EXISTS tbl_suppliers (
     SUPPLIER_ID INT AUTO_INCREMENT PRIMARY KEY,
