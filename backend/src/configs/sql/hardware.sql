@@ -165,18 +165,23 @@ INSERT INTO tbl_providers (PROVIDER_NAME, PROVIDER_CONTACT, PROVIDER_DESCRIPTION
 CREATE TABLE IF NOT EXISTS tbl_tariffs (
     TARIFF_ID INT AUTO_INCREMENT PRIMARY KEY,
     TARIFF_NAME VARCHAR(255) NOT NULL COMMENT 'Name of the tariff',
+    TARIFF_PRICE DOUBLE NOT NULL COMMENT 'Price of the tariff',
+    TARIFF_DESCRIPTION TEXT COMMENT 'Description of the tariff',
     PROVIDER_ID INT NOT NULL COMMENT 'Provider ID, references tbl_providers',
-    PRICE DOUBLE COMMENT 'Price of the tariff',
-    FOREIGN KEY (PROVIDER_ID) REFERENCES tbl_providers(PROVIDER_ID)
+    CURRENCY_ID INT NOT NULL COMMENT 'Currency ID, references tbl_currencies',
+    CREATED_AT TIMESTAMP DEFAULT CURRENT_TIMESTAMP COMMENT 'Timestamp when the tariff was created',
+    UPDATED_AT TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT 'Timestamp when the tariff was last updated',
+    FOREIGN KEY (PROVIDER_ID) REFERENCES tbl_providers(PROVIDER_ID),
+    FOREIGN KEY (CURRENCY_ID) REFERENCES tbl_currencies(CURRENCY_ID)
 ) COMMENT 'Table for storing tariffs';
 
-INSERT INTO tbl_tariffs (TARIFF_NAME, PROVIDER_ID) VALUES
-('Tariff 1', 1),
-('Tariff 2', 2),
-('Tariff 3', 3),
-('Tariff 4', 1),
-('Tariff 5', 2),
-('Tariff 6', 3);
+INSERT INTO tbl_tariffs (TARIFF_NAME, TARIFF_PRICE, TARIFF_DESCRIPTION, PROVIDER_ID, CURRENCY_ID) VALUES
+('Tariff 1', 1, 'Basic tariff plan', 1, 1),
+('Tariff 2', 2, 'Standard tariff plan', 2, 2),
+('Tariff 3', 3, 'Premium tariff plan', 3, 3),
+('Tariff 4', 1, 'Basic tariff plan', 1, 1),
+('Tariff 5', 2, 'Standard tariff plan', 2, 2),
+('Tariff 6', 3, 'Premium tariff plan', 3, 3);
 
 CREATE TABLE IF NOT EXISTS tbl_sim_cards (
     SIM_ID INT AUTO_INCREMENT PRIMARY KEY,
