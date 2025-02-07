@@ -13,8 +13,10 @@ export const tariffService = {
         if (search) {
             whereClauses.OR = [
                 { TARIFF_NAME: { contains: search } },
+                { TARIFF_PRICE: { contains: search } },
+                { TARIFF_DESCRIPTION: { contains: search } },
                 { tbl_providers: { PROVIDER_NAME: { contains: search } } },
-                { PRICE: { contains: search } }
+                { tbl_currencies: { CURRENCY_CODE: { contains: search } } },
             ];
         }
 
@@ -31,7 +33,8 @@ export const tariffService = {
             skip: parseInt(offset),
             take: parseInt(limit),
             include: {
-                tbl_providers: { select: { PROVIDER_NAME: true } }
+                tbl_providers: { select: { PROVIDER_NAME: true } },
+                tbl_currencies: { select: { CURRENCY_CODE: true } },
             },
         });
 
@@ -43,6 +46,10 @@ export const tariffService = {
         data: tariffs.map(item => ({
             TARIFF_ID: item.TARIFF_ID,
             TARIFF_NAME: item.TARIFF_NAME,
+            TARIFF_PRICE: item.TARIFF_PRICE,
+            TARIFF_DESCRIPTION: item.TARIFF_DESCRIPTION,
+            CURRENCY_ID: item.CURRENCY_ID,
+            CURRENCY_CODE: item.tbl_currencies.CURRENCY_CODE,
             PROVIDER_ID: item.PROVIDER_ID,
             PROVIDER_NAME: item.tbl_providers.PROVIDER_NAME,
         })),
