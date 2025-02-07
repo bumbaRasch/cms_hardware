@@ -46,7 +46,20 @@ fastify.register(fastifyStatic, {
     decorateReply: false
 });
 
-fastify.register(fastifyHelmet);
+fastify.register(fastifyHelmet, {
+    contentSecurityPolicy: {
+        directives: {
+            defaultSrc: ["'self'"],
+            scriptSrc: ["'self'", "https://cdn.jsdelivr.net"],
+            styleSrc: ["'self'", "https://cdn.jsdelivr.net", "https://fonts.googleapis.com"],
+            fontSrc: ["'self'", "https://cdn.jsdelivr.net", "https://fonts.gstatic.com"],
+            imgSrc: ["'self'", "data:", "https://cdn.jsdelivr.net"],
+            connectSrc: ["'self'", "https://cdn.jsdelivr.net"],
+            objectSrc: ["'none'"],
+            upgradeInsecureRequests: []
+        }
+    }
+});
 
 fastify.register(routes);
 
