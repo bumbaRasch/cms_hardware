@@ -1,13 +1,15 @@
 <header class="header" id="header">
-    <div class="header_toggle"> <i class='bx bx-menu' id="header-toggle"></i> </div>
+    <div class="header_toggle"> 
+        <i class='bx bx-menu' id="header-toggle" title="Toggle Menu"></i> 
+    </div>
     <div class="header_right d-flex align-items-center">
         <div class="header_icons me-5 position-relative">
-            <a href="#" class="position-relative">
-                <i class="bi bi-bell-fill" title="Notifications"></i>
+            <a href="#" class="position-relative" title="Notifications">
+                <i class="bi bi-bell-fill"></i>
                 <span class="badge rounded-pill bg-danger position-absolute top-0 start-100 translate-middle">3</span>
             </a>
-            <a href="#" class="position-relative ms-4">
-                <i class="bi bi-envelope-fill" title="Messages"></i>
+            <a href="#" class="position-relative ms-4" title="Messages">
+                <i class="bi bi-envelope-fill"></i>
                 <span class="badge rounded-pill bg-danger position-absolute top-0 start-100 translate-middle">32</span>
             </a>
         </div>
@@ -16,15 +18,15 @@
             <div class="header_username me-4">
                 <span>Username</span>
             </div>
-            <a class="nav-link dropdown" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                <img class="header_img avatar-img" src="/public/img/avatar_example.png" alt="">
+            <a class="nav-link dropdown" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false" title="User Menu">
+                <img class="header_img avatar-img" src="/public/img/avatar_example.png" alt="User Avatar">
             </a>
             <ul class="dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="userDropdown">
-                <li><a class="dropdown-item" href="#"><i class="bi bi-person-fill me-2"></i>Profile</a></li>
-                <li><a class="dropdown-item" href="#"><i class="bi bi-gear-fill me-2"></i>Settings</a></li>
-                <li><a class="dropdown-item" href="#"><i class="bi bi-file-easel-fill me-2"></i>Activity Log</a></li>
+                <li><a class="dropdown-item" href="#" title="Profile"><i class="bi bi-person-fill me-2"></i>Profile</a></li>
+                <li><a class="dropdown-item" href="#" title="Settings"><i class="bi bi-gear-fill me-2"></i>Settings</a></li>
+                <li><a class="dropdown-item" href="#" title="Activity Log"><i class="bi bi-file-easel-fill me-2"></i>Activity Log</a></li>
                 <div class="dropdown-divider"></div>
-                <li><a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#logoutModal"><i class="bi bi-door-open-fill me-2"></i>Logout</a></li>
+                <li><a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#logoutModal" title="Logout"><i class="bi bi-door-open-fill me-2"></i>Logout</a></li>
             </ul>
         </div>
     </div>
