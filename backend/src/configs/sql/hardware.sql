@@ -143,15 +143,24 @@ CREATE TABLE IF NOT EXISTS tbl_user_companies (
 
 CREATE TABLE IF NOT EXISTS tbl_providers (
     PROVIDER_ID INT AUTO_INCREMENT PRIMARY KEY,
-    PROVIDER_NAME VARCHAR(255) NOT NULL COMMENT 'Name of the provider'
+    PROVIDER_NAME VARCHAR(255) NOT NULL COMMENT 'Name of the provider',
+    PROVIDER_CONTACT VARCHAR(255) COMMENT 'Contact information of the provider',
+    PROVIDER_DESCRIPTION TEXT COMMENT 'Description of the provider',
+    PROVIDER_TYPE VARCHAR(50) COMMENT 'Type of the provider',
+    LOC_ID INT NOT NULL COMMENT 'Location ID, references tbl_locations',
+    ST_ID  INT NOT NULL COMMENT 'Status ID, references tbl_statuses',
+    CREATED_AT TIMESTAMP DEFAULT CURRENT_TIMESTAMP COMMENT 'Timestamp when the provider was created',
+    UPDATED_AT TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT 'Timestamp when the provider was last updated',
+    FOREIGN KEY (LOC_ID) REFERENCES tbl_locations(LOC_ID),
+    FOREIGN KEY (ST_ID) REFERENCES tbl_statuses(ST_ID)
 ) COMMENT 'Table for storing providers';
 
-INSERT INTO tbl_providers (PROVIDER_NAME) VALUES
-('Provider A'),
-('Provider B'),
-('Provider C'),
-('Provider D'),
-('Provider E');
+INSERT INTO tbl_providers (PROVIDER_NAME, PROVIDER_CONTACT, PROVIDER_DESCRIPTION, PROVIDER_TYPE, LOC_ID, ST_ID) VALUES
+('Provider A', 'John Doe', 'Main provider for services', 'Service', 1, 1),
+('Provider B', 'Jane Smith', 'Secondary provider for services', 'Hardware', 2, 1),
+('Provider C', 'Alice Johnson', 'Tertiary provider for services', 'Software', 3, 2),
+('Provider D', 'Bob Brown', 'Quaternary provider for services', 'Service', 4, 1),
+('Provider E', 'Charlie Davis', 'Quinary provider for services', 'Hardware', 5, 1);
 
 CREATE TABLE IF NOT EXISTS tbl_tariffs (
     TARIFF_ID INT AUTO_INCREMENT PRIMARY KEY,

@@ -73,6 +73,7 @@ model tbl_locations {
   LOC_CONTACT_EMAIL  String?         @db.VarChar(100)
   LOC_DESCRIPTION    String?         @db.Text
   tbl_hardware       tbl_hardware[]
+  tbl_providers      tbl_providers[]
   tbl_sim_cards      tbl_sim_cards[]
 }
 
@@ -83,6 +84,7 @@ model tbl_statuses {
   ST_CREATED_AT  DateTime?       @default(now()) @db.Timestamp(0)
   ST_UPDATED_AT  DateTime?       @default(now()) @db.Timestamp(0)
   tbl_hardware   tbl_hardware[]
+  tbl_providers  tbl_providers[]
   tbl_sim_cards  tbl_sim_cards[]
 }
 
@@ -96,10 +98,22 @@ model tbl_currencies {
 
 /// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
 model tbl_providers {
-  PROVIDER_ID   Int             @id @default(autoincrement())
-  PROVIDER_NAME String          @db.VarChar(255)
-  tbl_sim_cards tbl_sim_cards[]
-  tbl_tariffs   tbl_tariffs[]
+  PROVIDER_ID          Int             @id @default(autoincrement())
+  PROVIDER_NAME        String          @db.VarChar(255)
+  PROVIDER_CONTACT     String?         @db.VarChar(255)
+  PROVIDER_DESCRIPTION String?         @db.Text
+  PROVIDER_TYPE        String?         @db.VarChar(50)
+  LOC_ID               Int
+  ST_ID                Int
+  CREATED_AT           DateTime?       @default(now()) @db.Timestamp(0)
+  UPDATED_AT           DateTime?       @default(now()) @db.Timestamp(0)
+  tbl_locations        tbl_locations   @relation(fields: [LOC_ID], references: [LOC_ID], onUpdate: Restrict, map: "tbl_providers_ibfk_1")
+  tbl_statuses         tbl_statuses    @relation(fields: [ST_ID], references: [ST_ID], onUpdate: Restrict, map: "tbl_providers_ibfk_2")
+  tbl_sim_cards        tbl_sim_cards[]
+  tbl_tariffs          tbl_tariffs[]
+
+  @@index([LOC_ID], map: "LOC_ID")
+  @@index([ST_ID], map: "ST_ID")
 }
 
 /// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
