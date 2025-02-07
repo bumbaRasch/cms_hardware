@@ -52,19 +52,22 @@ INSERT INTO tbl_hardware_types (HT_NAME, HT_DESCRIPTION, HT_CATEGORY) VALUES
 
 CREATE TABLE IF NOT EXISTS tbl_statuses (
     ST_ID INT AUTO_INCREMENT PRIMARY KEY,
-    ST_NAME VARCHAR(50) NOT NULL UNIQUE COMMENT 'Name of the status'
+    ST_NAME VARCHAR(50) NOT NULL UNIQUE COMMENT 'Name of the status',
+    ST_DESCRIPTION TEXT COMMENT 'Description of the status',
+    ST_CREATED_AT TIMESTAMP DEFAULT CURRENT_TIMESTAMP COMMENT 'Timestamp when the status was created',
+    ST_UPDATED_AT TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT 'Timestamp when the status was last updated'
 ) COMMENT 'Table for storing statuses';
 
-INSERT INTO tbl_statuses (ST_NAME) VALUES
-('In Use'),
-('In Storage'),
-('Under Maintenance'),
-('Retired'),
-('Disposed'),
-('Lost'),
-('Stolen'),
-('Damaged'),
-('Other');
+INSERT INTO tbl_statuses (ST_NAME, ST_DESCRIPTION) VALUES
+('In Use', 'The item is currently in use'),
+('In Storage', 'The item is stored and not in use'),
+('Under Maintenance', 'The item is undergoing maintenance'),
+('Retired', 'The item is no longer in active use but retained for records'),
+('Disposed', 'The item has been disposed of'),
+('Lost', 'The item is lost and cannot be located'),
+('Stolen', 'The item has been stolen'),
+('Damaged', 'The item is damaged and not functional'),
+('Other', 'Any other status not listed');
 
 CREATE TABLE IF NOT EXISTS tbl_roles (
     ROLE_ID INT AUTO_INCREMENT PRIMARY KEY,

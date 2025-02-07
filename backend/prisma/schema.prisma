@@ -77,10 +77,13 @@ model tbl_locations {
 }
 
 model tbl_statuses {
-  ST_ID         Int             @id @default(autoincrement())
-  ST_NAME       String          @unique(map: "ST_NAME") @db.VarChar(50)
-  tbl_hardware  tbl_hardware[]
-  tbl_sim_cards tbl_sim_cards[]
+  ST_ID          Int             @id @default(autoincrement())
+  ST_NAME        String          @unique(map: "ST_NAME") @db.VarChar(50)
+  ST_DESCRIPTION String?         @db.Text
+  ST_CREATED_AT  DateTime?       @default(now()) @db.Timestamp(0)
+  ST_UPDATED_AT  DateTime?       @default(now()) @db.Timestamp(0)
+  tbl_hardware   tbl_hardware[]
+  tbl_sim_cards  tbl_sim_cards[]
 }
 
 /// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
