@@ -14,15 +14,17 @@ dotenv.config();
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-const logger = {
-    level: process.env.LOG_LEVEL || 'info',
-    transport: {
-        target: 'pino-pretty',
-        options: {
-            colorize: true
+const isProd = process.env.NODE_ENV === 'production';
+
+const logger = isProd
+    ? { level: process.env.LOG_LEVEL || 'info' }
+    : {
+        level: process.env.LOG_LEVEL || 'debug',
+        transport: {
+            target: 'pino-pretty',
+            options: { colorize: true }
         }
-    }
-};
+    };
 
 const fastify = Fastify({ logger });
 
@@ -66,8 +68,7 @@ fastify.register(routes);
 const startServer = async () => {
     try {
         await fastify.listen({ host: process.env.HOST || '0.0.0.0', port: process.env.PORT || 3000 });
-        const address = fastify.server.address();
-        fastify.log.info(`Server listening on ${address.address}:${address.port}`);
+        fastify.log.info(`Server listening on ${fastify.server.address().port}`);
     } catch (err) {
         fastify.log.error(err);
         process.exit(1);
@@ -75,3 +76,13 @@ const startServer = async () => {
 };
 
 startServer();
+
+process.on('uncaughtException', (err) => {
+    fastify.log.error(`Uncaught Exception: ${err.message}`);
+    process.exit(1);
+});
+
+process.on('unhandledRejection', (reason, promise) => {
+    fastify.log.error(`Unhandled Rejection: ${reason}`);
+    process.exit(1);
+});
