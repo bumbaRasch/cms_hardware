@@ -8,11 +8,15 @@ import fastifyCors from '@fastify/cors';
 import fastifyStatic from '@fastify/static';
 import fastifyHelmet from '@fastify/helmet';
 import dotenv from 'dotenv';
-dotenv.config();
-
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
+
+const result = dotenv.config();
+if (result.error) {
+    console.error("Failed to load environment variables:", result.error);
+    process.exit(1);
+}
 
 const isProd = process.env.NODE_ENV === 'production';
 
@@ -77,12 +81,16 @@ const startServer = async () => {
 
 startServer();
 
-process.on('uncaughtException', (err) => {
-    fastify.log.error(`Uncaught Exception: ${err.message}`);
-    process.exit(1);
-});
+const gracefulShutdown = () => {
+    fastify.close().then(() => {
+        console.log('Server closed gracefully');
+        process.exit(0);
+    }).catch((err) => {
+        console.error('Error during server shutdown:', err);
+        process.exit(1);
+    });
+};
 
-process.on('unhandledRejection', (reason, promise) => {
-    fastify.log.error(`Unhandled Rejection: ${reason}`);
-    process.exit(1);
-});
+process.on('SIGINT', gracefulShutdown); // Ctrl + C
+process.on('SIGTERM', gracefulShutdown); // Termination signal from PM2, Kubernetes, etc.
+;
