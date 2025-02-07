@@ -4,7 +4,7 @@ import { locationController } from '../controllers/location.controller.js';
 
 export const locationRouter = async (fastify, options) => {
     fastify.get('/locations', async (request, reply) => {
-        return reply.view('location', { currentPath: '/locations' });
+        return reply.view('locations', { currentPath: '/locations' });
     });
     fastify.get('/api/locations', locationController.getLocations);
     fastify.post('/api/locations', {
