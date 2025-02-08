@@ -44,8 +44,7 @@ export const botService = {
             const sqlQuery = extractValidSQL(chatCompletion.choices[0]?.message?.content);
 
             if (!sqlQuery || !isSafeSQL(sqlQuery) || containsForbiddenColumns(sqlQuery) || sqlQuery.length > 700) {
-                console.log("Invalid SQL query generated:", sqlQuery);
-                throw new Error("Sorry, I cannot perform this action.");
+                return null;
             }
     
             try {

@@ -7,7 +7,10 @@ export const botController = {
         const { question } = request.body;
         try {
             const result = await botService.handleAsk(question);
-            reply.send({ result });
+            return result 
+                ? reply.send(result) 
+                : reply.code(400).send({ message: 'Sorry' });
+            
         } catch (error) {
             reply.status(error.status || 500).send({ error: error.message });
         }
