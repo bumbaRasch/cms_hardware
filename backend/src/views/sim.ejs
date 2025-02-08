@@ -62,16 +62,8 @@
     <%- include('partials/modal') %>
     <!-- Footer -->
     <%- include('footer') %>
-    <script src="https://cdn.jsdelivr.net/npm/jquery/dist/jquery.min.js" nonce="<%= locals.nonce %>"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous" nonce="<%= locals.nonce %>"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap-table@1.24.0/dist/bootstrap-table.min.js" nonce="<%= locals.nonce %>"></script>
-    <script src="https://cdn.jsdelivr.net/npm/tableexport.jquery.plugin@1.29.0/tableExport.min.js" nonce="<%= locals.nonce %>"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap-table@1.24.0/dist/bootstrap-table-locale-all.min.js" nonce="<%= locals.nonce %>"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap-table@1.24.0/dist/extensions/export/bootstrap-table-export.min.js" nonce="<%= locals.nonce %>"></script>
-    <script src="https://cdn.jsdelivr.net/npm/flatpickr" nonce="<%= locals.nonce %>"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap-table@1.24.0/dist/extensions/auto-refresh/bootstrap-table-auto-refresh.min.js" nonce="<%= locals.nonce %>"></script>
-    <script src="/public/js/index.js" defer nonce="<%= locals.nonce %>"></script>
-    <script src="/public/js/sidebar.js" defer nonce="<%= locals.nonce %>"></script>
+    <!-- Scripts -->
+    <%- include('partials/scripts') %>
     <script src="/public/js/sim.js" defer nonce="<%= locals.nonce %>"></script>
 </body>
 </html>
