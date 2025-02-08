@@ -25,8 +25,15 @@ document.getElementById('ask-form').addEventListener('submit', async function(ev
     const data = await response.json();
     const tableHeader = document.getElementById('table-header');
     const tableBody = document.getElementById('table-body');
+
+    if (!tableHeader || !tableBody) {
+        console.error('Table header or body not found');
+        return;
+    }
+
     tableHeader.innerHTML = '';
     tableBody.innerHTML = '';
+    
     if (data.result && data.result.length > 0) {
         const headers = Object.keys(data.result[0]);
         headers.forEach(header => {
@@ -43,5 +50,7 @@ document.getElementById('ask-form').addEventListener('submit', async function(ev
             });
             tableBody.appendChild(tr);
         });
+    } else {
+        console.log('No results found');
     }
 });
