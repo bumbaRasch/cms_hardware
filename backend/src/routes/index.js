@@ -11,6 +11,7 @@ import {typeRouter} from './type.route.js';
 import {currencyRouter} from './currency.route.js';
 import {supplierRouter} from './supplier.route.js';
 import {storeRouter} from './store.route.js';
+import {botRouter} from './bot.route.js';
 
 async function routes(fastify, options) {
   fastify.register(homeRouter);
@@ -25,6 +26,7 @@ async function routes(fastify, options) {
   fastify.register(currencyRouter);
   fastify.register(supplierRouter);
   fastify.register(storeRouter);
+  fastify.register(botRouter);
 }
 
 export default routes;
