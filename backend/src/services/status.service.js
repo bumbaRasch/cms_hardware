@@ -1,6 +1,6 @@
 //backend/src/services/status.service.js
 
-import prisma from '../configs/database.js'
+import prisma from '../configs/prisma.js'
 
 export const statusService = {
     getStatuses: async ({ offset = 0, limit = 10, sort = 'ST_NAME', order = 'asc', filter = {}, search = '' }) => {

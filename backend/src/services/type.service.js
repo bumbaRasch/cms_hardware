@@ -1,5 +1,5 @@
 //backend/src/services/type.service.js
-import prisma from '../configs/database.js';
+import prisma from '../configs/prisma.js';
 
 export const typeService = {
     getTypes: async ({ offset = 0, limit = 10, sort = 'HT_NAME', order = 'asc', filter = {}, search = '' }) => {

@@ -1,5 +1,5 @@
 import { faker } from '@faker-js/faker';
-import prisma from '../src/configs/database.js';
+import prisma from '../src/configs/prisma.js';
 
 async function createRandomHardware() {
   return {

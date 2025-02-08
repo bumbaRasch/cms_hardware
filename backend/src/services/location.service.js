@@ -1,6 +1,6 @@
 //backend/src/services/location.service.js
 
-import prisma from '../configs/database.js';
+import prisma from '../configs/prisma.js';
 
 export const locationService = {
     getLocations: async ({ offset = 0, limit = 10, sort = 'LOC_NAME', order = 'asc', filter = {}, search = '' }) => {

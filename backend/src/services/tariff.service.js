@@ -1,5 +1,5 @@
 //backend/src/services/tariff.service.js
-import prisma from '../configs/database.js';
+import prisma from '../configs/prisma.js';
 
 export const tariffService = {
     getTariffs: async ({ offset = 0, limit = 10, sort = 'TARIFF_NAME', order = 'asc', filter = {}, search = '' }) => {

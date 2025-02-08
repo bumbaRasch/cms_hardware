@@ -1,5 +1,5 @@
 //backend/src/services/sim.service.js
-import prisma from '../configs/database.js';
+import prisma from '../configs/prisma.js';
 import { formatDate } from '../utils/date.js';
 
 export const simService = {

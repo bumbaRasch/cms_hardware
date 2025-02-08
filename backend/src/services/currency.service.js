@@ -1,5 +1,5 @@
 //backend/src/services/currency.service.js
-import prisma from '../configs/database.js';
+import prisma from '../configs/prisma.js';
 
 export const currencyService = {
     getCurrencies: async ({ offset = 0, limit = 10, sort = 'CURRENCY_CODE', order = 'asc', filter = {}, search = '' }) => {

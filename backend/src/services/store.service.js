@@ -1,6 +1,6 @@
 // backend/src/services/store.service.js
 
-import prisma from '../configs/database.js'
+import prisma from '../configs/prisma.js'
 
 export const storeService = {
     getStores: async ({ offset = 0, limit = 10, sort = 'STORE_NAME', order = 'asc', filter = {}, search = '' }) => {

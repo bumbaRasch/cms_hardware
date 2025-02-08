@@ -1,6 +1,6 @@
 //backend/src/services/supplier.service.js
 
-import prisma from "../configs/database.js";
+import prisma from "../configs/prisma.js";
 
 export const supplierService = {
     getSuppliers: async ({ offset = 0, limit = 10, sort = 'SUPPLIER_NAME', order = 'asc', filter = {}, search = '' }) => {

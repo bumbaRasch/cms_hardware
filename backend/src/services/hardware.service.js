@@ -1,4 +1,4 @@
-import prisma from '../configs/database.js';
+import prisma from '../configs/prisma.js';
 import { formatDate } from '../utils/date.js';
 
 export const hardwareService = {
