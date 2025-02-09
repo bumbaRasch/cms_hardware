@@ -33,7 +33,9 @@ const config = {
         clickToSelect: false
     }],
     idField: 'TARIFF_ID',
-    url: '/api/tariffs'
+    url: '/api/tariffs',
+    modalColumns: 2,
+
 };
 
 initializeTable(config);
