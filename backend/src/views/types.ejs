@@ -1,4 +1,3 @@
-<!-- /views/types.ejs -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -13,17 +12,14 @@
     <%- include('header') %>
     <!-- Siderbar -->
     <%- include('sidebar', { currentPath: currentPath }) %>
-    <div class="container">
-        <h4>Hardware Types</h4>
-        <table id="table"></table>
-    </div>
-
+    <!-- Table -->
+    <%- include('partials/table', { title: 'Hardware Types' }) %>
     <!-- Modal -->
     <%- include('partials/modal') %>
     <!-- Footer -->
     <%- include('footer') %>
     <!-- Scripts -->
     <%- include('partials/scripts') %>
-    <script src="/public/js/types.js" defer ></script>
+    <script src="/public/js/types.js" defer></script>
 </body>
 </html>
