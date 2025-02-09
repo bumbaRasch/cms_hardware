@@ -47,26 +47,100 @@ export function operateFormatter(value, row, index) {
 
 function createOperateEvents(config) {
     return {
-        'click .delete': async function (e, value, row, index) {
-            if (confirm('Are you sure you want to delete this item?')) {
-                try {
-                    const response = await fetch(`${config.url}/${row[config.idField]}`, {
-                        method: 'DELETE',
-                    });
-
-                    if (response.ok) {
-                        $('#table').bootstrapTable('remove', {
-                            field: config.idField,
-                            values: [row[config.idField]]
-                        });
-                    } else {
-                        throw new Error('Failed to delete item');
-                    }
-                } catch (error) {
-                    console.error('Error:', error);
-                    alert('Failed to delete item');
-                }
-            }
+        'click .edit': function (e, value, row, index) {
+            openModal('Edit', row, config, 'lg');
+        },
+        'click .delete': function (e, value, row, index) {
+            openModal('Delete', row, config, 'sm');
         }
     };
+}
+
+function openModal(action, row, config, size) {
+    const modal = $('#universalModal');
+    const modalDialog = $('#universalModalDialog');
+    const modalTitle = $('#universalModalLabel');
+    const modalBody = $('#universalModalBody');
+    const modalSaveButton = $('#universalModalSave');
+
+    modalDialog.removeClass('modal-sm modal-lg modal-xl').addClass(`modal-${size}`);
+    modalTitle.text(`${action} ${config.title}`);
+    modalBody.html(generateModalContent(action, row, config));
+
+    if (action === 'Delete') {
+        modalSaveButton.text('Delete').removeClass('btn-primary').addClass('btn-danger');
+    } else {
+        modalSaveButton.text('Save').removeClass('btn-danger').addClass('btn-primary');
+    }
+
+    modalSaveButton.off('click').on('click', function() {
+        handleModalSave(action, row, config);
+    });
+
+    modal.modal('show');
+}
+
+function generateModalContent(action, row, config) {
+    if (action === 'Delete') {
+        return `<p>Are you sure you want to delete the ${config.title.toLowerCase()} <b>${row[config.nameField]}</b>?</p>`;
+    } else if (action === 'Edit') {
+        return Object.keys(row).map(key => `
+            <div class="mb-3">
+                <label for="${key}" class="form-label">${key}</label>
+                <input type="text" class="form-control" id="${key}" value="${row[key]}">
+            </div>
+        `).join('');
+    }
+}
+
+async function handleModalSave(action, row, config) {
+    const modal = $('#universalModal');
+    if (action === 'Delete') {
+        try {
+            const response = await fetch(`${config.url}/${row[config.idField]}`, {
+                method: 'DELETE',
+            });
+
+            if (response.ok) {
+                $('#table').bootstrapTable('remove', {
+                    field: config.idField,
+                    values: [row[config.idField]]
+                });
+                modal.modal('hide');
+            } else {
+                throw new Error('Failed to delete item');
+            }
+        } catch (error) {
+            console.error('Error:', error);
+            alert('Failed to delete item');
+        }
+    } else if (action === 'Edit') {
+        const updatedRow = {};
+        Object.keys(row).forEach(key => {
+            updatedRow[key] = $(`#${key}`).val();
+        });
+
+        try {
+            const response = await fetch(`${config.url}/${row[config.idField]}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(updatedRow)
+            });
+
+            if (response.ok) {
+                $('#table').bootstrapTable('updateByUniqueId', {
+                    id: row[config.idField],
+                    row: updatedRow
+                });
+                modal.modal('hide');
+            } else {
+                throw new Error('Failed to update item');
+            }
+        } catch (error) {
+            console.error('Error:', error);
+            alert('Failed to update item');
+        }
+    }
 }
