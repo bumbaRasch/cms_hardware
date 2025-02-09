@@ -15,39 +15,7 @@
     <%- include('sidebar', { currentPath: currentPath }) %>
     <div class="container">
         <h4>Hardware Types</h4>
-        <table class="table table-bordered table-striped table-hover"
-            data-auto-refresh="true"
-            data-click-to-select="true"
-            data-id-field="HA_ID"
-            data-locale="en-US"
-            data-page-list="[10, 25, 50, all]"
-            data-pagination="true"
-            data-search="true"
-            data-show-columns-toggle-all="true"
-            data-show-columns="true"
-            data-show-export="true"
-            data-show-footer="true"
-            data-cache="true"
-            data-show-fullscreen="true"
-            data-show-pagination-switch="true"
-            data-show-toggle="true"
-            data-side-pagination="server"
-            data-sortable="true"
-            data-toggle="table"
-            data-toolbar="#toolbar"
-            data-url="/api/types"
-            id="table"
-            >
-            <thead>
-                <tr>
-                    <th data-checkbox="true">ID</th>
-                    <th data-field="HT_NAME" data-sortable="true">Name</th>
-                    <th data-field="HT_CATEGORY" data-sortable="true">Category</th>
-                    <th data-field="HT_DESCRIPTION" data-sortable="true">Description</th>
-                    <th data-field="operate" data-formatter="operateFormatter" data-events="operateEvents">Actions</th>
-                </tr>
-            </thead>
-        </table>
+        <table id="table"></table>
     </div>
 
     <!-- Modal -->
