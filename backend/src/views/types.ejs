@@ -40,6 +40,7 @@
             >
             <thead>
                 <tr>
+                    <th data-checkbox="true">ID</th>
                     <th data-field="HT_NAME" data-sortable="true">Name</th>
                     <th data-field="HT_CATEGORY" data-sortable="true">Category</th>
                     <th data-field="HT_DESCRIPTION" data-sortable="true">Description</th>
@@ -55,6 +56,6 @@
     <%- include('footer') %>
     <!-- Scripts -->
     <%- include('partials/scripts') %>
-    <script src="/public/js/types.js" defer nonce="<%= locals.nonce %>"></script>
+    <script src="/public/js/types.js" defer ></script>
 </body>
 </html>

@@ -8,7 +8,6 @@ import fastifyCors from '@fastify/cors';
 import fastifyStatic from '@fastify/static';
 import fastifyHelmet from '@fastify/helmet';
 import dotenv from 'dotenv';
-import crypto from 'crypto';
 
 dotenv.config();
 
@@ -26,28 +25,6 @@ const logger = {
 };
 
 const fastify = Fastify({ logger });
-
-const configureSecurityHeaders = (reply, nonce) => {
-    const csp = [
-        "default-src 'self'",
-        `script-src 'self' 'nonce-${nonce}' https://cdn.jsdelivr.net`,
-        "style-src 'self' https://cdn.jsdelivr.net https://fonts.googleapis.com",
-        "font-src 'self' https://cdn.jsdelivr.net https://fonts.gstatic.com",
-        "img-src 'self' data: https://cdn.jsdelivr.net",
-        "connect-src 'self' https://cdn.jsdelivr.net",
-        "object-src 'none'",
-        "upgrade-insecure-requests"
-    ].join('; ');
-
-    reply.header('Content-Security-Policy', csp);
-};
-
-fastify.addHook('onRequest', (request, reply, done) => {
-    const nonce = crypto.randomBytes(16).toString('base64');
-    reply.locals = { nonce };
-    configureSecurityHeaders(reply, nonce);
-    done();
-});
 
 const registerPlugins = () => {
     fastify.register(fastifyView, {
@@ -71,16 +48,9 @@ const registerPlugins = () => {
     fastify.register(fastifyHelmet, {
         contentSecurityPolicy: {
             directives: {
-                defaultSrc: ["'self'"],
-                scriptSrc: ["'self'", "https://cdn.jsdelivr.net"],
-                styleSrc: ["'self'", "https://cdn.jsdelivr.net", "https://fonts.googleapis.com"],
-                fontSrc: ["'self'", "https://cdn.jsdelivr.net", "https://fonts.gstatic.com"],
-                imgSrc: ["'self'", "data:", "https://cdn.jsdelivr.net"],
-                connectSrc: ["'self'", "https://cdn.jsdelivr.net"],
-                objectSrc: ["'none'"],
-                upgradeInsecureRequests: []
+                    scriptSrc: ["'self'", "https://cdn.jsdelivr.net", ],
+                }
             }
-        }
     });
 
     fastify.register(routes);
