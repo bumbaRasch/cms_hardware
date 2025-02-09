@@ -6,4 +6,8 @@ export const typeRouter = async (fastify, options) => {
         return reply.view('types', { currentPath: '/types' });
     });
     fastify.get('/api/types', typeController.getTypes);
+    fastify.delete('/api/types/:id', typeController.deleteType);
+    //fastify.post('/api/types', typeController.createType);
+    //fastify.get('/api/types/:id', typeController.getType);
+    //fastify.put('/api/types/:id', typeController.updateType);
 }

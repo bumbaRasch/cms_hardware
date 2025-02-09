@@ -63,10 +63,14 @@ export const typeService = {
         });
         return type;
     },
-    deleteType: async (data) => {
-        const type = await prisma.tbl_hardware_types.delete({
-            where: { TYPE_ID: data.TYPE_ID }
-        });
-        return type;
+    deleteType: async (id) => {
+        try{
+            const type = await prisma.tbl_hardware_types.delete({
+                where: { HT_ID: parseInt(id) }
+            });
+            return type;
+        } catch (error) {         
+            return null;
+        }
     }
 };

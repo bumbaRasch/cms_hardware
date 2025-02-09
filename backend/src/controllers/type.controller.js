@@ -11,4 +11,11 @@ export const typeController = {
             rows: types.data,    
         });
     },
+    deleteType: async (request, reply) => {
+        console.log("ids",request.params.id);
+        const result = await typeService.deleteType(request.params.id);
+        return result 
+            ? reply.code(204).send() 
+            : reply.code(404).send({ message: 'Type not found' });
+    }
 };
