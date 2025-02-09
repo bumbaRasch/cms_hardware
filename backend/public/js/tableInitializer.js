@@ -33,6 +33,11 @@ export function initializeTable(config) {
             toolbar: '#toolbar',
             url: config.url,
         });
+
+        // Add button click event #addButton
+        $('#addButton').on('click', function() {
+            openModal('Add', {}, config, 'sm');
+        });
     });
 }
 
@@ -69,7 +74,10 @@ function openModal(action, row, config, size) {
 
     if (action === 'Delete') {
         modalSaveButton.text('Delete').removeClass('btn-primary').addClass('btn-danger');
-    } else {
+    } else if (action === 'Add') {
+        modalSaveButton.text('Save').removeClass('btn-danger').addClass('btn-success');
+    } 
+    else {
         modalSaveButton.text('Save').removeClass('btn-danger').addClass('btn-primary');
     }
 
@@ -83,11 +91,11 @@ function openModal(action, row, config, size) {
 function generateModalContent(action, row, config) {
     if (action === 'Delete') {
         return `<p>Are you sure you want to delete the ${config.title.toLowerCase()} <b>${row[config.nameField]}</b>?</p>`;
-    } else if (action === 'Edit') {
-        return Object.keys(row).map(key => `
+    } else {
+        return config.columns.filter(column => column.field !== 'operate' && column.field !== 'checkbox').map(column => `
             <div class="mb-3">
-                <label for="${key}" class="form-label">${key}</label>
-                <input type="text" class="form-control" id="${key}" value="${row[key]}">
+                <label for="${column.field}" class="form-label">${column.title}</label>
+                <input type="text" class="form-control" id="${column.field}" value="${row[column.field] || ''}">
             </div>
         `).join('');
     }
@@ -95,6 +103,11 @@ function generateModalContent(action, row, config) {
 
 async function handleModalSave(action, row, config) {
     const modal = $('#universalModal');
+    const updatedRow = {};
+    config.columns.filter(column => column.field !== 'operate' && column.field !== 'checkbox').forEach(column => {
+        updatedRow[column.field] = $(`#${column.field}`).val();
+    });
+
     if (action === 'Delete') {
         try {
             const response = await fetch(`${config.url}/${row[config.idField]}`, {
@@ -115,11 +128,6 @@ async function handleModalSave(action, row, config) {
             alert('Failed to delete item');
         }
     } else if (action === 'Edit') {
-        const updatedRow = {};
-        Object.keys(row).forEach(key => {
-            updatedRow[key] = $(`#${key}`).val();
-        });
-
         try {
             const response = await fetch(`${config.url}/${row[config.idField]}`, {
                 method: 'PUT',
@@ -141,6 +149,27 @@ async function handleModalSave(action, row, config) {
         } catch (error) {
             console.error('Error:', error);
             alert('Failed to update item');
+        }
+    } else if (action === 'Add') {
+        try {
+            const response = await fetch(config.url, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(updatedRow)
+            });
+
+            if (response.ok) {
+                const newItem = await response.json();
+                $('#table').bootstrapTable('append', newItem);
+                modal.modal('hide');
+            } else {
+                throw new Error('Failed to add item');
+            }
+        } catch (error) {
+            console.error('Error:', error);
+            alert('Failed to add item');
         }
     }
 }
