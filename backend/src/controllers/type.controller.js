@@ -12,7 +12,6 @@ export const typeController = {
         });
     },
     deleteType: async (request, reply) => {
-        console.log("ids",request.params.id);
         const result = await typeService.deleteType(request.params.id);
         return result 
             ? reply.code(204).send() 
