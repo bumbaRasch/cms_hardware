@@ -1,6 +1,8 @@
 import { initializeTable } from './tableInitializer.js';
 
 const config = {
+    title: 'Hardware Type',
+    nameField: 'HT_NAME',
     columns: [{
         checkbox: true,
         visible: true
@@ -27,4 +29,3 @@ const config = {
 };
 
 initializeTable(config);
-

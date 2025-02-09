@@ -1,6 +1,8 @@
 import { initializeTable } from './tableInitializer.js';
 
 const config = {
+    title: 'Tariff',
+    nameField: 'TARIFF_NAME',
     columns: [{
         checkbox: true,
         visible: true
