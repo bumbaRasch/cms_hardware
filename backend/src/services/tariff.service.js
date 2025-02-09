@@ -82,10 +82,14 @@ export const tariffService = {
         return tariff;
     },
     deleteTariff: async (id) => {
-        const tariff = await prisma.tbl_tariffs.delete({
-            where: { TARIFF_ID: parseInt(id) }
-        });
+        try {
+            const tariff = await prisma.tbl_tariffs.delete({
+                where: { TARIFF_ID: parseInt(id) }
+            });
 
-        return tariff;
+            return tariff;
+        } catch (error) {
+            return null;
+        }
     }
 };

@@ -6,4 +6,8 @@ export const tariffRouter = async (fastify, options) => {
         return reply.view('tariffs', { currentPath: '/tariffs' });
     });
     fastify.get('/api/tariffs', tariffController.getTariffs);
+    // fastify.get('/api/tariffs/:id', tariffController.getTariff);
+    // fastify.post('/api/tariffs', tariffController.createTariff);
+    // fastify.put('/api/tariffs/:id', tariffController.updateTariff);
+    fastify.delete('/api/tariffs/:id', tariffController.deleteTariff);
 }
