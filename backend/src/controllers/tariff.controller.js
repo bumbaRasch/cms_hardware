@@ -13,7 +13,7 @@ export const tariffController = {
     },
     createTariff: async (request, reply) => {
         const tariff = await tariffService.createTariff(request.body);
-        return tariff;
+        return reply.code(201).send(tariff);
     },
 
     updateTariff: async (request, reply) => {
