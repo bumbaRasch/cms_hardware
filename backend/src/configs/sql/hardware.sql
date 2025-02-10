@@ -26,29 +26,42 @@ INSERT INTO tbl_locations (LOC_NAME, LOC_ADDRESS, LOC_CITY, LOC_STATE, LOC_COUNT
 ('Remote Site C', 'C Remote Rd', 'Remote City', 'Remote State', 'Remote Country', '67890', 'Diana Evans', '222-333-4444', 'dianaevans@remotesitec.com', 'Remote site for field operations'),
 ('Remote Site D', 'D Remote Rd', 'Remote City', 'Remote State', 'Remote Country', '67890', 'Evan Foster', '111-222-3333', 'evanfoster@remotesited.com', 'Remote site for field operations');
 
+CREATE TABLE IF NOT EXISTS tbl_hardware_categories (
+    HC_ID INT AUTO_INCREMENT PRIMARY KEY,
+    HC_NAME VARCHAR(255) NOT NULL UNIQUE COMMENT 'Name of the hardware category',
+    HC_DESCRIPTION TEXT COMMENT 'Description of the hardware category',
+    HC_CREATED_AT TIMESTAMP DEFAULT CURRENT_TIMESTAMP COMMENT 'Timestamp when the hardware category was created',
+    HC_UPDATED_AT TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT 'Timestamp when the hardware category was last updated'
+) COMMENT 'Table for storing hardware categories';
+
+INSERT INTO tbl_hardware_categories (HC_NAME, HC_DESCRIPTION) VALUES
+('Computer', 'Devices that perform computations and store data'),
+('Printer', 'Devices that produce hard copies of documents'),
+('Networking', 'Devices that facilitate communication and data transfer between computers'),
+('Storage', 'Devices that store and retrieve data'),
+('Other', 'Any other category of hardware not listed');
 
 CREATE TABLE IF NOT EXISTS tbl_hardware_types (
     HT_ID INT AUTO_INCREMENT PRIMARY KEY,
     HT_NAME VARCHAR(255) NOT NULL UNIQUE COMMENT 'Name of the hardware type',
     HT_DESCRIPTION TEXT COMMENT 'Description of the hardware type',
-    HT_CATEGORY VARCHAR(100) COMMENT 'Category of the hardware type',
+    HC_ID INT NOT NULL COMMENT 'Category of the hardware type',
     HT_CREATED_AT TIMESTAMP DEFAULT CURRENT_TIMESTAMP COMMENT 'Timestamp when the hardware type was created',
-    HT_UPDATED_AT TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT 'Timestamp when the hardware type was last updated'
+    HT_UPDATED_AT TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT 'Timestamp when the hardware type was last updated',
+    FOREIGN KEY (HC_ID) REFERENCES tbl_hardware_categories(HC_ID)
 ) COMMENT 'Table for storing hardware types';
 
-INSERT INTO tbl_hardware_types (HT_NAME, HT_DESCRIPTION, HT_CATEGORY) VALUES
-('Computer', 'A general-purpose computing device', 'Computing'),
-('Printer', 'A device that prints documents', 'Peripheral'),
-('Router', 'A device that forwards data packets between computer networks', 'Networking'),
-('Switch', 'A device that connects devices within a network', 'Networking'),
-('Laptop', 'A portable personal computer', 'Computing'),
-('Server', 'A computer that provides data to other computers', 'Computing'),
-('Storage Device', 'A device used to store data', 'Storage'),
-('Network Device', 'A device used to manage network traffic', 'Networking'),
-('Peripheral Device', 'An external device that provides input and output for the computer', 'Peripheral'),
-('Other', 'Any other type of hardware not listed', 'Miscellaneous');
-
-
+INSERT INTO tbl_hardware_types (HT_NAME, HT_DESCRIPTION, HC_ID) VALUES
+('Computer', 'A general-purpose computing device', 1),
+('Printer', 'A device that prints documents', 2),
+('Router', 'A device that forwards data packets between computer networks', 3),
+('Switch', 'A device that connects devices within a network', 3),
+('Laptop', 'A portable personal computer', 1),
+('Server', 'A computer that provides data to other computers', 1),
+('Storage Device', 'A device used to store data', 4),
+('Network Device', 'A device used to manage network traffic', 3),
+('Peripheral Device', 'An external device that provides input and output for the computer', 2),
+('Other', 'Any other type of hardware not listed', 5);
 
 CREATE TABLE IF NOT EXISTS tbl_statuses (
     ST_ID INT AUTO_INCREMENT PRIMARY KEY,
