@@ -7,7 +7,7 @@ export const tariffRouter = async (fastify, options) => {
     });
     fastify.get('/api/tariffs', tariffController.getTariffs);
     // fastify.get('/api/tariffs/:id', tariffController.getTariff);
-    // fastify.post('/api/tariffs', tariffController.createTariff);
-    // fastify.put('/api/tariffs/:id', tariffController.updateTariff);
+    fastify.post('/api/tariffs', tariffController.createTariff);
+    fastify.put('/api/tariffs/:id', tariffController.updateTariff);
     fastify.delete('/api/tariffs/:id', tariffController.deleteTariff);
 }

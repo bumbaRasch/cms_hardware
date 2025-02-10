@@ -59,27 +59,49 @@ export const tariffService = {
        }
     },
     createTariff: async (data) => {
+        console.log("data", data);
         const tariff = await prisma.tbl_tariffs.create({
             data: {
                 TARIFF_NAME: data.TARIFF_NAME,
-                TARIFF_DESC: data.TARIFF_DESC,
-                COMMENTS: data.COMMENTS
+                TARIFF_PRICE: parseFloat(data.TARIFF_PRICE),
+                TARIFF_DESCRIPTION: data.TARIFF_DESCRIPTION,
+                PROVIDER_ID: parseInt(data.PROVIDER_NAME),
+                CURRENCY_ID: parseInt(data.CURRENCY_CODE),
+            },
+            include: {
+                tbl_providers: { select: { PROVIDER_NAME: true } },
+                tbl_currencies: { select: { CURRENCY_CODE: true } },
             }
         });
-
-        return tariff;
+        console.log("tariff", tariff);
+        return {
+            TARIFF_ID: tariff.TARIFF_ID,
+            TARIFF_NAME: tariff.TARIFF_NAME,
+            TARIFF_PRICE: tariff.TARIFF_PRICE,
+            TARIFF_DESCRIPTION: tariff.TARIFF_DESCRIPTION,
+            PROVIDER_ID: tariff.PROVIDER_ID,
+            PROVIDER_NAME: tariff.tbl_providers.PROVIDER_NAME,
+            CURRENCY_ID: tariff.CURRENCY_ID,
+            CURRENCY_CODE: tariff.tbl_currencies.CURRENCY_CODE,
+        };
     },
     updateTariff: async (id, data) => {
-        const tariff = await prisma.tbl_tariffs.update({
-            where: { TARIFF_ID: parseInt(id) },
-            data: {
-                TARIFF_NAME: data.TARIFF_NAME,
-                TARIFF_DESC: data.TARIFF_DESC,
-                COMMENTS: data.COMMENTS
-            }
-        });
-
-        return tariff;
+        const updateData = {
+            TARIFF_NAME: data.TARIFF_NAME,
+            TARIFF_PRICE: parseFloat(data.TARIFF_PRICE),
+            TARIFF_DESCRIPTION: data.TARIFF_DESCRIPTION,
+            PROVIDER_ID: parseInt(data.PROVIDER_NAME),
+            CURRENCY_ID: parseInt(data.CURRENCY_CODE),
+        };
+        try {
+            return await prisma.tbl_tariffs.update({
+                where: { TARIFF_ID: parseInt(id) },
+                data: updateData
+            });
+        } catch (error) {
+            console.error(error);
+            throw error;
+        }
     },
     deleteTariff: async (id) => {
         try {

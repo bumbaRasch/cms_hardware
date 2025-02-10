@@ -9,23 +9,36 @@ const config = {
     }, {
         field: 'TARIFF_NAME',
         title: 'Name',
-        sortable: true
+        sortable: true,
+        type: 'text',
     }, {
         field: 'TARIFF_PRICE',
         title: 'Price',
-        sortable: true
+        sortable: true,
+        type: 'number',
     }, {
         field: 'CURRENCY_CODE',
         title: 'Currency',
-        sortable: true
+        sortable: true,
+        type: 'select',
+        optionsEndpoint: '/api/currencies',
+        idField: 'CURRENCY_ID',
+        valueField: 'CURRENCY_ID', 
+        labelField: 'CURRENCY_CODE',
     }, {
         field: 'PROVIDER_NAME',
         title: 'Provider',
-        sortable: true
+        sortable: true,
+        type: 'select',
+        optionsEndpoint: '/api/providers',
+        idField: 'PROVIDER_ID',
+        valueField: 'PROVIDER_ID', 
+        labelField: 'PROVIDER_NAME', 
     }, {
         field: 'TARIFF_DESCRIPTION',
         title: 'Description',
-        sortable: true
+        sortable: true,
+        type: 'textarea',
     }, {
         field: 'operate',
         title: 'Actions',
