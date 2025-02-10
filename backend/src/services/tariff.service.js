@@ -23,6 +23,8 @@ export const tariffService = {
         const orderBy = [];
         if (sort === 'PROVIDER_NAME') {
             orderBy.push({ tbl_providers: { PROVIDER_NAME: order } });
+        } else if (sort === 'CURRENCY_CODE') {
+            orderBy.push({ tbl_currencies: { CURRENCY_CODE: order } });
         } else {
             orderBy.push({ [sort]: order });
         }
