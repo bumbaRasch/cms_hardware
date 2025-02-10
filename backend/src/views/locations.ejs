@@ -12,52 +12,14 @@
     <%- include('header') %>
     <!-- Siderbar -->
     <%- include('sidebar', { currentPath: currentPath }) %>
-        <h4>Location</h4>
-        <div class="table-responsive">
-            <table 
-                data-show-export="true"
-                id="table"
-                data-toggle="table"
-                data-toolbar="#toolbar"
-                data-search="true"
-                data-show-toggle="true"
-                data-show-fullscreen="true"
-                data-show-columns="true"
-                data-show-columns-toggle-all="true"
-                data-pagination="true"
-                data-click-to-select="true"
-                data-show-footer="true"
-                data-show-pagination-switch="true"
-                data-page-list="[10, 25, 50, all]"
-                data-sortable="true"
-                data-id-field="LOC_ID"
-                data-locale="en-US"
-                data-url="/api/locations"
-                data-side-pagination="server"
-                class="table table-bordered table-striped table-hover">
-            <thead class="table-primary">
-                <tr>
-                    <th data-field="LOC_NAME" data-sortable="true">Name</th>
-                    <th data-field="LOC_ADDRESS" data-sortable="true">Address</th>
-                    <th data-field="LOC_CITY" data-sortable="true">City</th>
-                    <th data-field="LOC_STATE" data-sortable="true">State</th>
-                    <th data-field="LOC_COUNTRY" data-sortable="true">Country</th>
-                    <th data-field="LOC_POSTAL_CODE" data-sortable="true">Postal Code</th>
-                    <th data-field="LOC_CONTACT_PERSON" data-sortable="true">Contact Person</th>
-                    <th data-field="LOC_CONTACT_PHONE" data-sortable="true">Phone</th>
-                    <th data-field="LOC_CONTACT_EMAIL" data-sortable="true">Email</th>
-                    <th data-field="LOC_DESCRIPTION" data-sortable="true">Description</th>
-                    <!-- <th data-field="operate" data-formatter="operateFormatter" data-events="operateEvents">Actions</th> -->
-                </tr>
-            </thead>
-            </table>
-        </div>
-
+    <!-- Table -->
+    <%- include('partials/table', { title: 'Locations', buttonColor: 'btn-info', buttonTitle: 'Add' }) %>
     <!-- Modal -->
     <%- include('partials/modal') %>
     <!-- Footer -->
     <%- include('footer') %>
     <!-- Scripts -->
     <%- include('partials/scripts') %>
+    <script src="/public/js/locations.js" defer type="module"></script>
 </body>
 </html>

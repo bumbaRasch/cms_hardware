@@ -13,6 +13,15 @@ export const locationRouter = async (fastify, options) => {
                 type: 'object',
                 properties: {
                     LOC_NAME: { type: 'string' },
+                    LOC_ADDRESS: { type: 'string' },
+                    LOC_CITY: { type: 'string' },
+                    LOC_STATE: { type: 'string' },
+                    LOC_COUNTRY: { type: 'string' },
+                    LOC_POSTAL_CODE: { type: 'string' },
+                    LOC_CONTACT_PERSON: { type: 'string' },
+                    LOC_CONTACT_PHONE: { type: 'string' },
+                    LOC_CONTACT_EMAIL: { type: 'string' },
+                    LOC_DESCRIPTION: { type: 'string' },
                 },
                 required: ['LOC_NAME']
             }
@@ -33,6 +42,15 @@ export const locationRouter = async (fastify, options) => {
                 type: 'object',
                 properties: {
                     LOC_NAME: { type: 'string' },
+                    LOC_ADDRESS: { type: 'string' },
+                    LOC_CITY: { type: 'string' },
+                    LOC_STATE: { type: 'string' },
+                    LOC_COUNTRY: { type: 'string' },
+                    LOC_POSTAL_CODE: { type: 'string' },
+                    LOC_CONTACT_PERSON: { type: 'string' },
+                    LOC_CONTACT_PHONE: { type: 'string' },
+                    LOC_CONTACT_EMAIL: { type: 'string' },
+                    LOC_DESCRIPTION: { type: 'string' },
                 },
                 required: ['LOC_NAME']
             }

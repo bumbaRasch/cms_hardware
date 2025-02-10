@@ -62,28 +62,53 @@ export const locationService = {
         const location = await prisma.tbl_locations.create({
             data: {
                 LOC_NAME: data.LOC_NAME,
+                LOC_ADDRESS: data.LOC_ADDRESS,
+                LOC_CITY: data.LOC_CITY,
+                LOC_STATE: data.LOC_STATE,
+                LOC_COUNTRY: data.LOC_COUNTRY,
+                LOC_POSTAL_CODE: data.LOC_POSTAL_CODE,
+                LOC_CONTACT_PERSON: data.LOC_CONTACT_PERSON,
+                LOC_CONTACT_PHONE: data.LOC_CONTACT_PHONE,
+                LOC_CONTACT_EMAIL: data.LOC_CONTACT_EMAIL,
+                LOC_DESCRIPTION: data.LOC_DESCRIPTION,
             }
         });
 
         return location;
     },
     updateLocation: async (id, data) => {
-        const location = await prisma.tbl_locations.update({
-            where: { LOCATION_ID: parseInt(id) },
-            data: {
-                LOC_NAME: data.LOC_NAME,
-            }
-        });
-
-        return location;
+        const updateData = {
+            LOC_NAME: data.LOC_NAME,
+            LOC_ADDRESS: data.LOC_ADDRESS,
+            LOC_CITY:  data.LOC_CITY,
+            LOC_STATE: data.LOC_STATE,
+            LOC_COUNTRY: data.LOC_COUNTRY,
+            LOC_POSTAL_CODE: data.LOC_POSTAL_CODE,
+            LOC_CONTACT_PERSON: data.LOC_CONTACT_PERSON,
+            LOC_CONTACT_PHONE: data.LOC_CONTACT_PHONE,
+            LOC_CONTACT_EMAIL: data.LOC_CONTACT_EMAIL,
+            LOC_DESCRIPTION: data.LOC_DESCRIPTION,
+        };
+        try {
+            return await prisma.tbl_locations.update({
+                where: { LOC_ID: parseInt(id) },
+                data: updateData
+            });
+        } catch (error) {
+            console.error(error);
+            return null;
+        }
     },
     deleteLocation: async (id) => {
-        const location = await prisma.tbl_locations.delete({
-            where: { LOCATION_ID: parseInt(id) }
-        });
-
-        return location;
-    }
+        try {
+            return await prisma.tbl_locations.delete({
+                where: { LOC_ID: parseInt(id) }
+            });
+        } catch (error) {
+            console.error(error);
+            return null;
+        }
+    },
 };
 
 
