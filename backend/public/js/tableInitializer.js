@@ -6,7 +6,28 @@ export function initializeTable(config) {
         }
     });
 
-    $(document).ready(function() {
+    $(document).ready(async function() {
+        await Promise.all(config.columns.map(async column => {
+            if (column.type === 'select' && column.optionsEndpoint) {
+                try {
+                    const response = await fetch(column.optionsEndpoint);
+                    if (response.ok) {
+                        const data = await response.json();
+                        column.options = data.rows.map(row => ({
+                            value: row[column.valueField],
+                            label: row[column.labelField]
+                        }));
+                    } else {
+                        console.error(`Failed to fetch options for ${column.field}`);
+                        column.options = [];
+                    }
+                } catch (error) {
+                    console.error(`Error fetching options for ${column.field}:`, error);
+                    column.options = [];
+                }
+            }
+        }));
+
         const table = $('#table');
         table.bootstrapTable({
             columns: config.columns,
@@ -34,7 +55,6 @@ export function initializeTable(config) {
             url: config.url,
         });
 
-        // Add button click event #addButton
         $('#addButton').on('click', function() {
             openModal('Add', {}, config, 'lg');
         });
@@ -98,7 +118,7 @@ function generateModalContent(action, row, config) {
     if (action === 'Delete') {
         return `<p>Are you sure you want to delete the ${config.title.toLowerCase()} <b>${row[config.nameField]}</b>?</p>`;
     } else {
-        const fields = config.columns.filter(column => column.field !== 'operate' && column.field !== 'checkbox');
+        const fields = config.columns.filter(column => column.field && column.field !== 'operate' && !column.checkbox);
         const columns = config.modalColumns || 1;
         const rows = Math.ceil(fields.length / columns);
         let content = '<div class="row">';
@@ -112,7 +132,7 @@ function generateModalContent(action, row, config) {
                         <div class="col-md-${12 / columns}">
                             <div class="mb-3">
                                 <label for="${field.field}" class="form-label">${field.title}</label>
-                                <input type="text" class="form-control" id="${field.field}" value="${row[field.field] || ''}">
+                                ${generateInputField(field, row[field.field])}
                             </div>
                         </div>
                     `;
@@ -125,17 +145,35 @@ function generateModalContent(action, row, config) {
     }
 }
 
+function generateInputField(field, value) {
+    switch (field.type) {
+        case 'textarea':
+            return `<textarea class="form-control" id="${field.field}">${value || ''}</textarea>`;
+        case 'select':
+            return `
+                <select class="form-control" id="${field.field}">
+                    ${(Array.isArray(field.options) ? field.options : []).map(option => {
+                        const isSelected = String(option.label) === String(value);
+                        return `<option value="${option.value}" ${isSelected ? 'selected' : ''}>${option.label}</option>`;
+                    }).join('')}
+                </select>
+            `;
+        case 'checkbox':
+            return `<input type="checkbox" class="form-check-input" id="${field.field}" ${value ? 'checked' : ''}>`;
+        default:
+            return `<input type="text" class="form-control" id="${field.field}" value="${value || ''}">`;
+    }
+}
+
 async function handleModalSave(action, row, config) {
     const modal = $('#universalModal');
     const modalSaveButton = $('#universalModalSave');
     const updatedRow = {};
 
-    // Collect form data
     config.columns.filter(column => column.field !== 'operate' && column.field !== 'checkbox').forEach(column => {
         updatedRow[column.field] = $(`#${column.field}`).val();
     });
 
-    // Disable save button and show loading state
     modalSaveButton.prop('disabled', true).text('Saving...');
 
     try {
@@ -178,14 +216,16 @@ async function handleModalSave(action, row, config) {
                     field: config.idField,
                     values: [row[config.idField]]
                 });
+                $('#table').bootstrapTable('refresh')
             } else if (action === 'Edit') {
                 $('#table').bootstrapTable('updateByUniqueId', {
                     id: row[config.idField],
                     row: updatedRow
                 });
+                $('#table').bootstrapTable('refresh');
             } else if (action === 'Add') {
                 const newItem = await response.json();
-                $('#table').bootstrapTable('append', newItem);
+                $('#table').bootstrapTable('prepend', newItem);
             }
             alert(successMessage);
             modal.modal('hide');
