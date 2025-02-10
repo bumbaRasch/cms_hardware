@@ -12,47 +12,14 @@
     <%- include('header') %>
     <!-- Siderbar -->
     <%- include('sidebar', { currentPath: currentPath }) %>
-        <h4>Supplier</h4>
-        <div class="table-responsive">
-            <table 
-                data-show-export="true"
-                id="table"
-                data-toggle="table"
-                data-toolbar="#toolbar"
-                data-search="true"
-                data-show-toggle="true"
-                data-show-fullscreen="true"
-                data-show-columns="true"
-                data-show-columns-toggle-all="true"
-                data-pagination="true"
-                data-click-to-select="true"
-                data-show-footer="true"
-                data-show-pagination-switch="true"
-                data-page-list="[10, 25, 50, all]"
-                data-sortable="true"
-                data-id-field="SUPPLIER_ID"
-                data-locale="en-US"
-                data-url="/api/suppliers"
-                data-side-pagination="server"
-                class="table table-bordered table-striped table-hover">
-            <thead class="table-primary">
-                
-                <tr>
-                    <th data-field="ST_NAME" data-sortable="true">Status</th>
-                    <th data-field="SUPPLIER_NAME" data-sortable="true">Name</th>
-                    <th data-field="SUPPLIER_DESCRIPTION" data-sortable="true">Description</th>
-                    <th data-field="LOC_NAME" data-sortable="true">Location</th>
-                    <!-- <th data-field="operate" data-formatter="operateFormatter" data-events="operateEvents">Actions</th> -->
-                </tr>
-            </thead>
-            </table>
-        </div>
-
+    <!-- Table -->
+    <%- include('partials/table', { title: 'Suppliers', buttonColor: 'btn-info', buttonTitle: 'Add' }) %>
     <!-- Modal -->
     <%- include('partials/modal') %>
     <!-- Footer -->
     <%- include('footer') %>
     <!-- Scripts -->
     <%- include('partials/scripts') %>
+    <script src="/public/js/suppliers.js" defer type="module"></script>
 </body>
 </html>

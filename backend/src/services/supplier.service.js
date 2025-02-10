@@ -56,24 +56,54 @@ export const supplierService = {
 
         };
     },
-    createSupplier: async (supplier) => {
-        const newSupplier = await prisma.tbl_suppliers.create({
+    createSupplier: async (data) => {
+        const supplier = await prisma.tbl_suppliers.create({
             data: {
-                SUPPLIER_ID: supplier.SUPPLIER_ID,
-                SUPPLIER_NAME: supplier.SUPPLIER_NAME,
-                SUPPLIER_CONTACT: supplier.SUPPLIER_CONTACT,
+                SUPPLIER_NAME: data.SUPPLIER_NAME,
+                SUPPLIER_DESCRIPTION: data.SUPPLIER_DESCRIPTION,
+                LOC_ID: parseInt(data.LOC_NAME),
+                ST_ID: parseInt(data.ST_NAME),
+            },
+            include: {
+                tbl_locations: { select: { LOC_NAME: true } },
+                tbl_statuses: { select: { ST_NAME: true } },
             }
         });
-        return newSupplier;
+        return {
+            SUPPLIER_ID: supplier.SUPPLIER_ID,
+            SUPPLIER_NAME: supplier.SUPPLIER_NAME,
+            SUPPLIER_DESCRIPTION: supplier.SUPPLIER_DESCRIPTION,
+            LOC_ID: supplier.LOC_ID,
+            LOC_NAME: supplier.tbl_locations.LOC_NAME,
+            ST_ID: supplier.ST_ID,
+            ST_NAME: supplier.tbl_statuses.ST_NAME,
+        }
     },
     updateSupplier: async (id, supplier) => {
-        const updatedSupplier = await prisma.tbl_suppliers.update({
-            where: { SUPPLIER_ID: parseInt(id) },
-            data: {
-                SUPPLIER_NAME: supplier.SUPPLIER_NAME,
-                SUPPLIER_CONTACT: supplier.SUPPLIER_CONTACT,
-            }
-        });
-        return updatedSupplier;
+        const updateData = {
+            SUPPLIER_NAME: supplier.SUPPLIER_NAME,
+            SUPPLIER_DESCRIPTION: supplier.SUPPLIER_DESCRIPTION,
+            LOC_ID: parseInt(supplier.LOC_NAME),
+            ST_ID: parseInt(supplier.ST_NAME),
+        };
+        try {
+            return await prisma.tbl_suppliers.update({
+                where: { SUPPLIER_ID: parseInt(id) },
+                data: updateData,
+            });
+        } catch (error) {
+            console.error(error);
+            throw error;
+        }
+    },
+    deleteSupplier: async (id) => {
+        try {
+            return await prisma.tbl_suppliers.delete({
+                where: { SUPPLIER_ID: parseInt(id) },
+            });
+        } catch (error) {
+            console.error(error);
+            throw error;
+        }
     }
 };

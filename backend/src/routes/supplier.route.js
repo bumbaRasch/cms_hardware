@@ -7,6 +7,8 @@ export const supplierRouter = async (fastify, options) => {
         return reply.view('suppliers', { currentPath: '/suppliers' });
     });
     fastify.get('/api/suppliers', supplierController.getSuppliers);
-    // fastify.post('/api/suppliers', supplierController.createSupplier);
-    // fastify.delete('/api/suppliers/:id', supplierController.deleteSupplier);
+    fastify.post('/api/suppliers', supplierController.createSupplier);
+    fastify.put('/api/suppliers/:id', supplierController.updateSupplier);
+    // fastify.get('/api/suppliers/:id', supplierController.getSupplier);
+    fastify.delete('/api/suppliers/:id', supplierController.deleteSupplier);
 };
