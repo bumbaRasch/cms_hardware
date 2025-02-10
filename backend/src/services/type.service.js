@@ -53,21 +53,36 @@ export const typeService = {
     createType: async (data) => {
         const type = await prisma.tbl_hardware_types.create({
             data: {
-                TYPE_NAME: data.TYPE_NAME,
-                COMMENTS: data.COMMENTS
+                HT_NAME: data.HT_NAME,
+                HT_DESCRIPTION: data.HT_DESCRIPTION,
+                HC_ID: parseInt(data.HC_NAME)
+            },
+            include: {
+                tbl_hardware_categories: { select: { HC_NAME: true } }
             }
         });
-        return type;
+        return {
+            HT_ID: type.HT_ID,
+            HT_NAME: type.HT_NAME,
+            HT_DESCRIPTION: type.HT_DESCRIPTION,
+            HC_NAME: type.tbl_hardware_categories.HC_NAME
+        }
     },
-    updateType: async (data) => {
-        const type = await prisma.tbl_hardware_types.update({
-            where: { TYPE_ID: data.TYPE_ID },
-            data: {
-                TYPE_NAME: data.TYPE_NAME,
-                COMMENTS: data.COMMENTS
-            }
-        });
-        return type;
+    updateType: async (id ,data) => {
+        console.log("data", data);
+        const updateData = {
+            HT_NAME: data.HT_NAME,
+            HT_DESCRIPTION: data.HT_DESCRIPTION,
+            HC_ID: parseInt(data.HC_NAME)
+        };
+        try {
+            return await prisma.tbl_hardware_types.update({
+                where: { HT_ID: parseInt(id) },
+                data: updateData,
+            });
+        } catch (error) {
+            console.error(error);
+        }
     },
     deleteType: async (id) => {
         try{

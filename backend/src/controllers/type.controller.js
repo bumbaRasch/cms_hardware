@@ -11,9 +11,19 @@ export const typeController = {
             rows: types.data,    
         });
     },
+    createType: async (request, reply) => {
+        const type = await typeService.createType(request.body);
+        return reply.code(201).send(type);
+    },
+    updateType: async (request, reply) => {
+        const type = await typeService.updateType(request.params.id, request.body);
+        return type 
+            ? reply.code(200).send(type) 
+            : reply.code(404).send({ message: 'Type not found' });
+    },
     deleteType: async (request, reply) => {
-        const result = await typeService.deleteType(request.params.id);
-        return result 
+        const type = await typeService.deleteType(request.params.id);
+        return type 
             ? reply.code(204).send() 
             : reply.code(404).send({ message: 'Type not found' });
     }
