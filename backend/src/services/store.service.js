@@ -56,4 +56,57 @@ export const storeService = {
 
         };
     },
+
+    createStore: async (data) => {
+        const store = await prisma.tbl_stores.create({
+            data: {
+                STORE_NAME: data.STORE_NAME,
+                STORE_DESCRIPTION: data.STORE_DESCRIPTION,
+                LOC_ID: parseInt(data.LOC_NAME),
+                ST_ID: parseInt(data.ST_NAME),
+            },
+            include: {
+                tbl_locations: { select: { LOC_NAME: true } },
+                tbl_statuses: { select: { ST_NAME: true } },
+            }
+        });
+        return {
+            STORE_ID: store.STORE_ID,
+            STORE_NAME: store.STORE_NAME,
+            STORE_DESCRIPTION: store.STORE_DESCRIPTION,
+            LOC_ID: store.LOC_ID,
+            LOC_NAME: store.tbl_locations.LOC_NAME,
+            ST_ID: store.ST_ID,
+            ST_NAME: store.tbl_statuses.ST_NAME,
+        }
+    },
+
+    updateStore: async (id, data) => {
+        const updateData = {
+            STORE_NAME: data.STORE_NAME,
+            STORE_DESCRIPTION: data.STORE_DESCRIPTION,
+            LOC_ID: parseInt(data.LOC_NAME),
+            ST_ID: parseInt(data.ST_NAME),
+        };
+
+        try {
+            return await prisma.tbl_stores.update({
+                where: { STORE_ID: parseInt(id) },
+                data: updateData,
+            });
+        } catch (error) {
+            console.error(error);
+            throw error;
+        }
+    },
+    deleteStore: async (id) => {
+        try {
+            return await prisma.tbl_stores.delete({
+                where: { STORE_ID: parseInt(id) },
+            });
+        } catch (error) {
+            console.error(error);
+            throw error;
+        }
+    }
 };

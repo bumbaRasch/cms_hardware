@@ -12,4 +12,20 @@ export const storeController = {
             rows: stores.data,    
         });
     },
+    createStore: async (request, reply) => {
+        const store = await storeService.createStore(request.body);
+        return reply.code(201).send(store);
+    },
+    updateStore: async (request, reply) => {
+        const store = await storeService.updateStore(request.params.id, request.body);
+        return store 
+            ? reply.send(store) 
+            : reply.code(404).send({ message: 'Store not found' });
+    },
+    deleteStore: async (request, reply) => {
+        const store = await storeService.deleteStore(request.params.id);
+        return store 
+            ? reply.code(204).send() 
+            : reply.code(404).send({ message: 'Store not found' });
+    }
 };
