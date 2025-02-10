@@ -69,10 +69,6 @@ export const typeService = {
         }
     },
     updateType: async (id ,data) => {
-<<<<<<< HEAD
-=======
-        console.log("data", data);
->>>>>>> 8b1d5be5e6f60f1c62348e78f205d09322002ee9
         const updateData = {
             HT_NAME: data.HT_NAME,
             HT_DESCRIPTION: data.HT_DESCRIPTION,
