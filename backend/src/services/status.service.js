@@ -46,26 +46,36 @@ export const statusService = {
         const status = await prisma.tbl_statuses.create({
             data: {
                 ST_NAME: data.ST_NAME,
+                ST_DESCRIPTION: data.ST_DESCRIPTION,
             }
         });
 
         return status;
     },
     updateStatus: async (id, data) => {
-        const status = await prisma.tbl_statuses.update({
-            where: { STATUS_ID: parseInt(id) },
-            data: {
-                ST_NAME: data.ST_NAME,
-            }
-        });
+        const updateData = {
+            ST_NAME: data.ST_NAME,
+            ST_DESCRIPTION: data.ST_DESCRIPTION,
+        };
 
-        return status;
+        try {
+            return await prisma.tbl_statuses.update({
+                where: { ST_ID: parseInt(id) },
+                data: updateData,
+            });
+        } catch (error) {
+            console.error(error);
+            throw error;
+        }
     },
     deleteStatus: async (id) => {
-        const status = await prisma.tbl_statuses.delete({
-            where: { STATUS_ID: parseInt(id) },
-        });
-
-        return status;
+        try {
+            return await prisma.tbl_statuses.delete({
+                where: { ST_ID: parseInt(id) },
+            });
+        } catch (error) {
+            console.error(error);
+            throw error;
+        }
     },
 };
