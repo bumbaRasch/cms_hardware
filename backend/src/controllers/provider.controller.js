@@ -13,7 +13,7 @@ export const providerController = {
     },
     createProvider: async (request, reply) => {
         const provider = await providerService.createProvider(request.body);
-        return provider;
+        return reply.code(201).send(provider);
     },
 
     updateProvider: async (request, reply) => {

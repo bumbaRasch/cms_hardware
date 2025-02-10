@@ -52,10 +52,73 @@ export const providerService = {
             data: providers.map(item => ({
                 PROVIDER_ID: item.PROVIDER_ID,
                 PROVIDER_NAME: item.PROVIDER_NAME,
+                PROVIDER_TYPE: item.PROVIDER_TYPE,
+                PROVIDER_CONTACT: item.PROVIDER_CONTACT,
+                PROVIDER_DESCRIPTION: item.PROVIDER_DESCRIPTION,
+                LOC_ID: item.LOC_ID,
                 LOC_NAME: item.tbl_locations.LOC_NAME,
+                ST_ID: item.ST_ID,
                 ST_NAME: item.tbl_statuses.ST_NAME,
             })),
             total: parseInt(total),
         };
     },
+
+    createProvider: async (data) => {
+        const provider = await prisma.tbl_providers.create({
+            data: {
+                PROVIDER_NAME: data.PROVIDER_NAME,
+                PROVIDER_CONTACT: data.PROVIDER_CONTACT,
+                PROVIDER_DESCRIPTION: data.PROVIDER_DESCRIPTION,
+                PROVIDER_TYPE: data.PROVIDER_TYPE,
+                LOC_ID: parseInt(data.LOC_NAME),
+                ST_ID: parseInt(data.ST_NAME),
+            },
+            include: {
+                tbl_locations: { select: { LOC_NAME: true } },
+                tbl_statuses: { select: { ST_NAME: true } },
+            }
+        });
+
+        return {
+            PROVIDER_ID: provider.PROVIDER_ID,
+            PROVIDER_NAME: provider.PROVIDER_NAME,
+            PROVIDER_CONTACT: provider.PROVIDER_CONTACT,
+            PROVIDER_DESCRIPTION: provider.PROVIDER_DESCRIPTION,
+            PROVIDER_TYPE: provider.PROVIDER_TYPE,
+            LOC_ID: provider.LOC_ID,
+            LOC_NAME: provider.tbl_locations.LOC_NAME,
+            ST_ID: provider.ST_ID,
+            ST_NAME: provider.tbl_statuses.ST_NAME,
+        };
+    },
+    updateProvider: async (id, provider) => {
+        const updateData = {
+            PROVIDER_NAME: provider.PROVIDER_NAME,
+            PROVIDER_CONTACT: provider.PROVIDER_CONTACT,
+            PROVIDER_DESCRIPTION: provider.PROVIDER_DESCRIPTION,
+            PROVIDER_TYPE: provider.PROVIDER_TYPE,
+            LOC_ID: parseInt(provider.LOC_NAME),
+            ST_ID: parseInt(provider.ST_NAME),
+        };
+        try {
+            return await prisma.tbl_providers.update({
+                where: { PROVIDER_ID: parseInt(id) },
+                data: updateData,
+            });
+        } catch (error) {
+            return null;
+        }
+    },
+    deleteProvider: async (id) => {
+        try {
+            const provider = await prisma.tbl_providers.delete({
+                where: { PROVIDER_ID: parseInt(id) }
+            });
+
+            return provider;
+        } catch (error) {
+            return null;
+        }
+    }
 };
