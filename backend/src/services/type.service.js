@@ -14,18 +14,24 @@ export const typeService = {
             whereClauses.OR = [
                 { HT_NAME: { contains: search } },
                 { HT_DESCRIPTION: { contains: search } },
-                { HT_CATEGORY: { contains: search } },
+                { tbl_hardware_categories: { HC_NAME: { contains: search } } },
             ];
         }
 
         const orderBy = [];
-        orderBy.push({ [sort]: order });
-
+        if (sort === 'HC_NAME') {
+            orderBy.push({ tbl_hardware_categories: { HC_NAME: order } });
+        } else {
+            orderBy.push({ [sort]: order });
+        }    
         const types = await prisma.tbl_hardware_types.findMany({
             where: whereClauses,
             orderBy,
             skip: parseInt(offset),
             take: parseInt(limit),
+            include: {
+                tbl_hardware_categories: { select: { HC_NAME: true } }
+            },
         });
 
         const total = await prisma.tbl_hardware_types.count({
@@ -37,7 +43,7 @@ export const typeService = {
                 HT_ID: item.HT_ID,
                 HT_NAME: item.HT_NAME,
                 HT_DESCRIPTION: item.HT_DESCRIPTION,
-                HT_CATEGORY: item.HT_CATEGORY,
+                HC_NAME: item.tbl_hardware_categories.HC_NAME,
             })),
             total: parseInt(total),
             offset: parseInt(offset),

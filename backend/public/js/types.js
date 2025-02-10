@@ -9,15 +9,22 @@ const config = {
     }, {
         field: 'HT_NAME',
         title: 'Name',
-        sortable: true
+        sortable: true,
+        type: 'text',
     }, {
-        field: 'HT_CATEGORY',
+        field: 'HC_NAME',
         title: 'Category',
-        sortable: true
+        sortable: true,
+        type: 'select',
+        optionsEndpoint: '/api/categories',
+        idField: 'HC_ID',
+        valueField: 'HC_ID',
+        labelField: 'HC_NAME',
     }, {
         field: 'HT_DESCRIPTION',
         title: 'Description',
-        sortable: true
+        sortable: true,
+        type: 'textarea',
     }, {
         field: 'operate',
         title: 'Actions',
@@ -25,7 +32,8 @@ const config = {
         clickToSelect: false
     }],
     idField: 'HT_ID',
-    url: '/api/types'
+    url: '/api/types',
+    modalColumns: 2,
 };
 
 initializeTable(config);
