@@ -59,7 +59,6 @@ export const tariffService = {
        }
     },
     createTariff: async (data) => {
-        console.log("data", data);
         const tariff = await prisma.tbl_tariffs.create({
             data: {
                 TARIFF_NAME: data.TARIFF_NAME,
@@ -73,7 +72,6 @@ export const tariffService = {
                 tbl_currencies: { select: { CURRENCY_CODE: true } },
             }
         });
-        console.log("tariff", tariff);
         return {
             TARIFF_ID: tariff.TARIFF_ID,
             TARIFF_NAME: tariff.TARIFF_NAME,
