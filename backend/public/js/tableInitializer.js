@@ -148,7 +148,7 @@ function generateModalContent(action, row, config) {
 function generateInputField(field, value) {
     switch (field.type) {
         case 'textarea':
-            return `<textarea class="form-control" id="${field.field}">${value || ''}</textarea>`;
+            return `<textarea style="resize: none;" class="form-control" id="${field.field}">${value || ''}</textarea>`;
         case 'select':
             return `
                 <select class="form-control" id="${field.field}">
