@@ -1,3 +1,5 @@
+import {showAlert} from './index.js';
+
 export function initializeTable(config) {
     config.columns.forEach(column => {
         if (column.field === 'operate') {
@@ -286,15 +288,4 @@ function highlightRow(id, highlightClass = 'table-warning', delay = 500) {
             setTimeout(() => row.removeClass(highlightClass), 2000);
         }
     }, delay);
-}
-
-
-function showAlert(message, type) {
-    const alertContainer = document.getElementById('alert-container');
-    const alert = document.createElement('div');
-    alert.className = `alert alert-${type}`;
-    alert.role = 'alert';
-    alert.innerHTML = message;
-    alertContainer.appendChild(alert);
-    setTimeout(() => alert.remove(), 5000);
 }
