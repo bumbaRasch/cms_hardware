@@ -7,7 +7,38 @@ export const hardwareRouter = async (fastify, options) => {
         return reply.view('hardware', { currentPath: '/hardware' });
     });
     fastify.get('/api/hardware', hardwareController.getHardware);
-    fastify.post('/api/hardware', hardwareController.createHardware);
+    fastify.post('/api/hardware', {
+        schema: {
+            body: {
+                type: 'object',
+                properties: {
+                    HA_NAME : { type: 'string' },
+                    HT_ID: { type: 'number' },
+                    HT_NAME: {  type: 'number' },
+                    HA_MANUFACTURER: { type: 'string' },
+                    HA_MODEL: { type: 'string' },
+                    HA_SERIAL_NUMBER: { type: 'string' },
+                    HA_PURCHASE_DATE: { type: 'string' },
+                    HA_WARRANTY_EXPIRY_DATE: { type: 'string' },
+                    LOC_NAME: {  type: 'number' },
+                    ST_NAME: {  type: 'number' },
+                    HA_LAST_MAINTENANCE_DATE: { type: 'string' },
+                    HA_NOTES: { type: 'string' },
+                    SIM_NUMBER: { type: 'string' },
+                    STORE_NAME: { type: 'number' },
+                    SUPPLIER_NAME: { type: 'number' },
+                    HA_COST: { type: 'number' },
+                    CURRENCY_CODE: { type: 'number' },
+                    HA_CONDITION: { type: 'string' },
+                    HA_DEPLOYMENT_DATE: { type: 'string' },
+                    HA_RETIREMENT_DATE: { type: 'string' },
+                    HA_IP_ADDRESS: { type: 'string' },
+                    HA_MAC_ADDRESS: { type: 'string' },
+                },
+                required: ['HA_NAME', 'HT_NAME', 'HA_MANUFACTURER', "ST_NAME", 'HA_MODEL', 'HA_SERIAL_NUMBER', 'HA_MAC_ADDRESS']
+            }
+        },
+    }, hardwareController.createHardware);
     fastify.put('/api/hardware/:id', {
         schema: {
             params: {
@@ -23,7 +54,8 @@ export const hardwareRouter = async (fastify, options) => {
                 type: 'object',
                 properties: {
                     HA_NAME : { type: 'string' },
-                    HA_TYPE: {  type: 'number' },
+                    HT_ID: { type: 'number' },
+                    HT_NAME: {  type: 'number' },
                     HA_MANUFACTURER: { type: 'string' },
                     HA_MODEL: { type: 'string' },
                     HA_SERIAL_NUMBER: { type: 'string' },
@@ -34,17 +66,17 @@ export const hardwareRouter = async (fastify, options) => {
                     HA_LAST_MAINTENANCE_DATE: { type: 'string' },
                     HA_NOTES: { type: 'string' },
                     SIM_NUMBER: { type: 'string' },
-                    HA_STORE: { type: 'number' },
-                    HA_SUPPLIER: { type: 'number' },
+                    STORE_NAME: { type: 'number' },
+                    SUPPLIER_NAME: { type: 'number' },
                     HA_COST: { type: 'number' },
-                    HA_CURRENCY: { type: 'number' },
+                    CURRENCY_CODE: { type: 'number' },
                     HA_CONDITION: { type: 'string' },
                     HA_DEPLOYMENT_DATE: { type: 'string' },
                     HA_RETIREMENT_DATE: { type: 'string' },
                     HA_IP_ADDRESS: { type: 'string' },
                     HA_MAC_ADDRESS: { type: 'string' },
                 },
-                required: ['HA_NAME', 'HA_TYPE', 'HA_MANUFACTURER', 'HA_MODEL', 'HA_SERIAL_NUMBER', 'HA_PURCHASE_DATE', 'HA_WARRANTY_EXPIRY_DATE', 'LOC_NAME', 'ST_NAME', 'HA_LAST_MAINTENANCE_DATE', 'HA_NOTES', 'SIM_NUMBER', 'STORE_NAME', 'SUPPLIER_NAME', 'HA_COST', 'HA_CURRENCY', 'HA_CONDITION', 'HA_DEPLOYMENT_DATE', 'HA_RETIREMENT_DATE', 'HA_IP_ADDRESS', 'HA_MAC_ADDRESS']
+                required: ['HA_NAME', 'HT_NAME', 'HA_MANUFACTURER', 'HA_MODEL', 'HA_SERIAL_NUMBER', 'HA_MAC_ADDRESS']
             }
         },
     },   

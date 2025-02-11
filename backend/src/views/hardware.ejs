@@ -4,7 +4,6 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <%- include('partials/head', { title: 'Hardware List' }) %>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
 </head>
 <body id="body-pd">
     <!-- Alert message -->
@@ -13,67 +12,14 @@
     <%- include('header') %>
     <!-- Siderbar -->
     <%- include('sidebar', { currentPath: currentPath }) %>
-    <h4>Hardware List</h4>
-    <div class="table-responsive">
-        <table 
-            data-show-export="true"
-            id="table"
-            data-toggle="table"
-            data-toolbar="#toolbar"
-            data-search="true"
-            data-show-toggle="true"
-            data-auto-refresh="true"
-            data-show-fullscreen="true"
-            data-show-columns="true"
-            data-show-columns-toggle-all="true"
-            data-pagination="true"
-            data-click-to-select="true"
-            data-show-footer="true"
-            data-show-pagination-switch="true"
-            data-page-list="[10, 25, 50, all]"
-            data-sortable="true"
-            data-id-field="HA_ID"
-            data-locale="en-US"
-            data-url="/api/hardware"
-            data-side-pagination="server"
-            class="table table-bordered table-striped table-hover">
-            <thead>
-                <tr>
-                    <th data-field="ST_NAME" data-sortable="true">Status</th>
-                    <th data-field="HT_NAME" data-sortable="true">Type</th>
-                    <th data-field="HA_NAME" data-sortable="true">Item Name</th>
-                    <th data-field="HA_MODEL" data-sortable="true">Model</th>
-                    <th data-field="HA_SERIAL_NUMBER" data-sortable="true">Serial Number</th>
-                    <th data-field="HA_MANUFACTURER" data-sortable="true">Manufacturer</th>
-                    <th data-field="HA_COST" data-sortable="true" data-formatter="costFormatter">Price</th>
-                    <th data-field="CURRENCY_CODE" data-sortable="true">Currency</th>
-                    <th data-field="SUPPLIER_NAME" data-sortable="true">Supplier</th>
-                    <th data-field="STORE_NAME" data-sortable="true">Store</th>
-                    <th data-field="LOC_NAME" data-sortable="true">Location</th>
-                    <th data-field="SIM_NUMBER" data-sortable="true">SIM Card</th>
-                    <th data-field="HA_IP_ADDRESS" data-sortable="true">IP Address</th>
-                    <th data-field="HA_MAC_ADDRESS" data-sortable="true">MAC Address</th>
-                    <th data-field="HA_PURCHASE_DATE" data-sortable="true">Purchase Date</th>
-                    <th data-field="HA_WARRANTY_EXPIRY_DATE" data-sortable="true">Warranty Expiry Date</th>
-                    <th data-field="HA_DEPLOYMENT_DATE" data-sortable="true">Deployment Date</th>
-                    <th data-field="HA_RETIREMENT_DATE" data-sortable="true">Retirement Date</th>
-                    <th data-field="HA_LAST_MAINTENANCE_DATE" data-sortable="true">Last Maintenance Date</th>
-                    <th data-field="HA_CONDITION" data-sortable="true">Condition</th>
-                    <th data-field="HA_NOTES" data-sortable="true">Notes</th>
-                    <th data-field="HA_CREATED_AT" data-sortable="true">Created At</th>
-                    
-                    <th data-field="operate" data-formatter="operateFormatter" data-events="operateEvents">Actions</th>
-                </tr>
-            </thead>
-        </table>
-        </div>
-
+    <!-- Table -->
+    <%- include('partials/table', { title: 'Hardware List', buttonColor: 'btn-info', buttonTitle: 'Add' }) %>
     <!-- Modal -->
     <%- include('partials/modal') %>
     <!-- Footer -->
     <%- include('footer') %>
     <!-- Scripts -->
     <%- include('partials/scripts') %>
-    <script src="/public/js/hardware.js" defer ></script>
+    <script src="/public/js/hardware.js" defer type="module"></script>
 </body>
 </html>
