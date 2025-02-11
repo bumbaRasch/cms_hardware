@@ -9,3 +9,8 @@ export const formatDate = (date) => {
         // second: '2-digit'
     }).format(new Date(date));
 };
+
+export const isValidDate = (dateString) => {
+    const date = new Date(dateString);
+    return !isNaN(date.getTime());
+};

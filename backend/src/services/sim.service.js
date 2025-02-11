@@ -1,6 +1,6 @@
 //backend/src/services/sim.service.js
 import prisma from '../configs/prisma.js';
-import { formatDate } from '../utils/date.js';
+import { formatDate, isValidDate } from '../utils/date.js';
 
 export const simService = {
     getSims: async ({ offset = 0, limit = 10, sort = 'SIM_CREATED_AT', order = 'desc', filter = {}, search = '' }) => {
@@ -173,9 +173,4 @@ export const simService = {
             return null;
         }
     }
-};
-
-const isValidDate = (dateString) => {
-    const date = new Date(dateString);
-    return !isNaN(date.getTime());
 };
