@@ -21,7 +21,7 @@ const config = {
         field: 'SIM_NUMBER',
         title: 'Number',
         sortable: true,
-        type: 'number',
+        type: 'text',
     }, {
         field: 'PROVIDER_NAME',
         title: 'Provider',
