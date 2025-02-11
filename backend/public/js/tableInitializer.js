@@ -255,9 +255,11 @@ async function handleModalSave(action, row, config) {
                     row: updatedRow
                 });
                 $('#table').bootstrapTable('refresh');
+                highlightRow(row[config.idField], 'table-warning');
             } else if (action === 'Add') {
                 const newItem = await response.json();
                 $('#table').bootstrapTable('prepend', newItem);
+                highlightRow(newItem[config.idField], 'table-success');
             }
             modal.modal('hide');
             showAlert(successMessage, 'success');
@@ -272,6 +274,20 @@ async function handleModalSave(action, row, config) {
         modalSaveButton.prop('disabled', false).text(action === 'Delete' ? 'Delete' : 'Save');
     }
 }
+
+function highlightRow(id, highlightClass = 'table-warning', delay = 500) {
+    setTimeout(() => {
+        const row = $(`#table tbody tr:has(td input[value="${id}"])`);
+        if (row.length) {
+            row.addClass(highlightClass);
+
+            setTimeout(() => row.removeClass(highlightClass), 300);
+            setTimeout(() => row.addClass(highlightClass), 800);
+            setTimeout(() => row.removeClass(highlightClass), 2000);
+        }
+    }, delay);
+}
+
 
 function showAlert(message, type) {
     const alertContainer = document.getElementById('alert-container');
