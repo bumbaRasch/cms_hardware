@@ -111,6 +111,19 @@ function openModal(action, row, config, size) {
         handleModalSave(action, row, config);
     });
 
+    config.columns.forEach(column => {
+        if (column.type === 'date') {
+            const datePicker = flatpickr(`#${column.field}`, {
+                dateFormat: "Y-m-d",
+                defaultDate: row[column.field] || null
+            });
+
+            document.querySelector(`#${column.field} + .input-group-text`).addEventListener('click', () => {
+                datePicker.open();
+            });
+        }
+    });
+
     modal.modal('show');
 }
 
@@ -160,6 +173,17 @@ function generateInputField(field, value) {
             `;
         case 'checkbox':
             return `<input type="checkbox" class="form-check-input" id="${field.field}" ${value ? 'checked' : ''}>`;
+        case 'date':
+                return `<div class="input-group">
+                            <input type="text" class="form-control" id="${field.field}" name="${field.field}" value="${value || ''}">
+                            <span class="input-group-text"><i class="bi bi-calendar2-date"></i></span>
+                        </div>`
+        case 'number':
+            return `<input type="number" class="form-control" id="${field.field}" value="${value || ''}">`;
+        case 'email':
+            return `<input type="email" class="form-control" id="${field.field}" value="${value || ''}">`;
+        case 'tel':
+            return `<input type="tel" class="form-control" placeholder="123-45-678" pattern="[0-9]{3}-[0-9]{2}-[0-9]{3}" id="${field.field}" value="${value || ''}">`;
         default:
             return `<input type="text" class="form-control" id="${field.field}" value="${value || ''}">`;
     }
@@ -173,7 +197,7 @@ async function handleModalSave(action, row, config) {
     config.columns.filter(column => column.field !== 'operate' && column.field !== 'checkbox').forEach(column => {
         updatedRow[column.field] = $(`#${column.field}`).val();
     });
-
+    
     modalSaveButton.prop('disabled', true).text('Saving...');
 
     try {
