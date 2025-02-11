@@ -82,21 +82,21 @@ export const simService = {
             limit: parseInt(limit),
         };
     },
-    createSim: async (body) => {
+    createSim: async (data) => {
         const sim = await prisma.tbl_sim_cards.create({
             data: {
-                SIM_NUMBER: body.SIM_NUMBER,
-                PROVIDER_ID: body.PROVIDER_ID,
-                TARIFF_ID: body.TARIFF_ID,
-                LOC_ID: body.LOC_ID,
-                STATUS_ID: body.STATUS_ID,
-                PIN1: body.PIN1,
-                PUK1: body.PUK1,
-                PIN2: body.PIN2,
-                PUK2: body.PUK2,
-                ACTIVATION_DATE: new Date(body.ACTIVATION_DATE).toISOString(),
-                EXPIRATION_DATE: new Date(body.EXPIRATION_DATE).toISOString(),
-                COMMENTS: body.COMMENTS
+                SIM_NUMBER: data.SIM_NUMBER,
+                PROVIDER_ID: parseInt(data.PROVIDER_NAME),
+                TARIFF_ID: parseInt(data.TARIFF_NAME),
+                LOC_ID: parseInt(data.LOC_NAME),
+                STATUS_ID: parseInt(data.ST_NAME),
+                PIN1: data.PIN1,
+                PUK1: data.PUK1,
+                PIN2: data.PIN2,
+                PUK2: data.PUK2,
+                ACTIVATION_DATE: new Date(data.ACTIVATION_DATE).toISOString(),
+                EXPIRATION_DATE: new Date(data.EXPIRATION_DATE).toISOString(),
+                COMMENTS: data.COMMENTS
             },
             include: {
                 tbl_locations: { select: { LOC_NAME: true } },
@@ -129,10 +129,10 @@ export const simService = {
     updateSim: async (id, body) => {
         const updateData = {
             SIM_NUMBER: body.SIM_NUMBER,
-            PROVIDER_ID: parseInt(body.PROVIDER_ID),
-            TARIFF_ID: parseInt(body.TARIFF_ID),
-            LOC_ID: parseInt(body.LOC_ID),
-            STATUS_ID: parseInt(body.STATUS_ID),
+            PROVIDER_ID: parseInt(body.PROVIDER_NAME),
+            TARIFF_ID: parseInt(body.TARIFF_NAME),
+            LOC_ID: parseInt(body.LOC_NAME),
+            STATUS_ID: parseInt(body.ST_NAME),
             PIN1: body.PIN1,
             PUK1: body.PUK1,
             PIN2: body.PIN2,

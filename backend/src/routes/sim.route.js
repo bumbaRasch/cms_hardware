@@ -7,6 +7,30 @@ export const simRouter = async (fastify, options) => {
     });
     fastify.get('/api/sim-cards', simController.getSims);
 
+    //fastify.get('/api/sim-cards/:id', simController.getSimById);
+
+    fastify.post('/api/sim-cards', {
+        schema: {
+            body: {
+                type: 'object',
+                properties: {
+                    SIM_NUMBER: { type: 'string' },
+                    PROVIDER_NAME: { type: 'string' },
+                    TARIFF_NAME: { type: 'string' },
+                    LOC_NAME: { type: 'string' },
+                    ST_NAME: { type: 'string' },
+                    PIN1: { type: 'string', pattern: '^[0-9]{4}$' },
+                    PUK1: { type: 'string', pattern: '^[0-9]{4}$' },
+                    PIN2: { type: 'string', pattern: '^[0-9]{4}$' },
+                    PUK2: { type: 'string', pattern: '^[0-9]{4}$' },
+                    ACTIVATION_DATE: { type: 'string' },
+                    EXPIRATION_DATE: { type: 'string' },
+                    COMMENTS: { type: 'string' },
+                },
+                required: ['SIM_NUMBER', 'PROVIDER_NAME', 'TARIFF_NAME', 'LOC_NAME', 'ST_NAME', 'PIN1', 'PUK1', 'PIN2', 'PUK2',]
+            }
+        },
+    }, simController.createSim);
     fastify.put('/api/sim-cards/:id', {
         schema: {
             params: {
@@ -22,10 +46,10 @@ export const simRouter = async (fastify, options) => {
                 type: 'object',
                 properties: {        
                     SIM_NUMBER: { type: 'string' },
-                    PROVIDER_ID: { type: 'string' },
-                    TARIFF_ID: { type: 'string' },
-                    LOC_ID: { type: 'string' },
-                    STATUS_ID: { type: 'string' },
+                    PROVIDER_NAME: { type: 'string' },
+                    TARIFF_NAME: { type: 'string' },
+                    LOC_NAME: { type: 'string' },
+                    ST_NAME: { type: 'string' },
                     PIN1: { type: 'string', pattern: '^[0-9]{4}$' },
                     PUK1: { type: 'string', pattern: '^[0-9]{4}$' },
                     PIN2: { type: 'string', pattern: '^[0-9]{4}$' },
@@ -34,7 +58,7 @@ export const simRouter = async (fastify, options) => {
                     EXPIRATION_DATE: { type: 'string' },
                     COMMENTS: { type: 'string' },
                 },
-                required: ['SIM_NUMBER', 'PROVIDER_ID', 'TARIFF_ID', 'LOC_ID', 'STATUS_ID', 'PIN1', 'PUK1', 'PIN2', 'PUK2', 'ACTIVATION_DATE', 'EXPIRATION_DATE', 'COMMENTS']
+                required: ['SIM_NUMBER', 'PROVIDER_NAME', 'TARIFF_NAME', 'LOC_NAME', 'ST_NAME', 'PIN1', 'PUK1', 'PIN2', 'PUK2',]
             }
         }
     }, simController.updateSim);

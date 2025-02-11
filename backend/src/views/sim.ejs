@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <%- include('partials/head', { title: 'Sim List' }) %>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
 </head>
 <body id="body-pd">
     <!-- Alert message -->
@@ -13,57 +12,14 @@
     <%- include('header') %>
     <!-- Siderbar -->
     <%- include('sidebar', { currentPath: currentPath }) %>
-    <div class="container">
-        <h4>Sim Cards</h4>
-        <table 
-            data-show-export="true"
-            id="table"
-            data-toggle="table"
-            data-toolbar="#toolbar"
-            data-search="true"
-            data-show-toggle="true"
-            data-show-fullscreen="true"
-            data-show-columns="true"
-            data-show-columns-toggle-all="true"
-            data-pagination="true"
-            data-click-to-select="true"
-            data-show-footer="true"
-            data-show-pagination-switch="true"
-            data-page-list="[10, 25, 50, all]"
-            data-sortable="true"
-            data-id-field="SIM_ID"
-            data-locale="en-US"
-            data-url="/api/sim-cards"
-            data-side-pagination="server"
-            class="table table-bordered table-hover">
-        <thead class="table-primary">
-            <tr>
-                <th data-field="SIM_NUMBER" data-sortable="true">Number</th>
-                <th data-field="PROVIDER_NAME" data-sortable="true">Provider</th>
-                <th data-field="TARIFF_NAME" data-sortable="true">Tariff</th>
-                <th data-field="LOC_NAME" data-sortable="true">Location</th>
-                <th data-field="ST_NAME" data-sortable="true">Status</th>
-                <th data-field="PIN1" data-sortable="true">PIN1</th>
-                <th data-field="PUK1" data-sortable="true">PUK1</th>
-                <th data-field="PIN2" data-sortable="true">PIN2</th>
-                <th data-field="PUK2" data-sortable="true">PUK2</th>
-                <th data-field="ACTIVATION_DATE" data-sortable="true">Activation Date</th>
-                <th data-field="EXPIRATION_DATE" data-sortable="true">Expiration Date</th>
-                <th data-field="COMMENTS" data-sortable="true">Comments</th>
-                <th data-field="SIM_CREATED_AT" data-sortable="true">Created At</th>
-                <th data-field="SIM_UPDATED_AT" data-sortable="true">Updated At</th>
-                <th data-field="operate" data-formatter="operateFormatter" data-events="operateEvents">Actions</th>
-            </tr>
-        </thead>
-        </table>
-    </div>
-
+    <!-- Table -->
+    <%- include('partials/table', { title: 'Sim Cards', buttonColor: 'btn-info', buttonTitle: 'Add' }) %>
     <!-- Modal -->
     <%- include('partials/modal') %>
     <!-- Footer -->
     <%- include('footer') %>
     <!-- Scripts -->
     <%- include('partials/scripts') %>
-    <script src="/public/js/sim.js" defer ></script>
+    <script src="/public/js/sim.js" defer type="module"></script>
 </body>
 </html>
