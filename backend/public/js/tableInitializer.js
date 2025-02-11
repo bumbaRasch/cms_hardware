@@ -111,6 +111,8 @@ function openModal(action, row, config, size) {
         handleModalSave(action, row, config);
     });
 
+    modal.modal('show');
+
     config.columns.forEach(column => {
         if (column.type === 'date') {
             const datePicker = flatpickr(`#${column.field}`, {
@@ -123,8 +125,6 @@ function openModal(action, row, config, size) {
             });
         }
     });
-
-    modal.modal('show');
 }
 
 function generateModalContent(action, row, config) {
@@ -159,12 +159,14 @@ function generateModalContent(action, row, config) {
 }
 
 function generateInputField(field, value) {
+    const commonAttributes = `class="form-control" id="${field.field}" name="${field.field}" value="${value || ''}"`;
+
     switch (field.type) {
         case 'textarea':
-            return `<textarea style="resize: none;" class="form-control" id="${field.field}">${value || ''}</textarea>`;
+            return `<textarea style="resize: none;" ${commonAttributes}>${value || ''}</textarea>`;
         case 'select':
             return `
-                <select class="form-control" id="${field.field}">
+                <select ${commonAttributes}>
                     ${(Array.isArray(field.options) ? field.options : []).map(option => {
                         const isSelected = String(option.label) === String(value);
                         return `<option value="${option.value}" ${isSelected ? 'selected' : ''}>${option.label}</option>`;
@@ -172,20 +174,26 @@ function generateInputField(field, value) {
                 </select>
             `;
         case 'checkbox':
-            return `<input type="checkbox" class="form-check-input" id="${field.field}" ${value ? 'checked' : ''}>`;
+            return `<input type="checkbox" class="form-check-input" id="${field.field}" name="${field.field}" ${value ? 'checked' : ''}>`;
         case 'date':
-                return `<div class="input-group">
-                            <input type="text" class="form-control" id="${field.field}" name="${field.field}" value="${value || ''}">
-                            <span class="input-group-text"><i class="bi bi-calendar2-date"></i></span>
-                        </div>`
+            return `<div class="input-group">
+                        <input type="text" ${commonAttributes}>
+                        <span class="input-group-text"><i class="bi bi-calendar2-date"></i></span>
+                    </div>`;
         case 'number':
-            return `<input type="number" class="form-control" id="${field.field}" value="${value || ''}">`;
+            return `<input type="number" ${commonAttributes}>`;
         case 'email':
-            return `<input type="email" class="form-control" id="${field.field}" value="${value || ''}">`;
+            return `<input type="email" ${commonAttributes}>`;
         case 'tel':
-            return `<input type="tel" class="form-control" placeholder="123-45-678" pattern="[0-9]{3}-[0-9]{2}-[0-9]{3}" id="${field.field}" value="${value || ''}">`;
+            return `<input type="tel" ${commonAttributes} placeholder="123-45-678" pattern="[0-9]{3}-[0-9]{2}-[0-9]{3}">`;
+        case 'password':
+            return `<input type="password" ${commonAttributes}>`;
+        case 'url':
+            return `<input type="url" ${commonAttributes}>`;
+        case 'datetime-local':
+            return `<input type="datetime-local" ${commonAttributes}>`;
         default:
-            return `<input type="text" class="form-control" id="${field.field}" value="${value || ''}">`;
+            return `<input type="text" ${commonAttributes}>`;
     }
 }
 
@@ -197,7 +205,7 @@ async function handleModalSave(action, row, config) {
     config.columns.filter(column => column.field !== 'operate' && column.field !== 'checkbox').forEach(column => {
         updatedRow[column.field] = $(`#${column.field}`).val();
     });
-    
+
     modalSaveButton.prop('disabled', true).text('Saving...');
 
     try {
@@ -205,22 +213,22 @@ async function handleModalSave(action, row, config) {
             'Delete': {
                 method: 'DELETE',
                 url: `${config.url}/${row[config.idField]}`,
-                successMessage: 'Item deleted successfully',
-                errorMessage: 'Failed to delete item'
+                successMessage: `${config.title} ${row[config.nameField]} deleted successfully`,
+                errorMessage: `Failed to delete ${config.title} ${row[config.nameField]}`,
             },
             'Edit': {
                 method: 'PUT',
                 url: `${config.url}/${row[config.idField]}`,
                 body: JSON.stringify(updatedRow),
-                successMessage: 'Item updated successfully',
-                errorMessage: 'Failed to update item'
+                successMessage: `${config.title} ${row[config.nameField]} updated successfully`,
+                errorMessage: `Failed to update ${config.title} ${row[config.nameField]}`,
             },
             'Add': {
                 method: 'POST',
                 url: config.url,
                 body: JSON.stringify(updatedRow),
-                successMessage: 'Item added successfully',
-                errorMessage: 'Failed to add item'
+                successMessage: `${config.title} ${updatedRow[config.nameField]} added successfully`,
+                errorMessage: `Failed to add ${config.title} ${updatedRow[config.nameField]}`,
             }
         };
 
@@ -240,7 +248,7 @@ async function handleModalSave(action, row, config) {
                     field: config.idField,
                     values: [row[config.idField]]
                 });
-                $('#table').bootstrapTable('refresh')
+                $('#table').bootstrapTable('refresh');
             } else if (action === 'Edit') {
                 $('#table').bootstrapTable('updateByUniqueId', {
                     id: row[config.idField],
@@ -251,15 +259,26 @@ async function handleModalSave(action, row, config) {
                 const newItem = await response.json();
                 $('#table').bootstrapTable('prepend', newItem);
             }
-            alert(successMessage);
             modal.modal('hide');
+            showAlert(successMessage, 'success');
         } else {
+            modal.modal('hide');
             throw new Error(errorMessage);
         }
     } catch (error) {
         console.error('Error:', error);
-        alert(error.message);
+        showAlert(error.message, 'danger');
     } finally {
         modalSaveButton.prop('disabled', false).text(action === 'Delete' ? 'Delete' : 'Save');
     }
+}
+
+function showAlert(message, type) {
+    const alertContainer = document.getElementById('alert-container');
+    const alert = document.createElement('div');
+    alert.className = `alert alert-${type}`;
+    alert.role = 'alert';
+    alert.innerHTML = message;
+    alertContainer.appendChild(alert);
+    setTimeout(() => alert.remove(), 5000);
 }
