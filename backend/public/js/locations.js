@@ -1,3 +1,4 @@
+// bakend/public/js/locations.js
 import { initializeTable } from './tableInitializer.js';
 
 const config = {
@@ -45,12 +46,12 @@ const config = {
         field: 'LOC_CONTACT_PHONE',
         title: 'Contact Phone',
         sortable: true,
-        type: 'text',
+        type: 'tel',
     }, {
         field: 'LOC_CONTACT_EMAIL',
         title: 'Contact Email',
         sortable: true,
-        type: 'text',
+        type: 'email',
     }, {
         field: 'LOC_DESCRIPTION',
         title: 'Description',
