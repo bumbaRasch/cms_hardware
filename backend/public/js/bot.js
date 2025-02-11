@@ -1,3 +1,4 @@
+import { showAlert } from './index.js';
 document.getElementById('ask-form').addEventListener('submit', async function(event) {
     event.preventDefault();
     const question = document.getElementById('question').value;
@@ -69,22 +70,13 @@ document.getElementById('ask-form').addEventListener('submit', async function(ev
                 }
             });
 
+            showAlert('Results loaded successfully', 'success');
         } else {
-            $('#alert-container').html(`
-                <div class="alert alert-warning alert-dismissible fade show" role="alert">
-                    No results found for your query
-                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-                </div>`
-            );
+            showAlert('No results found for your query', 'warning');
         }
     } catch (error) {
         console.error('Error:', error);
-        $('#alert-container').html(`
-            <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                Error processing your request: ${error.message}
-                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-            </div>`
-        );
+        showAlert(`Error processing your request: ${error.message}`, 'danger');
     } finally {
         $('#table').bootstrapTable('hideLoading');
     }

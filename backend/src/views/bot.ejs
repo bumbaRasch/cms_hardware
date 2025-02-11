@@ -12,24 +12,24 @@
     <%- include('header') %>
     <!-- Siderbar -->
     <%- include('sidebar', { currentPath: currentPath }) %>
-    <h4>Bot</h4>
     <!-- Form for question -->
-    <form id="ask-form" class="mb-4">
-        <div class="mb-3">
-            <label for="question" class="form-label">Ask a question:</label>
-            <input type="text" class="form-control" id="question" required placeholder="Your question here">
-        </div>
-        <button type="submit" class="btn btn-primary">Submit</button>
-    </form>
-    <!-- Table -->
-    <div class="table-responsive">
-        <table id="table" ></table>
+    <div class="container">
+        <h4>Bot</h4>
+        <form id="ask-form" class="mb-4">
+            <div class="mb-3">
+                <label for="question" class="form-label">Ask a question:</label>
+                <input type="text" class="form-control" id="question" required placeholder="Your question here">
+            </div>
+            <button type="submit" class="btn btn-primary">Submit</button>
+        </form>
+        <!-- Table -->
+        <table id="table"></table>
     </div>
 
     <!-- Footer -->
     <%- include('footer') %>
     <!-- Scripts -->
     <%- include('partials/scripts') %>
-    <script src="/public/js/bot.js" defer></script>
+    <script src="/public/js/bot.js" defer type="module"></script>
 </body>
 </html>
