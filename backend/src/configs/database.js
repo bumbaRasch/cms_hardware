@@ -1,45 +1,50 @@
 // backend/src/configs/database.js
 import dotenv from 'dotenv';
 import prisma from './prisma.js';
-import fastify from 'fastify';
 
 dotenv.config();
 
 export const getDatabaseSchema = async () => {
+    const DB_NAME = process.env.DB_NAME || 'cms_hardware';
     try {
-        const columns = await prisma.$queryRaw`
-            SELECT
-                TABLE_NAME, 
-                COLUMN_NAME, 
-                COLUMN_TYPE
-            FROM 
-                INFORMATION_SCHEMA.COLUMNS
-            WHERE 
-                TABLE_SCHEMA = ${process.env.DB_NAME || 'cms_hardware'}
-        `;
+        const [columns, foreignKeys] = await Promise.all([
+            prisma.$queryRaw`
+                SELECT 
+                    TABLE_NAME, 
+                    COLUMN_NAME, 
+                    COLUMN_TYPE
+                FROM 
+                    INFORMATION_SCHEMA.COLUMNS
+                WHERE 
+                    TABLE_SCHEMA = ${DB_NAME}
+            `,
 
-        const foreignKeys = await prisma.$queryRaw`
-            SELECT
-                TABLE_NAME,
-                COLUMN_NAME,
-                REFERENCED_TABLE_NAME,
-                REFERENCED_COLUMN_NAME
-            FROM
-                INFORMATION_SCHEMA.KEY_COLUMN_USAGE
-            WHERE
-                TABLE_SCHEMA = ${process.env.DB_NAME || 'cms_hardware'}
-                AND REFERENCED_TABLE_NAME IS NOT NULL
-        `;
+            prisma.$queryRaw`
+                SELECT 
+                    TABLE_NAME, 
+                    COLUMN_NAME, 
+                    REFERENCED_TABLE_NAME, 
+                    REFERENCED_COLUMN_NAME
+                FROM 
+                    INFORMATION_SCHEMA.KEY_COLUMN_USAGE
+                WHERE 
+                    TABLE_SCHEMA = ${DB_NAME} 
+                AND 
+                    REFERENCED_TABLE_NAME IS NOT NULL
+            `
+        ]);
 
-        const tables = columns.reduce((acc, col) => {
-            if (!acc[col.TABLE_NAME]) acc[col.TABLE_NAME] = { columns: [], foreignKeys: [] };
-            acc[col.TABLE_NAME].columns.push(`${col.COLUMN_NAME} (${col.COLUMN_TYPE})`);
+        const tables = columns.reduce((acc, { TABLE_NAME, COLUMN_NAME, COLUMN_TYPE }) => {
+            if (!acc[TABLE_NAME]) {
+                acc[TABLE_NAME] = { columns: [], foreignKeys: [] };
+            }
+            acc[TABLE_NAME].columns.push(`${COLUMN_NAME} (${COLUMN_TYPE})`);
             return acc;
         }, {});
 
-        foreignKeys.forEach(fk => {
-            if (tables[fk.TABLE_NAME]) {
-                tables[fk.TABLE_NAME].foreignKeys.push(`FOREIGN KEY (${fk.COLUMN_NAME}) REFERENCES ${fk.REFERENCED_TABLE_NAME}(${fk.REFERENCED_COLUMN_NAME})`);
+        foreignKeys.forEach(({ TABLE_NAME, COLUMN_NAME, REFERENCED_TABLE_NAME, REFERENCED_COLUMN_NAME }) => {
+            if (tables[TABLE_NAME]) {
+                tables[TABLE_NAME].foreignKeys.push(`FOREIGN KEY (${COLUMN_NAME}) REFERENCES ${REFERENCED_TABLE_NAME}(${REFERENCED_COLUMN_NAME})`);
             }
         });
 
@@ -51,7 +56,7 @@ export const getDatabaseSchema = async () => {
 
         return schema;
     } catch (error) {
-        fastify.log.error("Error retrieving database schema:", error);
+        console.error("Error retrieving database schema:", error);
         return "";
     }
 };
