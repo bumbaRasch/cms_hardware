@@ -74,12 +74,12 @@ export const userRouter = async (fastify, options) => {
             body: {
                 type: 'object',
                 properties: {
-                    PASSWORD: {
+                    newPassword: {
                         type: 'string',
                         pattern: '^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[!@#$%^&*()_+\\-=[\\]{};:\'",.<>/?]).{8,}$'
                     }
                 },
-                required: ['PASSWORD']
+                required: ['newPassword']
             }
         }
     }, userController.resetPassword);

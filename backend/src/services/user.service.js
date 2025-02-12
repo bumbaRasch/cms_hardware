@@ -92,22 +92,13 @@ export const userService = {
         } : null;
     },
 
-    getRoles: async () => {
-        return await prisma.tbl_roles.findMany({
-            select: {
-                ROLE_ID: true,
-                ROLE_NAME: true
-            }
-        });
-    },
-
     updateUser: async (id, data) => {
         const updateData = {
             FIRST_NAME: data.FIRST_NAME,
             LAST_NAME: data.LAST_NAME,
             USERNAME: data.USERNAME,
             EMAIL: data.EMAIL,
-            ROLE_ID: parseInt(data.ROLE_ID)
+            ROLE_ID: parseInt(data.ROLE_NAME)
         };
 
         if (data.PASSWORD) {
@@ -131,7 +122,7 @@ export const userService = {
     },
 
     resetPassword: async (id, data) => {
-        const { salt, hash } = hashPassword(data.PASSWORD);
+        const { salt, hash } = hashPassword(data.newPassword);
         return await prisma.tbl_users.update({
             where: { USER_ID: id },
             data: { PASSWORD: `${salt}:${hash}` }
