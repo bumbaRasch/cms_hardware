@@ -85,21 +85,22 @@ INSERT INTO tbl_statuses (ST_NAME, ST_DESCRIPTION) VALUES
 CREATE TABLE IF NOT EXISTS tbl_roles (
     ROLE_ID INT AUTO_INCREMENT PRIMARY KEY,
     ROLE_NAME VARCHAR(255) NOT NULL UNIQUE COMMENT 'Name of the role',
+    ROLE_DESCRIPTION TEXT COMMENT 'Description of the role',
     CREATED_AT TIMESTAMP DEFAULT CURRENT_TIMESTAMP COMMENT 'Timestamp when the role was created',
     UPDATED_AT TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT 'Timestamp when the role was last updated'
 ) COMMENT 'Table for storing roles';
 
-INSERT INTO tbl_roles (ROLE_NAME) VALUES
-('Admin'),
-('User'),
-('Guest'),
-('Manager'),
-('Supervisor'),
-('Technician'),
-('Engineer'),
-('Analyst'),
-('Developer'),
-('Designer');
+INSERT INTO tbl_roles (ROLE_NAME, ROLE_DESCRIPTION) VALUES
+('Admin', 'Administrator with full access and permissions'),
+('User', 'Regular user with limited access and permissions'),
+('Guest', 'Guest user with minimal access and permissions'),
+('Manager', 'Manager with access to team and department data'),
+('Supervisor', 'Supervisor with access to team data'),
+('Technician', 'Technician with access to hardware and maintenance data'),
+('Engineer', 'Engineer with access to technical data'),
+('Analyst', 'Analyst with access to data analysis tools'),
+('Developer', 'Developer with access to development tools'),
+('Designer', 'Designer with access to design tools');
 
 CREATE TABLE IF NOT EXISTS tbl_users (
     USER_ID CHAR(36) PRIMARY KEY,

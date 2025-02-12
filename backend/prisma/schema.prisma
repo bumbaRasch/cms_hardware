@@ -238,11 +238,12 @@ model tbl_companies {
 
 /// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
 model tbl_roles {
-  ROLE_ID    Int         @id @default(autoincrement())
-  ROLE_NAME  String      @unique(map: "ROLE_NAME") @db.VarChar(255)
-  CREATED_AT DateTime?   @default(now()) @db.Timestamp(0)
-  UPDATED_AT DateTime?   @default(now()) @db.Timestamp(0)
-  tbl_users  tbl_users[]
+  ROLE_ID          Int         @id @default(autoincrement())
+  ROLE_NAME        String      @unique(map: "ROLE_NAME") @db.VarChar(255)
+  ROLE_DESCRIPTION String?     @db.Text
+  CREATED_AT       DateTime?   @default(now()) @db.Timestamp(0)
+  UPDATED_AT       DateTime?   @default(now()) @db.Timestamp(0)
+  tbl_users        tbl_users[]
 }
 
 /// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
