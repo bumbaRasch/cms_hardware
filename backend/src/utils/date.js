@@ -11,6 +11,13 @@ export const formatDate = (date) => {
 };
 
 export const isValidDate = (dateString) => {
-    const date = new Date(dateString);
-    return !isNaN(date.getTime());
+    if (!dateString) return false;
+    const date = parseDate(dateString);
+    return date instanceof Date && !isNaN(date.getTime());
+};
+
+export const parseDate = (dateString) => {
+    if (!dateString) return null;
+    const [day, month, year] = dateString.split('.').map(Number);
+    return new Date(year, month - 1, day + 1);
 };

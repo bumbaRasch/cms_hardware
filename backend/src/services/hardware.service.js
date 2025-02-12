@@ -1,5 +1,7 @@
+//backend/src/services/hardware.service.js
+
 import prisma from '../configs/prisma.js';
-import { formatDate, isValidDate } from '../utils/date.js';
+import { formatDate, isValidDate, parseDate } from '../utils/date.js';
 
 export const hardwareService = {
     getHardware: async ({ offset = 0, limit = 10, sort = 'HA_CREATED_AT', order = 'desc', filter = {}, search = '' }) => {
@@ -123,11 +125,11 @@ export const hardwareService = {
                 HA_MANUFACTURER: body.HA_MANUFACTURER,
                 HA_MODEL: body.HA_MODEL,
                 HA_SERIAL_NUMBER: body.HA_SERIAL_NUMBER,
-                HA_PURCHASE_DATE: isValidDate(body.HA_PURCHASE_DATE) ? new Date(body.HA_PURCHASE_DATE).toISOString() : null,
-                HA_WARRANTY_EXPIRY_DATE: isValidDate(body.HA_WARRANTY_EXPIRY_DATE) ? new Date(body.HA_WARRANTY_EXPIRY_DATE).toISOString() : null,
+                HA_PURCHASE_DATE: isValidDate(body.HA_PURCHASE_DATE) ? parseDate(body.HA_PURCHASE_DATE).toISOString() : null,
+                HA_WARRANTY_EXPIRY_DATE: isValidDate(body.HA_WARRANTY_EXPIRY_DATE) ? parseDate(body.HA_WARRANTY_EXPIRY_DATE).toISOString() : null,
                 HA_LOCATION: parseInt(body.LOC_NAME),
                 HA_STATUS: parseInt(body.ST_NAME),
-                HA_LAST_MAINTENANCE_DATE: isValidDate(body.HA_LAST_MAINTENANCE_DATE) ? new Date(body.HA_LAST_MAINTENANCE_DATE).toISOString() : null,
+                HA_LAST_MAINTENANCE_DATE: isValidDate(body.HA_LAST_MAINTENANCE_DATE) ? parseDate(body.HA_LAST_MAINTENANCE_DATE).toISOString() : null,
                 HA_NOTES: body.HA_NOTES,
                 HA_SIM_CARD: parseInt(body.SIM_NUMBER),
                 HA_STORE: parseInt(body.STORE_NAME),
@@ -135,8 +137,8 @@ export const hardwareService = {
                 HA_COST: parseFloat(body.HA_COST),
                 HA_CURRENCY: parseInt(body.CURRENCY_CODE),
                 HA_CONDITION: body.HA_CONDITION,
-                HA_DEPLOYMENT_DATE: isValidDate(body.HA_DEPLOYMENT_DATE) ? new Date(body.HA_DEPLOYMENT_DATE).toISOString() : null,
-                HA_RETIREMENT_DATE: isValidDate(body.HA_RETIREMENT_DATE) ? new Date(body.HA_RETIREMENT_DATE).toISOString() : null,
+                HA_DEPLOYMENT_DATE: isValidDate(body.HA_DEPLOYMENT_DATE) ? parseDate(body.HA_DEPLOYMENT_DATE).toISOString() : null,
+                HA_RETIREMENT_DATE: isValidDate(body.HA_RETIREMENT_DATE) ? parseDate(body.HA_RETIREMENT_DATE).toISOString() : null,
                 HA_IP_ADDRESS: body.HA_IP_ADDRESS,
                 HA_MAC_ADDRESS: body.HA_MAC_ADDRESS,
             },
@@ -192,11 +194,11 @@ export const hardwareService = {
             HA_MANUFACTURER: body.HA_MANUFACTURER,
             HA_MODEL: body.HA_MODEL,
             HA_SERIAL_NUMBER: body.HA_SERIAL_NUMBER,
-            HA_PURCHASE_DATE: isValidDate(body.HA_PURCHASE_DATE) ? new Date(body.HA_PURCHASE_DATE).toISOString() : null,
-            HA_WARRANTY_EXPIRY_DATE: isValidDate(body.HA_WARRANTY_EXPIRY_DATE) ? new Date(body.HA_WARRANTY_EXPIRY_DATE).toISOString() : null,
+            HA_PURCHASE_DATE: isValidDate(body.HA_PURCHASE_DATE) ? parseDate(body.HA_PURCHASE_DATE).toISOString() : null,
+            HA_WARRANTY_EXPIRY_DATE: isValidDate(body.HA_WARRANTY_EXPIRY_DATE) ? parseDate(body.HA_WARRANTY_EXPIRY_DATE).toISOString() : null,
             HA_LOCATION: parseInt(body.LOC_NAME),
             HA_STATUS: parseInt(body.ST_NAME),
-            HA_LAST_MAINTENANCE_DATE: isValidDate(body.HA_LAST_MAINTENANCE_DATE) ? new Date(body.HA_LAST_MAINTENANCE_DATE).toISOString() : null,
+            HA_LAST_MAINTENANCE_DATE: isValidDate(body.HA_LAST_MAINTENANCE_DATE) ? parseDate(body.HA_LAST_MAINTENANCE_DATE).toISOString() : null,
             HA_NOTES: body.HA_NOTES,
             HA_SIM_CARD: body.HA_SIM_CARD,
             HA_STORE: parseInt(body.STORE_NAME),
@@ -204,8 +206,8 @@ export const hardwareService = {
             HA_COST: body.HA_COST,
             HA_CURRENCY: parseInt(body.CURRENCY_CODE),
             HA_CONDITION: body.HA_CONDITION,
-            HA_DEPLOYMENT_DATE: isValidDate(body.HA_DEPLOYMENT_DATE) ? new Date(body.HA_DEPLOYMENT_DATE).toISOString() : null,
-            HA_RETIREMENT_DATE: isValidDate(body.HA_RETIREMENT_DATE) ? new Date(body.HA_RETIREMENT_DATE).toISOString() : null,
+            HA_DEPLOYMENT_DATE: isValidDate(body.HA_DEPLOYMENT_DATE) ? parseDate(body.HA_DEPLOYMENT_DATE).toISOString() : null,
+            HA_RETIREMENT_DATE: isValidDate(body.HA_RETIREMENT_DATE) ? parseDate(body.HA_RETIREMENT_DATE).toISOString() : null,
             HA_IP_ADDRESS: body.HA_IP_ADDRESS,
             HA_MAC_ADDRESS: body.HA_MAC_ADDRESS,
         };
