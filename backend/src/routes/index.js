@@ -2,6 +2,7 @@
 import {homeRouter} from './home.route.js';
 import {hardwareRouter} from './hardware.route.js';
 import {simRouter} from './sim.route.js';
+import {roleRouter} from './role.route.js';
 import {userRouter} from './user.route.js';
 import {providerRouter} from './provider.route.js';
 import {tariffRouter} from './tariff.route.js';
@@ -19,6 +20,7 @@ async function routes(fastify, options) {
   fastify.register(homeRouter);
   fastify.register(hardwareRouter);
   fastify.register(simRouter);
+  fastify.register(roleRouter);
   fastify.register(userRouter);
   fastify.register(providerRouter);
   fastify.register(tariffRouter);
