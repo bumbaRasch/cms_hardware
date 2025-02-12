@@ -1,9 +1,10 @@
 import {showAlert} from './index.js';
+import { generateResetPasswordForm, handleResetPassword } from './password.js';
 
 export function initializeTable(config) {
     config.columns.forEach(column => {
         if (column.field === 'operate') {
-            column.formatter = operateFormatter;
+            column.formatter = (value, row, index) => operateFormatter(value, row, index, config.title);
             column.events = createOperateEvents(config);
         }
     });
@@ -63,13 +64,19 @@ export function initializeTable(config) {
     });
 }
 
-export function operateFormatter(value, row, index) {
-    return `
-        <div class="d-grid gap-2 d-md-flex justify-content-md-center">
-            <button class="btn btn-sm btn-warning edit" title="Edit"><i class="bi bi-pencil"></i></button>
-            <button class="btn btn-sm btn-danger delete" title="Delete"><i class="bi bi-trash"></i></button>
-        </div>
-    `;
+export function operateFormatter(value, row, index, title) {
+    let buttons = `<div class="d-grid gap-2 d-md-flex justify-content-md-center">`;
+
+    if (title === 'Users') {
+        buttons += `<button class="btn btn-sm btn-info reset-password" title="Reset Password"><i class="bi bi-key"></i></button>`;
+    }
+
+    buttons += `
+        <button class="btn btn-sm btn-warning edit" title="Edit"><i class="bi bi-pencil"></i></button>
+        <button class="btn btn-sm btn-danger delete" title="Delete"><i class="bi bi-trash"></i></button>
+    </div>`;
+    
+    return buttons;
 }
 
 function createOperateEvents(config) {
@@ -79,6 +86,11 @@ function createOperateEvents(config) {
         },
         'click .delete': function (e, value, row, index) {
             openModal('Delete', row, config, 'sm');
+        },
+        'click .reset-password': function (e, value, row, index) {
+            if (config.title === 'Users') {
+                openModal('Reset Password', row, config, 'md');
+            }
         }
     };
 }
@@ -92,33 +104,51 @@ function openModal(action, row, config, size) {
 
     modalDialog.removeClass('modal-sm modal-lg modal-xl').addClass(`modal-${size}`);
     modalTitle.text(`${action} ${config.title}`);
-    modalBody.html(generateModalContent(action, row, config));
+    
+    if (action === 'Reset Password') {
+        modalBody.html(generateResetPasswordForm(row));
+    } else {
+        modalBody.html(generateModalContent(action, row, config));
+    }
 
     switch (action) {
+        case 'Reset Password':
+            modalSaveButton.text('Reset').removeClass().addClass('btn btn-warning');
+            modalSaveButton.off('click').on('click', function() {
+                handleResetPassword(row);
+            });
+            break;
         case 'Add':
             modalSaveButton.text('Save').removeClass().addClass('btn btn-success');
+            modalSaveButton.off('click').on('click', function() {
+                handleModalSave(action, row, config);
+            });
             break;
         case 'Edit':
             modalSaveButton.text('Update').removeClass().addClass('btn btn-warning');
+            modalSaveButton.off('click').on('click', function() {
+                handleModalSave(action, row, config);
+            });
             break;
         case 'Delete':
             modalSaveButton.text('Delete').removeClass().addClass('btn btn-danger');
-            break;
+            modalSaveButton.off('click').on('click', function() {
+                handleModalSave(action, row, config);
+            });
+        break;
         default:
-            modalSaveButton.text('Save').removeClass().addClass('btn btn-primary');
+            modalSaveButton.off('click').on('click', function() {
+                handleModalSave(action, row, config);
+            });
             break;
     }
-
-    modalSaveButton.off('click').on('click', function() {
-        handleModalSave(action, row, config);
-    });
 
     modal.modal('show');
 
     config.columns.forEach(column => {
         if (column.type === 'date') {
             const datePicker = flatpickr(`#${column.field}`, {
-                dateFormat: "Y-m-d",
+                dateFormat: "d.m.Y",
                 defaultDate: row[column.field] || null
             });
 
@@ -231,7 +261,7 @@ async function handleModalSave(action, row, config) {
                 body: JSON.stringify(updatedRow),
                 successMessage: `${config.title} ${updatedRow[config.nameField]} added successfully`,
                 errorMessage: `Failed to add ${config.title} ${updatedRow[config.nameField]}`,
-            }
+            },
         };
 
         const { method, url, body, successMessage, errorMessage } = actionConfig[action];
